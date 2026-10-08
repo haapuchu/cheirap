@@ -10,7 +10,7 @@
 
 **An autonomous AI and regulatory intelligence gateway that intercepts public procurement rigging pre-award and audits capital works execution on-ground under CVC, GFR-161, CPWD, and Bharatiya Sakshya Adhiniyam 2023 statutes.**
 
-[Submission Overview](#submission-overview) • [Manual Problem Statements](#official-hackathon-manual-problem-statements) • [How CHEIRAP Solves Them](#how-cheirap-solves-the-hackathon-problem-statements) • [System Visual Tour](#system-visual-tour) • [Trilateral Jury Matrix](#trilateral-grand-jury-alignment-matrix) • [Exploits Intercepted](#the-4-procurement-exploits-intercepted-pre-award) • [Works Assurance](#post-award-works--ground-assurance-engine-pwd-04) • [Statutory Grounding](#statutory-rules--legal-enforceability) • [Quickstart Guide](#quickstart--local-setup)
+[Submission Overview](#submission-overview) • [Official Problem Statement](#official-hackathon-manual-problem-statement) • [How CHEIRAP Solves PWD-04](#how-cheirap-solves-the-pwd-04-problem-statement) • [System Visual Tour](#system-visual-tour) • [Trilateral Jury Matrix](#trilateral-grand-jury-alignment-matrix) • [Exploits Intercepted](#the-4-procurement-exploits-intercepted-pre-award) • [Works Assurance](#post-award-works--ground-assurance-engine-pwd-04) • [Statutory Grounding](#statutory-rules--legal-enforceability) • [Quickstart Guide](#quickstart--local-setup)
 
 ---
 
@@ -24,17 +24,17 @@
 | **Host Department** | **Department of Information Technology (DIT), Government of Manipur** |
 | **Innovation Partner**| **Manipur Technology Innovation Foundation (MTIF)** |
 | **Team Name** | **Team Lotux** |
-| **Core Problem Tracks**| **PWD-04** (AI Construction Monitoring), **ED-04** (School Resource Planning & Lab Infra), and **IT-01** (AI Tender Integrity & Anti-Collusion) |
+| **Core Problem Track** | **PWD-04: AI-Based Construction Progress Monitoring (Government-side)** |
 | **Evaluation Date** | **9 October 2026** (On-site Demonstration & Trilateral Jury Defense) |
 | **Prototype Verification** | **100% Live Functional System** (FastAPI Microservice + React 18 / TypeScript SPA + Automated Browser Verification Suite) |
 
 ---
 
-## Official Hackathon Manual Problem Statements
+## Official Hackathon Manual Problem Statement
 
-CHEIRAP directly answers the challenge statements published in the **National Innovation Challenge on AI & Digital Governance – Manipur (2026)** official problem catalog:
+CHEIRAP directly answers the challenge statement published in the **National Innovation Challenge on AI & Digital Governance – Manipur (2026)** official problem catalog:
 
-### Track 1: Public Works Department (PWD) — Problem Code: PWD-04
+### Track: Public Works Department (PWD) — Problem Code: PWD-04
 * **Problem Title:** **AI-Based Construction Progress Monitoring (Government-side)**
 * **Target Department:** Public Works Department (PWD), Government of Manipur
 * **Government Problem (Verbatim from Manual):**  
@@ -44,78 +44,64 @@ CHEIRAP directly answers the challenge statements published in the **National In
 
 ---
 
-### Track 2: Education (S) Department — Problem Code: ED-04
-* **Problem Title:** **AI-Based School Resource Planning System (Government-side)**
-* **Target Department:** Department of Education (S), Government of Manipur
-* **Government Problem (Verbatim from Manual):**  
-  > *"Authorities face imbalances in teacher postings, laboratory infrastructure, computer hardware, and classroom capacity across diverse school clusters."*
-* **Problem Statement (Verbatim from Manual):**  
-  > *"Develop an AI decision-support platform that evaluates school-level infrastructural and enrolment metrics to generate objective, evidence-based resource allocation plans."*
-
----
-
-### Track 3: Cross-Departmental Governance — Problem Code: IT-01 (Flagship DIT Mandate)
-* **Problem Title:** **AI-Based Tender Surveillance & Public Procurement Anti-Collusion Gateway**
-* **Target Department:** Department of Information Technology (DIT) & State Vigilance Commission
-* **Government Problem:**  
-  > State authorities and vigilance commissioners discover tender manipulation **18 to 36 months after contracts are awarded and public funds disbursed** (the "post-mortem forensic audit failure"). Collusive syndicates exploit GePNIC (`manipurtenders.gov.in`) through artificial window squeezes, late corrigenda, and inflated EMDs to engineer single-bidder walkovers.
-* **Problem Statement:**  
-  > Develop an autonomous pre-award vigilance gateway that continuously scans active e-tenders during the live bidding window, detects collusive bidding clusters, verifies strict CVC and GFR-161 statutory compliance, and issues legally enforceable stay notices before technical bids are unlocked.
-
----
-
-## How CHEIRAP Solves the Hackathon Problem Statements
+## How CHEIRAP Solves the PWD-04 Problem Statement
 
 **CHEIRAP (ꯆꯩꯔꯥꯞ)**, designed by **Team Lotux**, bridges the gap between pre-award tender award integrity and on-ground capital works verification.
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                        CHEIRAP MULTI-TRACK SOLUTION MAP                      │
+│                    CHEIRAP PWD-04 WORKS ASSURANCE ARCHITECTURE               │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
-│  [IT-01] PRE-AWARD TENDER INTEGRITY GATEWAY                                  │
-│  ├── Live Ingestion: Monitors ₹1,874 Cr capex across 92 active line tenders  │
-│  ├── Dual-Brain AI: Deterministic Legal Automata + Econometric Scorer        │
-│  └── Pre-Award Stay Orders: Dispatches Sec 41(h) holds before bids unseal    │
+│  INPUT STREAMS & TELEMETRY INGESTION                                         │
+│  ├── Periodic Site Photographs & Drone Video Keyframes                       │
+│  ├── EXIF Geotags (Lat/Long, Altitude, Precision, Device Timestamp)          │
+│  ├── Project Management Metadata (GANTT Schedules, Stage Milestones)         │
+│  └── Measurement Book (MB Form 24) Entries & Running Account (RA) Bills      │
 │                                                                              │
-│  [PWD-04] POST-AWARD PHYSICAL WORKS ASSURANCE ENGINE                         │
-│  ├── Vector 1: GPS Geofence boundary polygon verification                    │
-│  ├── Vector 2: 64-bit DCT Perceptual Hashing (pHash) against 11,202 works   │
-│  ├── Vector 3: CPWD monsoon velocity curve dynamics                          │
-│  └── Vector 4: Fiscal parity against Measurement Book (MB) recordings        │
+│  AI FORENSIC & PROGRESS VERIFICATION ENGINES                                 │
+│  ├── Vector 1: GPS Geofence & Survey Boundary Polygon Coherence Check        │
+│  ├── Vector 2: 64-bit DCT Perceptual Hash (pHash) against 11,202 Works       │
+│  ├── Vector 3: CPWD Civil Velocity Norms with Monsoon Curing Adjustment      │
+│  └── Vector 4: Fiscal Parity Audit (Disbursed Funds vs Verified MB Records)  │
 │                                                                              │
-│  [ED-04] EDUCATIONAL INFRASTRUCTURE & LAB RESOURCE ASSURANCE                 │
-│  ├── Verifies physical delivery of prefabricated labs & smart classrooms     │
-│  ├── Eliminates duplicate photo reuse across rural and model schools         │
-│  └── Ensures equitable capital deployment across hill and valley districts   │
-│                                                                              │
-│  COURT-READY ADMISSIBILITY & NATURAL JUSTICE                                 │
-│  ├── Section 65B Bharatiya Sakshya Adhiniyam (BSA 2023) Cryptographic Seal  │
-│  └── PWD Form 44 Physical Field Verification Notices (7-Day Notice Gate)     │
+│  STATUTORY FIELD ENFORCEMENT & ADMISSIBILITY                                │
+│  ├── PWD Form 44 Physical Field Verification Notices (7-Day Notice Gate)     │
+│  └── Section 65B Bharatiya Sakshya Adhiniyam (BSA 2023) Digital Seals        │
 │                                                                              │
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 1. Direct Resolution of PWD-04 (Construction Progress Monitoring)
+### Direct Resolution of PWD-04 Mandates
+
 To satisfy the manual's mandate of analyzing periodic site photographs, videos, and project metadata without demanding impossible manual travel across remote districts:
-* **Computer Vision Perceptual Hashing (pHash):** Computes a 64-bit Discrete Cosine Transform (DCT) fingerprint of every submitted site image and cross-references it against a statewide repository of 11,202 civil works. It instantly flags duplicate, recycled, or stock imagery (such as Case A's 93.4% match with an archived 2024 project).
-* **GPS Geofence Boundary Polygons:** Reverse-geocodes EXIF lat/long telemetry and verifies whether photographs were taken within the registered survey boundary. Flags coordinates that drift outside (such as Case A's 9.42 km Lamphelpat drift).
-* **CPWD Velocity Norms & Monsoon Curing Dynamics:** Evaluates reported percentage jumps against civil engineering standards. Flags impossible leaps (e.g., claiming 15% to 100% completion in 12 days during peak monsoon).
-* **Measurement Book (MB) Reconciliation:** Reconciles contractor Running Account (RA) bills against verified on-site MB recordings. Flags cases where 100% of funds are disbursed without intermediate engineering sign-offs.
-* **PWD Form 44 Physical Field Inspection Notice:** Automatically dispatches formal inspection notices to the Executive Engineer, giving 7 days for physical verification before financial debarment.
 
-### 2. Direct Resolution of ED-04 (School Resource & Infrastructure Planning)
-To resolve imbalances in laboratory infrastructure, computer hardware, and classroom capacity:
-* **Secondary School Modular Labs Assurance:** Directly audited in CHEIRAP's flagship Case Study (`MAN_ED_PROC_2026_0142` and `MN-PWD-ED-2026-0812` for *Procurement and Construction of Prefabricated Modular Labs for Secondary Schools*).
-* **Verification of Physical Lab Fit-Out:** Uses photographic milestone comparison (Stage 2 civil framing vs. Stage 3 modular science and computer lab fit-out) to ensure allocated laboratory funds physically materialize in secondary schools rather than existing as paper claims.
-* **District-Level Transparency:** Real-time visibility into infrastructure deployment across Imphal East, Churachandpur, Bishnupur, Tamenglong, and remaining hill districts, ensuring equitable capital allocation.
+1. **Periodic Site Photograph & Drone Video Analysis (Computer Vision pHash):**
+   * Computes a 64-bit Discrete Cosine Transform (DCT) fingerprint (`pHash` and `dHash`) for every submitted site photograph or drone video keyframe.
+   * Cross-references the fingerprint against a statewide repository of 11,202 civil works to detect duplicate, recycled, or stock imagery across projects.
+   * *Demonstrated in Live Prototype:* Case A flags a claimed Lamphelpat construction photo as an immediate 93.4% perceptual match to an archived 2024 Bishnupur classroom photo.
 
-### 3. Direct Resolution of IT-01 (Pre-Award Tender Anti-Collusion Gateway)
-To eliminate the 18–36 month post-mortem lag:
-* **Active Bidding Window Interception:** Analyzes tenders while they are live on GePNIC (`manipurtenders.gov.in`), before technical bids are unlocked and before contracts are executed.
-* **Dual-Brain Hybrid Intelligence:** Combines deterministic legal automata (validating 8 statutory provisions with 0% hallucination) with an econometric Isolation Forest anomaly scorer.
-* **Pre-Award Statutory Stay Notice:** Generates court-ready stay orders citing Article 14 of the Constitution, GFR Rule 161, and Section 41(h) of the Specific Relief Act, preventing irreversible fund leakage before contracts are awarded.
-* **Section 65B BSA 2023 Digital Certification:** Every alert is sealed with an automated SHA-256 cryptographic chain of custody, ensuring judicial admissibility in the High Court of Manipur and State Lokayukta.
+2. **Geolocation Telemetry & Geofence Boundary Polygon Coherence:**
+   * Extracts device EXIF telemetry (latitude, longitude, altitude, timestamp) and reverse-geocodes it against the registered survey boundary polygon for the sanctioned project.
+   * Flags coordinates that drift outside the permitted perimeter.
+   * *Demonstrated in Live Prototype:* Case A automatically flags a 9.42 km coordinate drift away from the sanctioned Lamphelpat site boundary.
+
+3. **Schedule Slippage Detection & CPWD Civil Velocity Curves:**
+   * Models reported milestone completion percentages against CPWD engineering velocity norms and local monsoon curing dynamics.
+   * Identifies unphysical construction velocity spikes (e.g., claiming a jump from 15% to 100% completion in 12 days during peak monsoon season).
+   * Highlights schedule slippages where physical visible progress lags critically behind GANTT milestone targets.
+
+4. **Project Metadata & Measurement Book (MB) Reconciliation:**
+   * Reconciles contractor Running Account (RA) bills against physical Measurement Book (MB Form 24) entries verified by Assistant and Executive Engineers.
+   * Flags anomalies where 100% of milestone funds are claimed or disbursed without corresponding signed MB entries.
+
+5. **Automated Anomaly Flagging & PWD Form 44 Field Inspection Dispatch:**
+   * When multidimensional anomaly scoring exceeds statutory thresholds (Composite Risk $\ge 70$), the system halts further disbursements and automatically dispatches a formal **PWD Form 44 Physical Field Inspection Notice**.
+   * Implements strict administrative due process and natural justice by granting a mandatory 7-day field verification window before financial debarment.
+
+6. **Court-Ready Admissibility under Section 65B BSA 2023:**
+   * Seals all telemetry, photographs, hash comparisons, and audit logs with SHA-256 cryptographic hashes and automated digital certificates under Section 65B of the Bharatiya Sakshya Adhiniyam, 2023.
+   * Produces legally admissible evidence packets ready for the High Court of Manipur or State Lokayukta.
 
 ---
 
@@ -126,8 +112,8 @@ To eliminate the 18–36 month post-mortem lag:
 | **PWD-04: Periodic Site Photo Analysis** | Subjective inspection of printed photo attachments | **64-bit DCT pHash** checking photo originality against 11,202 state projects |
 | **PWD-04: Geolocation Verification** | Trusting self-reported contractor address | **Automated EXIF GPS polygon check** flagging $> 100\text{ m}$ perimeter drift |
 | **PWD-04: Milestone Slippage Detection** | Manual comparison of GANTT charts months late | **CPWD velocity curve engine** adjusting for monsoon curing schedules |
-| **ED-04: Lab & School Infra Assurance** | Unverified contractor invoices for remote schools | **Stage-wise photo forensics** certifying physical lab setup prior to RA bill release |
-| **IT-01: Tender Collusion Interception** | Post-mortem CAG audit 18–36 months after award | **Pre-award gatekeeper** issuing statutory stay orders before bids open |
+| **PWD-04: Measurement Book (MB) Parity** | Paper MB verification after bill clearance | **Fiscal parity check** matching RA disbursements against verified MB entries |
+| **PWD-04: Anomaly Field Audit Trigger** | Delayed vigilance inquiries after funds leak | **PWD Form 44 Notice** auto-dispatched with 7-day physical verification window |
 | **Judicial Admissibility** | Ad-hoc internal departmental inquiry notes | **Sec 65B BSA 2023** tamper-proof digital cryptographic seals |
 | **Administrative Due Process** | Arbitrary blacklisting or delayed action | **PWD Form 44 Notice** granting 7-day field verification window |
 
