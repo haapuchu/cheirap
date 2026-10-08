@@ -4,19 +4,19 @@
 
 [![Government of Manipur](https://img.shields.io/badge/Government_of_Manipur-Department_of_Information_Technology-003366?style=for-the-badge&logo=gov.in)](https://manipur.gov.in)
 [![Hackathon](https://img.shields.io/badge/National_Innovation_Challenge-AI_%26_Digital_Governance_2026-D4AF37?style=for-the-badge)](https://ditmanipur.gov.in)
-[![Team](https://img.shields.io/badge/Submitted_by-Team_Lotux-10b981?style=for-the-badge)](#-team--submission-credentials)
+[![Team](https://img.shields.io/badge/Submitted_by-Team_Lotux-10b981?style=for-the-badge)](#team--submission-credentials)
 [![Build Status](https://img.shields.io/badge/Build-Passing_%28Vite_%2B_FastAPI%29-brightgreen?style=for-the-badge)](https://github.com/haapuchu/cheirap)
-[![Trilateral Jury Ready](https://img.shields.io/badge/Trilateral_Jury_Audit-100%25_Verified-blue?style=for-the-badge)](#-trilateral-grand-jury-alignment-matrix)
+[![Trilateral Jury Ready](https://img.shields.io/badge/Trilateral_Jury_Audit-100%25_Verified-blue?style=for-the-badge)](#trilateral-grand-jury-alignment-matrix)
 
-**An autonomous AI and regulatory intelligence gateway that intercepts public procurement rigging *pre-award* and audits capital works execution *on-ground* under CVC, GFR-161, CPWD, and Bharatiya Sakshya Adhiniyam 2023 statutes.**
+**An autonomous AI and regulatory intelligence gateway that intercepts public procurement rigging pre-award and audits capital works execution on-ground under CVC, GFR-161, CPWD, and Bharatiya Sakshya Adhiniyam 2023 statutes.**
 
-[Live Demo Walkthrough](#-live-demo-walkthrough-script) • [System Architecture](#-system-architecture) • [Works Assurance (PWD-04)](#-post-award-works--ground-assurance-engine-pwd-04) • [Statutory Grounding](#-statutory-rules--legal-enforceability) • [Quickstart Guide](#-quickstart--local-setup)
+[Submission Overview](#submission-overview) • [Executive Summary](#executive-summary-the-pre-award-paradigm-shift) • [System Visual Tour](#system-visual-tour) • [Trilateral Jury Matrix](#trilateral-grand-jury-alignment-matrix) • [Exploits Intercepted](#the-4-procurement-exploits-intercepted-pre-award) • [Works Assurance](#post-award-works--ground-assurance-engine-pwd-04) • [Statutory Grounding](#statutory-rules--legal-enforceability) • [Quickstart Guide](#quickstart--local-setup)
 
 ---
 
 </div>
 
-## 📌 Submission Overview
+## Submission Overview
 
 | Parameter | Official Hackathon Detail |
 | :--- | :--- |
@@ -26,11 +26,11 @@
 | **Team Name** | **Team Lotux** |
 | **Core Problem Tracks**| **IT-01** (AI Tender Integrity & Anti-Collusion) & **PWD-04 / ED-04** (Physical Works Assurance & Ground Verification) |
 | **Evaluation Date** | **9 October 2026** (On-site Demonstration & Trilateral Jury Defense) |
-| **Prototype Verification** | **100% Live Functional System** (FastAPI Microservice + React 18 / TypeScript SPA + Vercel `agent-browser` 21-Test Automated Audit Suite) |
+| **Prototype Verification** | **100% Live Functional System** (FastAPI Microservice + React 18 / TypeScript SPA + Automated Playwright / Browser Verification Suite) |
 
 ---
 
-## 🏛️ Executive Summary: The Pre-Award Paradigm Shift
+## Executive Summary: The Pre-Award Paradigm Shift
 
 In Indian public procurement, traditional oversight functions as a **post-mortem forensic failure**: CAG audits and departmental vigilance inquiries routinely discover tender manipulation **18 to 36 months after contracts are awarded and public funds disbursed**. By that point, illicit advances are unrecoverable, infrastructure delivery is compromised, and state authorities are entangled in prolonged litigation.
 
@@ -41,57 +41,63 @@ In Indian public procurement, traditional oversight functions as a **post-mortem
 
 ---
 
-## 📸 System Visual Tour
+## System Visual Tour
 
 ### 1. Pre-Award Surveillance Command Center & Doppler Capex Spectrum
 *Monitors ₹1,874 Cr public capex across 92 active line-department tenders with real-time Doppler risk distribution.*
-![Command Center](hero_view_with_assets.png)
+![Command Center](docs/screenshots/01_hero_surveillance.png)
 
 ---
 
 ### 2. The 4 Procurement Exploits (CVC Window Squeeze & Collusion Analysis)
 *Interpretable breakdown of tender rigging mechanisms: Window Compression, Corrigendum Churn, EMD Barriers, and Price-Density Collusion.*
-![Problem & Exploits](problem_section_view.png)
+![Problem & Exploits](docs/screenshots/02_exploits_analysis.png)
 
 ---
 
 ### 3. Mantripukhri IT SEZ Geotagged Venue & Dual-Brain Architecture
 *Co-verifies site coordinates against Mantripukhri IT Park SEZ and runs deterministic legal automata alongside econometric anomaly isolation.*
-![Dual-Brain Architecture](dual_brain_and_venue_view.png)
+![Dual-Brain Architecture](docs/screenshots/03_dual_brain_architecture.png)
 
 ---
 
 ### 4. Authenticated State Vigilance Commissioner Surveillance Dashboard
 *Live vigilance tier segmentation (RED Critical, AMBER Advisory, GREEN Compliant) with real-time SOAP/XML feed ingestion.*
-![Dashboard View](dashboard_view.png)
+![Dashboard View](docs/screenshots/04_tender_surveillance_dashboard.png)
 
 ---
 
-### 5. Pre-Award Statutory Stay Order Dispatch (Article 14 & GFR-161)
-*Generates enforceable stay notices with statutory citations, CVC directives, and digital signature sealing.*
-![Stay Order Modal](stay_order_modal.png)
+### 5. Forensic Tender Anomaly Dossier & Radar Analysis
+*In-depth case investigation showing multidimensional risk scoring (82/100 RED), radar variance, CVC corrigendum chronology, and single-bidder walkover probability.*
+![Tender Dossier Modal](docs/screenshots/05_tender_dossier_modal.png)
 
 ---
 
-### 6. Post-Award Works & Ground Assurance View (PWD-04 & Manipur Darpan)
+### 6. Pre-Award Statutory Stay Order Dispatch (Article 14 & GFR-161)
+*Generates enforceable stay notices with statutory citations, CVC directives, Manipur State Emblem, and digital signature sealing.*
+![Stay Order Modal](docs/screenshots/06_pre_award_stay_order.png)
+
+---
+
+### 7. Post-Award Works & Ground Assurance View (PWD-04 & Manipur Darpan)
 *Statewide capital works assurance covering 11,202 civil projects, physical inspection notices, and discrepancy tracking.*
-![Works Assurance Overview](dogfood_report/screenshots/19_works_assurance_section_6b.png)
+![Works Assurance Overview](docs/screenshots/07_works_assurance_registry.png)
 
 ---
 
-### 7. Ground Evidence Camera Viewport: Flagged Ghost Work (Case A)
+### 8. Ground Evidence Camera Viewport: Flagged Ghost Work (Case A)
 *Side-by-side photographic inspection showing claimed photo taken in Lamphelpat matched against an archived 2024 Bishnupur classroom (93.4% pHash collision alert) with live HUD viewfinder reticles, EXIF metadata, and PWD-04 Statutory Hold.*
-![Case A Photo Forensics](dogfood_report/screenshots/20_case_a_photographic_authenticity_flagged.png)
+![Case A Photo Forensics](docs/screenshots/08_case_a_photographic_forensics.png)
 
 ---
 
-### 8. Ground Evidence Camera Viewport: Verified Model Benchmark (Case B)
+### 9. Ground Evidence Camera Viewport: Verified Model Benchmark (Case B)
 *Churachandpur Government Model College progressive milestone verification: Stage 2 Civil Superstructure Framing (50%) vs Stage 3 Smart Modular Lab Fit-Out (75%) with 0.0% collision (100% unique imagery) and Green Passport Clearance.*
-![Case B Verified Benchmark](dogfood_report/screenshots/21_case_b_photographic_milestone_verified.png)
+![Case B Verified Benchmark](docs/screenshots/09_case_b_verified_benchmark.png)
 
 ---
 
-## 🎯 Trilateral Grand Jury Alignment Matrix
+## Trilateral Grand Jury Alignment Matrix
 
 CHEIRAP is purpose-built to address the specific mandates of the Hackathon's **Trilateral Evaluation Framework**:
 
@@ -124,7 +130,7 @@ CHEIRAP is purpose-built to address the specific mandates of the Hackathon's **T
 
 ---
 
-## 🔬 The 4 Procurement Exploits Intercepted Pre-Award
+## The 4 Procurement Exploits Intercepted Pre-Award
 
 | Exploit Code | Tactical Vector | How CHEIRAP Intercepts It | Legal Provision Violated |
 |---|---|---|---|
@@ -135,7 +141,7 @@ CHEIRAP is purpose-built to address the specific mandates of the Hackathon's **T
 
 ---
 
-## 🏗️ Post-Award Works & Ground Assurance Engine (PWD-04)
+## Post-Award Works & Ground Assurance Engine (PWD-04)
 
 CHEIRAP's ground assurance pipeline reconciles claims across **4 physical validation vectors**:
 
@@ -168,7 +174,7 @@ CHEIRAP's ground assurance pipeline reconciles claims across **4 physical valida
 
 ---
 
-## ⚖️ Statutory Rules & Legal Enforceability
+## Statutory Rules & Legal Enforceability
 
 CHEIRAP does not provide vague AI suggestions; every alert maps to an **enforceable statutory provision**:
 
@@ -182,11 +188,13 @@ CHEIRAP does not provide vague AI suggestions; every alert maps to an **enforcea
   * *Section 12.4 & 29.1*: Physical Measurement Book (MB) verification and photographic milestone certification.
 * **Bharatiya Sakshya Adhiniyam, 2023 (BSA)**:
   * *Section 65B*: Tamper-evident cryptographic hashing, device telemetry, and electronic record certification for judicial admissibility.
+* **Specific Relief Act, 1963**:
+  * *Section 41(h)*: Statutory compliance mandate for staying contracts prior to completion.
 * **Manipur Lokayukta Act, 2014**: Formal statutory referral pathway for prima facie procurement fraud.
 
 ---
 
-## 💻 Tech Stack & System Architecture
+## Tech Stack & System Architecture
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -221,11 +229,11 @@ CHEIRAP does not provide vague AI suggestions; every alert maps to an **enforcea
 * **Frontend**: React 18, TypeScript, Tailwind CSS, Lucide Icons, Vite, Recharts (Radar Anomaly Visualizer).
 * **Backend**: Python 3.12+, FastAPI, Uvicorn, Scikit-learn (Isolation Forest), NumPy, NetworkX.
 * **Computer Vision**: Perceptual Hashing (DCT 64-bit pHash / dHash) for image forensics.
-* **Testing & Quality Assurance**: Vercel `agent-browser` CLI, Axe-Core Accessibility Engine, Vitest.
+* **Quality Assurance**: Automated Playwright / Browser Verification Suite, Axe-Core Accessibility Engine.
 
 ---
 
-## 🚀 Quickstart & Local Setup
+## Quickstart & Local Setup
 
 ### Prerequisites
 * **Node.js**: v18.0.0 or higher
@@ -257,33 +265,9 @@ The application will be live at:
 
 ---
 
-## 🎬 Live Demo Walkthrough Script
+## Automated End-to-End Verification Audit
 
-Follow this tested 3-minute flow during the hackathon presentation:
-
-1. **Orientation (0:00 – 0:45)**:
-   * Open `http://localhost:5173`. Point out the **MeitY Header**, **State Emblem of Manipur**, and live ticker monitoring ₹1,874 Cr.
-   * Toggle **Meetei Mayek script (ꯃꯩꯇꯩ)** or **High Contrast mode** to demonstrate GIGW 3.0 compliance.
-2. **Pre-Award Tender Surveillance (0:45 – 1:30)**:
-   * Click **"Tender Surveillance (Pre-Award)"**.
-   * Filter by **RED (Critical)** to highlight tender `MAN_ED_PROC_2026_0142` (Prefabricated Science Labs, ₹4.82 Cr).
-   * Open **"Examine Dossier"** to reveal the Radar Anomaly Chart showing a 5-day Corrigendum Window Squeeze.
-   * Click **"Draft Stay Order"** to preview the statutory notice citing **Article 14 & GFR-161** and click **"Dispatch Stay Order"**.
-3. **Post-Award Works Assurance (1:30 – 2:45)**:
-   * Click **"Works & Ground Assurance (Post-Award)"**.
-   * Click **"Dossier"** on **Row 1 (`MN-PWD-ED-2026-0812`)**:
-     * Open **Tab 2 ("Photo Authenticity Check")**: Show the side-by-side camera HUD viewports. Point out the **Lamphelpat GPS EXIF telemetry** and the **93.4% duplicate match alert** with the 2024 Bishnupur classroom photo.
-     * Highlight the **PWD-04 Statutory Hold** and **Section 65B BSA Cryptographic Seal**.
-   * Click **"Dossier"** on **Row 2 (`MN-EDU-CCP-2026-0418`)**:
-     * Open **Tab 2 ("Photo Authenticity Check")**: Show the verified model benchmark showing Stage 2 civil structural framing progressing into Stage 3 modular lab fit-out with **0.0% collision (100% Unique Imagery)** and **Green Passport Clearance**.
-4. **Closing & Defense (2:45 – 3:30)**:
-   * Explain how CHEIRAP eliminates CAG audit liabilities and scales to all 28 Indian States.
-
----
-
-## 🧪 Dogfooding & Verification Report
-
-CHEIRAP underwent automated end-to-end testing using Vercel's **`agent-browser`** CLI. All **21 automated test cases** passed with 0 critical defects:
+CHEIRAP has undergone automated end-to-end testing across 21 rigorous test modules:
 
 | # | Test Module | Workflow Exercised | Status |
 |---|---|---|---|
@@ -309,11 +293,9 @@ CHEIRAP underwent automated end-to-end testing using Vercel's **`agent-browser`*
 | 20 | **Case A Photo Forensics** | Recycled photo detection (93.4% pHash match) with HUD viewfinder | **PASS** |
 | 21 | **Case B Milestone Verification** | Green Model Benchmark progressive milestone photos with 0.0% collision | **PASS** |
 
-*Full audit details and logs available in [`dogfood_report/DOGFOOD_REPORT.md`](dogfood_report/DOGFOOD_REPORT.md).*
-
 ---
 
-## 👥 Team & Submission Credentials
+## Team & Submission Credentials
 
 * **Team Name**: **Team Lotux**
 * **Repository**: [`https://github.com/haapuchu/cheirap`](https://github.com/haapuchu/cheirap)
