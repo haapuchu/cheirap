@@ -104,6 +104,22 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
   const [activeModalTab, setActiveModalTab] = useState<'gps' | 'visual' | 'timeline' | 'financial' | 'ai_audit'>('gps');
   const [isExportingPdf, setIsExportingPdf] = useState<boolean>(false);
   const [escalatedCases, setEscalatedCases] = useState<Record<string, string>>({});
+  const [isDarpanPreviewOpen, setIsDarpanPreviewOpen] = useState<boolean>(false);
+  const [darpanPreviewProject, setDarpanPreviewProject] = useState<WorksProjectItem | null>(null);
+  const [darpanIframeKey, setDarpanIframeKey] = useState<number>(0);
+  const [isDarpanIframeLoading, setIsDarpanIframeLoading] = useState<boolean>(true);
+
+  const OFFICIAL_DARPAN_URL = 'https://www.darpanmanipur.in/site/index';
+
+  const handleOpenDarpanPreview = (project?: WorksProjectItem | null, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setDarpanPreviewProject(project || activeProject || null);
+    setIsDarpanIframeLoading(true);
+    setIsDarpanPreviewOpen(true);
+  };
 
   const ITEMS_PER_PAGE = 10;
 
@@ -623,20 +639,15 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <a
-              href="https://works.manipur.gov.in"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.preventDefault();
-                window.open('https://works.manipur.gov.in', '_blank');
-              }}
+            <button
+              type="button"
+              onClick={(e) => handleOpenDarpanPreview(null, e)}
               className="px-2.5 py-1 text-xs rounded bg-slate-50 hover:bg-slate-100 text-[#003366] border border-slate-300 font-semibold flex items-center gap-1.5 transition-transform duration-150 ease-out active:scale-[0.96] cursor-pointer shadow-2xs"
-              title="Open Manipur Works Darpan (works.manipur.gov.in)"
+              title="Open Manipur Infrastructure Darpan (darpanmanipur.in)"
             >
               <Globe className="size-3 text-[#003366]" />
-              <span>Live Darpan (works.manipur.gov.in) ↗</span>
-            </a>
+              <span>Live Darpan (darpanmanipur.in) ↗</span>
+            </button>
             <button
               onClick={() => onOpenRulesModal?.()}
               className="px-2.5 py-1 text-xs rounded bg-blue-50 text-[#003366] hover:bg-blue-100 border border-blue-200 font-medium flex items-center gap-1 transition-transform duration-150 ease-out active:scale-[0.96] cursor-pointer"
@@ -973,20 +984,15 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                             Dossier
                           </button>
 
-                          <a
-                            href={`https://works.manipur.gov.in/darpan/project/${p.project_id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              window.open(`https://works.manipur.gov.in/darpan/project/${p.project_id}`, '_blank');
-                            }}
+                          <button
+                            type="button"
+                            onClick={(e) => handleOpenDarpanPreview(p, e)}
                             className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-slate-50 text-slate-700 hover:bg-slate-200 border border-slate-200 transition-all duration-150 ease-out flex items-center gap-0.5 cursor-pointer"
-                            title="Open posting on Live Manipur Works Darpan (works.manipur.gov.in)"
+                            title="Open Live Darpan Portal Preview (darpanmanipur.in)"
                           >
                             <Globe className="size-2.5 text-blue-700" />
                             Darpan
-                          </a>
+                          </button>
 
                           {p.linked_tender_id && onOpenTenderDossier && (
                             <button
@@ -1110,20 +1116,15 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                                   </button>
 
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                    <a
-                                      href={`https://works.manipur.gov.in/darpan/project/${p.project_id}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        window.open(`https://works.manipur.gov.in/darpan/project/${p.project_id}`, '_blank');
-                                      }}
+                                    <button
+                                      type="button"
+                                      onClick={(e) => handleOpenDarpanPreview(p, e)}
                                       className="gov-btn-outline w-full text-xs py-2 px-3 flex items-center justify-center gap-1.5 cursor-pointer font-semibold shadow-2xs whitespace-nowrap hover:bg-slate-50 transition rounded-lg text-slate-800 border-slate-300"
-                                      title="Open posting on Live Manipur Works Darpan"
+                                      title="Open Live Darpan Portal Preview (darpanmanipur.in)"
                                     >
                                       <Globe className="size-3.5 text-blue-700 shrink-0" />
-                                      <span className="truncate">Live Darpan ↗</span>
-                                    </a>
+                                      <span className="truncate">Live Darpan Preview ↗</span>
+                                    </button>
 
                                     {p.linked_tender_id && onOpenTenderDossier && (
                                       <button
@@ -1496,20 +1497,15 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
               </div>
 
               {/* Direct Live Darpan Posting Link Button */}
-              <a
-                href={`https://works.manipur.gov.in/darpan/project/${activeProject.project_id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open(`https://works.manipur.gov.in/darpan/project/${activeProject.project_id}`, '_blank');
-                }}
+              <button
+                type="button"
+                onClick={(e) => handleOpenDarpanPreview(activeProject, e)}
                 className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#003366] hover:bg-[#002244] text-[#D4AF37] font-semibold text-xs rounded-md shadow-2xs transition-all border border-[#D4AF37]/40 hover:border-[#D4AF37] cursor-pointer"
-                title="View original posting on State Public Works Darpan Portal (works.manipur.gov.in)"
+                title="View original posting on State Public Works Darpan Portal (darpanmanipur.in)"
               >
                 <Globe className="size-3 text-[#D4AF37]" />
-                <span>Live Darpan Posting (works.manipur.gov.in) ↗</span>
-              </a>
+                <span>Live Darpan Preview (darpanmanipur.in) ↗</span>
+              </button>
             </div>
 
             {/* Modal Navigation Tabs */}
@@ -2062,20 +2058,15 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
               </button>
 
               {/* Direct Live Darpan Link in Footer */}
-              <a
-                href={`https://works.manipur.gov.in/darpan/project/${activeProject.project_id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open(`https://works.manipur.gov.in/darpan/project/${activeProject.project_id}`, '_blank');
-                }}
+              <button
+                type="button"
+                onClick={(e) => handleOpenDarpanPreview(activeProject, e)}
                 className="bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs whitespace-nowrap active:scale-[0.98]"
-                title="View original posting on State Public Works Darpan Portal"
+                title="View original posting on State Public Works Darpan Portal (darpanmanipur.in)"
               >
                 <Globe className="size-3.5 text-blue-700" />
-                <span>Live Darpan Posting ↗</span>
-              </a>
+                <span>Live Darpan Preview ↗</span>
+              </button>
 
               {/* Export Court Dossier PDF */}
               <button
@@ -2141,6 +2132,157 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
               )}
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* Live Darpan Portal Interactive Preview Modal */}
+      {isDarpanPreviewOpen && (
+        <div 
+          className="fixed inset-0 z-[80] bg-slate-900/50 backdrop-blur-[2px] flex items-center justify-center p-2 sm:p-4 overflow-hidden animate-in fade-in duration-200"
+          onClick={() => setIsDarpanPreviewOpen(false)}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl border border-slate-300 w-full max-w-6xl h-[92vh] max-h-[950px] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Top Chrome Header */}
+            <div className="bg-[#003366] text-white px-4 py-3 flex flex-wrap items-center justify-between gap-3 shrink-0 border-b border-[#002244]">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-2.5 h-7 bg-amber-400 rounded-xs shrink-0" />
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                      Government of Manipur
+                    </span>
+                    <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-1.5 py-0.5 rounded font-mono font-semibold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      Live Stream • 200 OK
+                    </span>
+                  </div>
+                  <h3 className="text-sm sm:text-base font-bold text-white truncate">
+                    Manipur Infrastructure Darpan — Official Monitoring MIS
+                  </h3>
+                </div>
+              </div>
+
+              {/* Browser Address Bar Pill */}
+              <div className="hidden md:flex items-center gap-2 bg-[#002244] px-3 py-1.5 rounded-lg border border-white/10 text-xs font-mono text-cyan-200 max-w-md truncate">
+                <Globe className="size-3.5 text-cyan-400 shrink-0" />
+                <span className="truncate select-all">https://www.darpanmanipur.in/site/index</span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2 shrink-0">
+                <a
+                  href={OFFICIAL_DARPAN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open(OFFICIAL_DARPAN_URL, '_blank');
+                  }}
+                  className="px-3 py-1.5 bg-[#D4AF37] hover:bg-[#c49f27] text-slate-900 font-bold text-xs rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  title="Open live portal in full separate browser tab"
+                >
+                  <ExternalLink className="size-3.5" />
+                  <span>Open Full Portal ↗</span>
+                </a>
+
+                <button
+                  onClick={() => {
+                    setIsDarpanIframeLoading(true);
+                    setDarpanIframeKey(k => k + 1);
+                  }}
+                  className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"
+                  title="Reload Live Feed"
+                >
+                  <RefreshCw className="size-4" />
+                </button>
+
+                <button
+                  onClick={() => setIsDarpanPreviewOpen(false)}
+                  className="p-1.5 rounded-lg bg-white/10 hover:bg-red-600 text-white transition cursor-pointer"
+                  title="Close Preview (Esc)"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Linked Project Oversight Strip (if launched from case) */}
+            {darpanPreviewProject && (
+              <div className="bg-slate-100 border-b border-slate-200 px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-700 shrink-0">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="font-bold text-[#003366] font-mono shrink-0">
+                    {darpanPreviewProject.project_id}:
+                  </span>
+                  <span className="font-semibold text-slate-900 truncate">
+                    {darpanPreviewProject.project_name}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 shrink-0 text-[11px] text-slate-600 font-medium">
+                  <span>Sanctioned: <strong>₹{darpanPreviewProject.sanctioned_cost_cr.toFixed(2)} Cr</strong></span>
+                  <span>•</span>
+                  <span>Dept: <strong>{darpanPreviewProject.department}</strong></span>
+                  <span>•</span>
+                  <span>Contractor: <strong>{darpanPreviewProject.contractor_name}</strong></span>
+                </div>
+              </div>
+            )}
+
+            {/* Interactive Iframe Window */}
+            <div className="relative flex-1 bg-slate-50 overflow-hidden">
+              {isDarpanIframeLoading && (
+                <div className="absolute inset-0 z-10 bg-slate-50/90 flex flex-col items-center justify-center gap-3 text-slate-600">
+                  <RefreshCw className="size-8 text-[#003366] animate-spin" />
+                  <div className="text-center">
+                    <p className="text-sm font-semibold text-slate-800">Connecting to live Darpan Manipur servers...</p>
+                    <p className="text-xs text-slate-500 font-mono mt-0.5">Stream: https://www.darpanmanipur.in/site/index</p>
+                  </div>
+                </div>
+              )}
+
+              <iframe
+                key={darpanIframeKey}
+                src="http://127.0.0.1:8000/api/darpan/proxy"
+                title="Live Manipur Infrastructure Darpan"
+                className="w-full h-full border-0"
+                onLoad={() => setIsDarpanIframeLoading(false)}
+              />
+            </div>
+
+            {/* Modal Bottom Bar */}
+            <div className="bg-slate-50 border-t border-slate-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0 text-xs text-slate-600">
+              <div className="flex items-center gap-2">
+                <Globe className="size-4 text-emerald-600 shrink-0" />
+                <span>
+                  Official Web Portal: <strong>darpanmanipur.in</strong> (Department of Information Technology & Planning, Government of Manipur)
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <a
+                  href={OFFICIAL_DARPAN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open(OFFICIAL_DARPAN_URL, '_blank');
+                  }}
+                  className="gov-btn-primary text-xs px-3 py-1.5 bg-[#003366] hover:bg-[#002244] text-white rounded-lg flex items-center gap-1.5 cursor-pointer font-semibold"
+                >
+                  <ExternalLink className="size-3" />
+                  <span>Open Official Site in Browser ↗</span>
+                </a>
+                <button
+                  onClick={() => setIsDarpanPreviewOpen(false)}
+                  className="px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-200 text-xs font-semibold cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

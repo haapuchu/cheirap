@@ -1016,8 +1016,43 @@ def api_projectproof_dispatch_inspection(project_id: str, req: Optional[Inspecti
         raise HTTPException(status_code=404, detail=res["error"])
     return res
 
-
-
+@app.get("/api/darpan/proxy", response_class=HTMLResponse)
+def api_darpan_proxy():
+    import urllib.request
+    url = "https://www.darpanmanipur.in/site/index"
+    try:
+        req = urllib.request.Request(
+            url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+            }
+        )
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            content = resp.read().decode("utf-8", errors="ignore")
+        
+        # Inject base tag so relative links, CSS, and images resolve to darpanmanipur.in
+        if "<head>" in content:
+            content = content.replace("<head>", '<head><base href="https://www.darpanmanipur.in/">')
+        elif "<HEAD>" in content:
+            content = content.replace("<HEAD>", '<HEAD><base href="https://www.darpanmanipur.in/">')
+        else:
+            content = '<base href="https://www.darpanmanipur.in/">' + content
+            
+        return HTMLResponse(content=content, status_code=200)
+    except Exception as e:
+        return HTMLResponse(
+            content=f"""<!DOCTYPE html>
+            <html><head><meta charset='utf-8'><title>Darpan Manipur</title></head>
+            <body style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:40px;background:#0f172a;color:#f8fafc;text-align:center;'>
+                <div style='max-width:600px;margin:0 auto;background:#1e293b;padding:32px;border-radius:12px;border:1px solid #334155;'>
+                    <h2 style='color:#38bdf8;margin-bottom:12px;'>Manipur Infrastructure Darpan</h2>
+                    <p style='color:#94a3b8;font-size:14px;margin-bottom:20px;'>Live official portal proxy connection encountered a network delay: {str(e)}</p>
+                    <a href='https://www.darpanmanipur.in/site/index' target='_blank' rel='noopener noreferrer' style='display:inline-block;background:#0284c7;color:#ffffff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;'>Open https://www.darpanmanipur.in/site/index Directly &rarr;</a>
+                </div>
+            </body></html>""",
+            status_code=200
+        )
 # Serve compiled React frontend if web/dist exists
 dist_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web", "dist")
 if os.path.exists(dist_dir):
