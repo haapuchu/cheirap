@@ -49,6 +49,9 @@ Using Vercel's **`agent-browser`** CLI and testing skill suite, an end-to-end do
 | 16 | **Forensic Dossier Modal** | Radar chart, timeline forensics & statutory penalties | **PASS** | ![Case Dossier](screenshots/16_case_dossier_modal.png) |
 | 17 | **Pre-Award Stay Order Modal**| Statutory notice draft citing Article 14 & GFR-161 | **PASS** | ![Stay Order Modal](screenshots/17_stay_order_modal.png) |
 | 18 | **Pre-Award Hold Dispatch** | Notice dispatch confirmation toast & audit trail update | **PASS** | ![Stay Dispatched Toast](screenshots/18_stay_order_dispatched_toast.png) |
+| 19 | **Works Assurance Section 6B** | PWD-04 Simulator showcase cards with live dual image previews | **PASS** | ![Works Assurance 6B](screenshots/19_works_assurance_section_6b.png) |
+| 20 | **Case A Photo Forensics** | Recycled photo detection (93.4% pHash match) with HUD viewfinder | **PASS** | ![Case A Photo Forensics](screenshots/20_case_a_photographic_authenticity_flagged.png) |
+| 21 | **Case B Milestone Verification** | Green Model Benchmark progressive milestone photos with 0.0% collision | **PASS** | ![Case B Milestone Verification](screenshots/21_case_b_photographic_milestone_verified.png) |
 
 ---
 

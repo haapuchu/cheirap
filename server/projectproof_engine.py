@@ -109,6 +109,65 @@ LOCAL_VENUE_CORRIDOR_PROJECTS: List[Dict[str, Any]] = [
     },
 
     # =========================================================================
+    # FLAGSHIP GREEN BENCHMARK: 100% Clean, Verified Education Project (Ideal Case)
+    # =========================================================================
+    {
+        "project_id": "MN-EDU-CCP-2026-0418",
+        "project_name": "Modern Smart Science Library & Digital Computer Resource Centre",
+        "scheme": "PM-SHRI / State Model Education Infrastructure Initiative",
+        "department": "Public Works Department (Buildings) / Education (S)",
+        "work_location": "Churachandpur Government Model College Campus, Churachandpur",
+        "linked_tender_id": "2026_EDM1_4102_1",
+        "contractor_name": "Kangla Educational Infrastructure Consortium",
+        "sanctioned_cost_cr": 3.20,
+        "funds_disbursed_cr": 2.40,
+        "reported_status": "IN PROGRESS (75%)",
+        "reported_physical_progress_pct": 75.0,
+        "reported_financial_progress_pct": 75.0,
+        "completion_claim_date": "2026-10-02",
+        "evidence_inconsistency_score": 4,
+        "verification_priority": "LOW",
+        "primary_flag": "Verified Ground Evidence Consistent (Green Passport Clearance)",
+        "site_coords": {
+            "lat": 24.3315,
+            "lng": 93.6821,
+            "label": "Churachandpur Government Model College Main Academic Block"
+        },
+        "evidence_signals": {
+            "gps_analysis": {
+                "claimed_site": "Churachandpur Model College (24.3315° N, 93.6821° E)",
+                "photo_exif_location": "Churachandpur Model College (24.3316° N, 93.6822° E)",
+                "discrepancy_delta_km": 0.012,
+                "status": "PASS_EXCELLENT",
+                "finding": "GPS location locked within 12 meters of project center alignment. Well within 50m geofence tolerance."
+            },
+            "visual_analysis": {
+                "similarity_match_pct": 0.0,
+                "matched_historical_project": "None — 100% Unique Progressive Ground Imagery",
+                "perceptual_hash_distance": 34,
+                "status": "PASS_AUTHENTIC",
+                "finding": "All submitted site inspection photos are verified unique across state archives. Zero duplicate collisions."
+            },
+            "temporal_velocity": {
+                "expected_duration_days": 180,
+                "reported_jump_days": 135,
+                "progress_delta": "Consistent 15-20% incremental milestone gains logged every 30 days",
+                "status": "PASS_LINEAR",
+                "finding": "Construction velocity curve strictly follows CPWD civil curing and modular erection standards (75% completed in 135 days)."
+            },
+            "financial_divergence": {
+                "disbursed_pct": 75.0,
+                "physical_claim_pct": 75.0,
+                "intermediate_inspection_logs": 4,
+                "status": "PASS_MATCHED",
+                "finding": "Disbursements strictly pace stage-wise Measurement Book (MB No. 408/2026) entries counter-signed by Executive Engineer & Assistant Engineer."
+            }
+        },
+        "recommended_action": "Green Passport Milestone Clearance — Release Stage-4 Running Tranche",
+        "human_review_status": "VERIFIED_CONSISTENT"
+    },
+
+    # =========================================================================
     # FLAGSHIP RED CASE 2: Road Drainage & Pavement
     # =========================================================================
     {
@@ -227,7 +286,7 @@ LOCAL_VENUE_CORRIDOR_PROJECTS: List[Dict[str, Any]] = [
     },
 
     # =========================================================================
-    # FLAGSHIP GREEN BENCHMARK: 100% Clean, Verified Project
+    # Additional Clean Road Maintenance Project (Dingku Road)
     # =========================================================================
     {
         "project_id": "MN-PWD-RD-2026-0214",

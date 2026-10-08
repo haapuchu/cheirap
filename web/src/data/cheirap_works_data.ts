@@ -88,6 +88,61 @@ export const initialWorksProjects = [
     "human_review_status": "FLAGGED_FOR_HUMAN_INSPECTION"
   },
   {
+    "project_id": "MN-EDU-CCP-2026-0418",
+    "project_name": "Modern Smart Science Library & Digital Computer Resource Centre",
+    "scheme": "PM-SHRI / State Model Education Infrastructure Initiative",
+    "department": "Public Works Department (Buildings) / Education (S)",
+    "work_location": "Churachandpur Government Model College Campus, Churachandpur",
+    "linked_tender_id": "2026_EDM1_4102_1",
+    "contractor_name": "Kangla Educational Infrastructure Consortium",
+    "sanctioned_cost_cr": 3.2,
+    "funds_disbursed_cr": 2.4,
+    "reported_status": "IN PROGRESS (75%)",
+    "reported_physical_progress_pct": 75.0,
+    "reported_financial_progress_pct": 75.0,
+    "completion_claim_date": "2026-10-02",
+    "evidence_inconsistency_score": 4,
+    "verification_priority": "LOW",
+    "primary_flag": "Verified Ground Evidence Consistent (Green Passport Clearance)",
+    "site_coords": {
+      "lat": 24.3315,
+      "lng": 93.6821,
+      "label": "Churachandpur Government Model College Main Academic Block"
+    },
+    "evidence_signals": {
+      "gps_analysis": {
+        "claimed_site": "Churachandpur Model College (24.3315° N, 93.6821° E)",
+        "photo_exif_location": "Churachandpur Model College (24.3316° N, 93.6822° E)",
+        "discrepancy_delta_km": 0.012,
+        "status": "PASS_EXCELLENT",
+        "finding": "GPS location locked within 12 meters of project center alignment. Well within 50m geofence tolerance."
+      },
+      "visual_analysis": {
+        "similarity_match_pct": 0.0,
+        "matched_historical_project": "None — 100% Unique Progressive Ground Imagery",
+        "perceptual_hash_distance": 34,
+        "status": "PASS_AUTHENTIC",
+        "finding": "All submitted site inspection photos are verified unique across state archives. Zero duplicate collisions."
+      },
+      "temporal_velocity": {
+        "expected_duration_days": 180,
+        "reported_jump_days": 135,
+        "progress_delta": "Consistent 15-20% incremental milestone gains logged every 30 days",
+        "status": "PASS_LINEAR",
+        "finding": "Construction velocity curve strictly follows CPWD civil curing and modular erection standards (75% completed in 135 days)."
+      },
+      "financial_divergence": {
+        "disbursed_pct": 75.0,
+        "physical_claim_pct": 75.0,
+        "intermediate_inspection_logs": 4,
+        "status": "PASS_MATCHED",
+        "finding": "Disbursements strictly pace stage-wise Measurement Book (MB No. 408/2026) entries counter-signed by Executive Engineer & Assistant Engineer."
+      }
+    },
+    "recommended_action": "Green Passport Milestone Clearance — Release Stage-4 Running Tranche",
+    "human_review_status": "VERIFIED_CONSISTENT"
+  },
+  {
     "project_id": "MN-PWD-RD-2026-4019",
     "project_name": "Pavement Upgradation & Stormwater Drainage, Khabam Lamkhai to Mantripukhri IT Park",
     "scheme": "Special Assistance to States for Capital Investment (SASCI)",
@@ -202,7 +257,7 @@ export const initialWorksProjects = [
     "project_name": "Dingku Road to Chingmeirong Pavement Resurfacing & Kerb Painting",
     "scheme": "Capital Road Infrastructure Maintenance Program",
     "department": "Public Works Department (Roads Division-I)",
-    "work_location": "Dingku Road \u2013 Chingmeirong, Imphal East",
+    "work_location": "Dingku Road – Chingmeirong, Imphal East",
     "linked_tender_id": "2026_PWDM1_2901_1",
     "contractor_name": "Meitei Builders & Engineering Works",
     "sanctioned_cost_cr": 1.2,
@@ -217,12 +272,12 @@ export const initialWorksProjects = [
     "site_coords": {
       "lat": 24.828,
       "lng": 93.942,
-      "label": "Dingku Road \u2013 Chingmeirong Main Artery"
+      "label": "Dingku Road – Chingmeirong Main Artery"
     },
     "evidence_signals": {
       "gps_analysis": {
-        "claimed_site": "Dingku Road (24.8280\u00b0 N, 93.9420\u00b0 E)",
-        "photo_exif_location": "Dingku Road (24.8281\u00b0 N, 93.9421\u00b0 E)",
+        "claimed_site": "Dingku Road (24.8280° N, 93.9420° E)",
+        "photo_exif_location": "Dingku Road (24.8281° N, 93.9421° E)",
         "discrepancy_delta_km": 0.015,
         "status": "PASS_EXCELLENT",
         "finding": "GPS location accurate within 15 meters of project center alignment."
@@ -249,7 +304,7 @@ export const initialWorksProjects = [
         "finding": "Disbursements strictly pace certified stage completion with 3 engineer signatures."
       }
     },
-    "recommended_action": "Standard Milestone Clearance \u2014 Proceed with Stage 4 Disbursement",
+    "recommended_action": "Standard Milestone Clearance — Proceed with Stage 4 Disbursement",
     "human_review_status": "VERIFIED_CONSISTENT"
   },
   {

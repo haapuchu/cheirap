@@ -67,6 +67,46 @@ export interface WorksProjectItem {
   inspection_order?: any;
 }
 
+export const getProjectPhotos = (projectId: string) => {
+  if (projectId === 'MN-PWD-ED-2026-0812') {
+    return {
+      photo1: {
+        src: '/evidence/case_a_claimed_lab_interior.jpg',
+        title: 'Claimed Modular Science Lab (Lamphelpat Geotag)',
+        badge: 'CLAIMED WORK',
+        subtitle: 'Submitted Progress Photo — Geotagged 9.42km outside site in Lamphelpat',
+        chipText: 'CLAIMED WORK • LAMPHELPAT EXIF'
+      },
+      photo2: {
+        src: '/evidence/case_a_archived_bishnupur_reference.jpg',
+        title: 'Archived Reference — Bishnupur Model Secondary 2024',
+        badge: 'DUPLICATE MATCH',
+        subtitle: 'Matched against March 2024 handover archive in Bishnupur district',
+        chipText: 'ARCHIVE MATCH #MN-ED-2024-1102 • 93.4% pHash'
+      }
+    };
+  }
+  if (projectId === 'MN-EDU-CCP-2026-0418') {
+    return {
+      photo1: {
+        src: '/evidence/case_b_stage2_superstructure_framing.jpg',
+        title: 'Stage-2 Superstructure & RCC Framing Inspection (August 2026)',
+        badge: 'VERIFIED STAGE-2',
+        subtitle: '50% Milestone Certification — Outdoor Civil Inspection with Project Signboard',
+        chipText: 'STAGE-2 CIVIL AUDIT • CHURACHANDPUR CAMPUS'
+      },
+      photo2: {
+        src: '/evidence/case_b_stage3_lab_fitout.jpg',
+        title: 'Stage-3 Modular Lab Fit-Out & Computer Centre (October 2026)',
+        badge: 'CURRENT STAGE-3',
+        subtitle: '75% Milestone Certification — Interior Fit-Out with Verified Window Alignment',
+        chipText: 'STAGE-3 MODULAR LAB • PROGRESSIVE CAPTURE'
+      }
+    };
+  }
+  return null;
+};
+
 interface CheirapWorksAssuranceViewProps {
   userRole?: string;
   onOpenTenderDossier?: (tenderId: string) => void;
@@ -704,6 +744,8 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
           </span>
         </div>
       </div>
+
+
 
       {/* ═══════════════════════════════════════════════════════════ */}
       {/* 7. FILTER CONTROLS (1:1 Match with Tender Surveillance)     */}
@@ -1548,12 +1590,29 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
               {/* TAB 1: GPS LOCATION CHECK */}
               {activeModalTab === 'gps' && (
                 <div className="space-y-4">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-2">
-                    <div className="flex items-center gap-2 text-red-900 font-bold text-sm">
-                      <AlertTriangle className="size-4 text-red-700" />
-                      <span>Location Discrepancy Found: Photo Taken {activeProject.evidence_signals.gps_analysis.discrepancy_delta_km} km Outside Registered Site</span>
+                  <div className={`${
+                    activeProject.verification_priority === 'LOW'
+                      ? 'bg-emerald-50 border border-emerald-200'
+                      : 'bg-red-50 border border-red-200'
+                  } rounded-lg p-4 space-y-2`}>
+                    <div className={`flex items-center gap-2 font-bold text-sm ${
+                      activeProject.verification_priority === 'LOW' ? 'text-emerald-950' : 'text-red-900'
+                    }`}>
+                      {activeProject.verification_priority === 'LOW' ? (
+                        <>
+                          <CheckCircle2 className="size-4 text-emerald-700" />
+                          <span>GPS Geofence Verified: Photo Taken within {Math.round(activeProject.evidence_signals.gps_analysis.discrepancy_delta_km * 1000)}m of Survey Perimeter</span>
+                        </>
+                      ) : (
+                        <>
+                          <AlertTriangle className="size-4 text-red-700" />
+                          <span>Location Discrepancy Found: Photo Taken {activeProject.evidence_signals.gps_analysis.discrepancy_delta_km} km Outside Registered Site</span>
+                        </>
+                      )}
                     </div>
-                    <p className="text-xs text-red-800 leading-relaxed">
+                    <p className={`text-xs leading-relaxed ${
+                      activeProject.verification_priority === 'LOW' ? 'text-emerald-800' : 'text-red-800'
+                    }`}>
                       {activeProject.evidence_signals.gps_analysis.finding}
                     </p>
                   </div>
@@ -1567,59 +1626,338 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                       <div className="text-xs text-gray-600">{activeProject.site_coords.label}</div>
                     </div>
 
-                    <div className="border border-red-200 rounded p-3 bg-red-50/50 space-y-1">
-                      <div className="text-[10px] font-bold text-red-800 uppercase">GPS Location from Uploaded Progress Photo</div>
-                      <div className="text-xs font-mono font-bold text-red-700">
+                    <div className={`border rounded p-3 space-y-1 ${
+                      activeProject.verification_priority === 'LOW'
+                        ? 'border-emerald-200 bg-emerald-50/50'
+                        : 'border-red-200 bg-red-50/50'
+                    }`}>
+                      <div className={`text-[10px] font-bold uppercase ${
+                        activeProject.verification_priority === 'LOW' ? 'text-emerald-800' : 'text-red-800'
+                      }`}>
+                        GPS Location from Uploaded Progress Photo
+                      </div>
+                      <div className={`text-xs font-mono font-bold ${
+                        activeProject.verification_priority === 'LOW' ? 'text-emerald-800' : 'text-red-700'
+                      }`}>
                         {activeProject.evidence_signals.gps_analysis.photo_exif_location || 'Coordinates extracted from photo metadata'}
                       </div>
-                      <div className="text-xs text-red-600 font-medium">
-                        Distance: <strong>{activeProject.evidence_signals.gps_analysis.discrepancy_delta_km} km away from registered project perimeter</strong>
+                      <div className={`text-xs font-medium ${
+                        activeProject.verification_priority === 'LOW' ? 'text-emerald-700' : 'text-red-600'
+                      }`}>
+                        {activeProject.verification_priority === 'LOW' ? (
+                          <span>Distance: <strong>{Math.round(activeProject.evidence_signals.gps_analysis.discrepancy_delta_km * 1000)} meters away (Fully compliant with 50m geofence tolerance)</strong></span>
+                        ) : (
+                          <span>Distance: <strong>{activeProject.evidence_signals.gps_analysis.discrepancy_delta_km} km away from registered project perimeter</strong></span>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-blue-50 border border-blue-200 rounded p-3 text-xs text-blue-900 space-y-1">
+                  <div className={`rounded p-3 text-xs space-y-1 ${
+                    activeProject.verification_priority === 'LOW'
+                      ? 'bg-emerald-50/70 border border-emerald-200 text-emerald-950'
+                      : 'bg-blue-50 border border-blue-200 text-blue-900'
+                  }`}>
                     <strong>Statutory Rule & Precedence:</strong>
-                    <p className="text-blue-800">
-                      Under PWD Quality Assurance Manual Section 12.4, evidence photographs must be taken directly at the surveyed project site (within 100 meters). Any photo taken miles away cannot be accepted as proof of construction.
+                    <p className={activeProject.verification_priority === 'LOW' ? 'text-emerald-900' : 'text-blue-800'}>
+                      {activeProject.verification_priority === 'LOW'
+                        ? 'Under PWD Quality Assurance Manual Section 12.4, evidence photographs meet mandatory site tolerance (< 50 meters). Geotag coordinates match ground surveyed boundary.'
+                        : 'Under PWD Quality Assurance Manual Section 12.4, evidence photographs must be taken directly at the surveyed project site (within 100 meters). Any photo taken miles away cannot be accepted as proof of construction.'}
                     </p>
                   </div>
                 </div>
               )}
 
-              {/* TAB 2: PHOTO AUTHENTICITY CHECK */}
+              {/* TAB 2: PHOTO AUTHENTICITY CHECK & EXIF VIEWPORT PLACEHOLDERS */}
               {activeModalTab === 'visual' && (
                 <div className="space-y-4">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-2">
-                    <div className="flex items-center gap-2 text-red-900 font-bold text-sm">
-                      <Camera className="size-4 text-red-700" />
-                      <span>Photo Match Alert: {activeProject.evidence_signals.visual_analysis.similarity_match_pct}% Duplicate Found</span>
+                  <div className={`${
+                    activeProject.verification_priority === 'LOW'
+                      ? 'bg-emerald-50 border border-emerald-200 text-emerald-950'
+                      : 'bg-red-50 border border-red-200 text-red-900'
+                  } rounded-lg p-4 space-y-2`}>
+                    <div className="flex items-center gap-2 font-bold text-sm">
+                      {activeProject.verification_priority === 'LOW' ? (
+                        <>
+                          <CheckCircle2 className="size-4 text-emerald-700" />
+                          <span>Visual Authenticity Confirmed: 0.0% Collision (100% Unique Ground Imagery)</span>
+                        </>
+                      ) : (
+                        <>
+                          <Camera className="size-4 text-red-700" />
+                          <span>Photo Match Alert: {activeProject.evidence_signals.visual_analysis.similarity_match_pct}% Duplicate Found</span>
+                        </>
+                      )}
                     </div>
-                    <p className="text-xs text-red-800 leading-relaxed">
+                    <p className={`text-xs leading-relaxed ${
+                      activeProject.verification_priority === 'LOW' ? 'text-emerald-800' : 'text-red-800'
+                    }`}>
                       {activeProject.evidence_signals.visual_analysis.finding}
                     </p>
                   </div>
 
+                  {/* High-Tech Photo Viewport Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="border border-gray-300 rounded p-3 text-center space-y-2">
-                      <div className="text-xs font-bold text-gray-700">Submitted Progress Photo (Claimed Work)</div>
-                      <div className="h-44 bg-gray-100 rounded flex flex-col items-center justify-center border border-gray-300 text-xs text-gray-600 p-3">
-                        <Camera className="size-8 text-gray-400 mb-1" />
-                        <span className="font-semibold text-gray-800">Submitted Site Photo</span>
-                        <span className="text-[11px] text-gray-500 mt-1">Uploaded with claim on {activeProject.completion_claim_date}</span>
+                    {/* Viewport 1 (Primary / Submitted Photo) */}
+                    <div className="border border-slate-300 rounded-lg p-3 space-y-2 bg-white shadow-2xs">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-bold text-gray-900">
+                          {activeProject.verification_priority === 'LOW'
+                            ? 'Milestone Stage-2 Progress Photo (50% Milestone)'
+                            : 'Submitted Progress Photo (Claimed Work)'}
+                        </span>
+                        <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
+                          activeProject.verification_priority === 'LOW'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {activeProject.verification_priority === 'LOW' ? 'VERIFIED STAGE-2' : 'CLAIMED WORK'}
+                        </span>
                       </div>
-                      <div className="text-[11px] text-gray-500">File uploaded for milestone sign-off</div>
+
+                      {/* Viewport Box */}
+                      <div className="relative h-64 bg-slate-950 border border-slate-700 rounded-lg overflow-hidden flex flex-col justify-between p-3 select-none group shadow-inner">
+                        {/* Actual Inspection Photo */}
+                        {getProjectPhotos(activeProject.project_id)?.photo1?.src ? (
+                          <>
+                            <img
+                              src={getProjectPhotos(activeProject.project_id)!.photo1.src}
+                              alt={getProjectPhotos(activeProject.project_id)!.photo1.title}
+                              className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-500 ease-out group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/60 pointer-events-none z-1"></div>
+                          </>
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center z-0 bg-slate-900">
+                            <Camera className="size-12 text-slate-600" />
+                          </div>
+                        )}
+
+                        {/* Viewfinder Corner Overlays */}
+                        <div className="absolute top-2 left-2 size-3.5 border-t-2 border-l-2 border-slate-300 pointer-events-none z-10"></div>
+                        <div className="absolute top-2 right-2 size-3.5 border-t-2 border-r-2 border-slate-300 pointer-events-none z-10"></div>
+                        <div className="absolute bottom-2 left-2 size-3.5 border-b-2 border-l-2 border-slate-300 pointer-events-none z-10"></div>
+                        <div className="absolute bottom-2 right-2 size-3.5 border-b-2 border-r-2 border-slate-300 pointer-events-none z-10"></div>
+
+                        {/* Center HUD Reticle */}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-5 opacity-40">
+                          <div className="size-8 border border-white/60 rounded-full flex items-center justify-center">
+                            <div className="size-1 bg-white rounded-full"></div>
+                          </div>
+                        </div>
+
+                        {/* Top HUD Tag */}
+                        <div className="flex items-center justify-between text-[10px] font-mono text-slate-200 z-10 drop-shadow-md">
+                          <span className="flex items-center gap-1.5 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10">
+                            <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span className="text-emerald-300 font-semibold">OPTICAL SENSOR READY</span>
+                          </span>
+                          <span className="text-slate-300 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10">
+                            {activeProject.project_id === 'MN-PWD-ED-2026-0812'
+                              ? 'PHOTO ID: #HEINGANG-LAB-01A'
+                              : activeProject.project_id === 'MN-EDU-CCP-2026-0418'
+                              ? 'PHOTO ID: #CCP-SCI-STAGE2'
+                              : `PHOTO ID: #${activeProject.project_id}`}
+                          </span>
+                        </div>
+
+                        {/* Center Identification Chip */}
+                        <div className="flex justify-center my-auto z-10 pointer-events-none">
+                          {getProjectPhotos(activeProject.project_id)?.photo1?.chipText ? (
+                            <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded bg-black/80 backdrop-blur-xs border border-white/20 text-white shadow-md">
+                              {getProjectPhotos(activeProject.project_id)!.photo1.chipText}
+                            </span>
+                          ) : (
+                            <div className="text-xs font-bold text-slate-200">
+                              [PHOTO: {activeProject.project_name}]
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Bottom EXIF HUD Overlay */}
+                        <div className="bg-black/85 backdrop-blur-xs border border-white/15 rounded p-2 text-[10px] font-mono text-slate-200 grid grid-cols-2 gap-x-2 gap-y-0.5 z-10 shadow-lg">
+                          <div>
+                            <span className="text-slate-400">Device: </span>
+                            <span className="text-white font-medium">
+                              {activeProject.project_id === 'MN-PWD-ED-2026-0812' ? 'Xiaomi Redmi Note 12' : 'Samsung Galaxy S23 (JE Kit)'}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">Time: </span>
+                            <span className="text-white font-medium">
+                              {activeProject.project_id === 'MN-PWD-ED-2026-0812' ? '2026-09-28 14:22 IST' : '2026-08-15 10:14 IST'}
+                            </span>
+                          </div>
+                          <div className="col-span-2 truncate">
+                            <span className="text-slate-400">GPS EXIF: </span>
+                            <span className={activeProject.verification_priority === 'LOW' ? 'text-emerald-300 font-medium' : 'text-red-300 font-medium'}>
+                              {activeProject.evidence_signals.gps_analysis.photo_exif_location || `${activeProject.site_coords.lat}° N, ${activeProject.site_coords.lng}° E`}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">Optics: </span>
+                            <span className="text-slate-200">24mm f/1.8 • ISO 160</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">pHash: </span>
+                            <span className="text-slate-200">
+                              {activeProject.verification_priority === 'LOW' ? '7a19...91e5' : 'd4f8...b1a2'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="text-[11px] text-gray-500 text-center">
+                        {activeProject.verification_priority === 'LOW'
+                          ? 'Uploaded by Junior Engineer for Stage-2 (50%) milestone certification'
+                          : `Uploaded with milestone claim on ${activeProject.completion_claim_date}`}
+                      </div>
                     </div>
 
-                    <div className="border border-red-300 rounded p-3 text-center space-y-2 bg-red-50/30">
-                      <div className="text-xs font-bold text-red-800">Duplicate Found in State Photo Registry</div>
-                      <div className="h-44 bg-red-100/60 rounded flex flex-col items-center justify-center border border-red-300 text-xs text-red-700 p-3">
-                        <AlertTriangle className="size-8 text-red-500 mb-1" />
-                        <span className="font-semibold text-red-900">Archived Project Match</span>
-                        <span className="text-[11px] text-red-700 mt-1 font-mono">{activeProject.evidence_signals.visual_analysis.matched_historical_project || 'State Archive Gallery'}</span>
+                    {/* Viewport 2 (Comparison / Verification Photo) */}
+                    <div className={`border rounded-lg p-3 space-y-2 bg-white shadow-2xs ${
+                      activeProject.verification_priority === 'LOW'
+                        ? 'border-emerald-300'
+                        : 'border-red-300'
+                    }`}>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className={`font-bold ${
+                          activeProject.verification_priority === 'LOW' ? 'text-emerald-900' : 'text-red-800'
+                        }`}>
+                          {activeProject.verification_priority === 'LOW'
+                            ? 'Milestone Stage-3 Progress Photo (Current 75% Claim)'
+                            : 'Duplicate Found in State Photo Registry'}
+                        </span>
+                        <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
+                          activeProject.verification_priority === 'LOW'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}>
+                          {activeProject.verification_priority === 'LOW' ? 'CURRENT STAGE-3' : 'DUPLICATE MATCH'}
+                        </span>
                       </div>
-                      <div className="text-[11px] text-red-700 font-bold">
-                        Visual Similarity: {activeProject.evidence_signals.visual_analysis.similarity_match_pct}% Match (Reused Image)
+
+                      {/* Viewport Box */}
+                      <div className={`relative h-64 bg-slate-950 border rounded-lg overflow-hidden flex flex-col justify-between p-3 select-none group shadow-inner ${
+                        activeProject.verification_priority === 'LOW'
+                          ? 'border-emerald-700/80'
+                          : 'border-red-700/80 bg-red-950/20'
+                      }`}>
+                        {/* Actual Evidence / Comparison Photo */}
+                        {getProjectPhotos(activeProject.project_id)?.photo2?.src ? (
+                          <>
+                            <img
+                              src={getProjectPhotos(activeProject.project_id)!.photo2.src}
+                              alt={getProjectPhotos(activeProject.project_id)!.photo2.title}
+                              className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-500 ease-out group-hover:scale-105"
+                            />
+                            <div className={`absolute inset-0 pointer-events-none z-1 ${
+                              activeProject.verification_priority === 'LOW'
+                                ? 'bg-gradient-to-t from-black/85 via-emerald-950/20 to-black/60'
+                                : 'bg-gradient-to-t from-black/85 via-red-950/20 to-black/60'
+                            }`}></div>
+                          </>
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center z-0 bg-slate-900">
+                            <Camera className="size-12 text-slate-600" />
+                          </div>
+                        )}
+
+                        {/* Viewfinder Corner Overlays */}
+                        <div className={`absolute top-2 left-2 size-3.5 border-t-2 border-l-2 pointer-events-none z-10 ${
+                          activeProject.verification_priority === 'LOW' ? 'border-emerald-400' : 'border-red-400'
+                        }`}></div>
+                        <div className={`absolute top-2 right-2 size-3.5 border-t-2 border-r-2 pointer-events-none z-10 ${
+                          activeProject.verification_priority === 'LOW' ? 'border-emerald-400' : 'border-red-400'
+                        }`}></div>
+                        <div className={`absolute bottom-2 left-2 size-3.5 border-b-2 border-l-2 pointer-events-none z-10 ${
+                          activeProject.verification_priority === 'LOW' ? 'border-emerald-400' : 'border-red-400'
+                        }`}></div>
+                        <div className={`absolute bottom-2 right-2 size-3.5 border-b-2 border-r-2 pointer-events-none z-10 ${
+                          activeProject.verification_priority === 'LOW' ? 'border-emerald-400' : 'border-red-400'
+                        }`}></div>
+
+                        {/* Top HUD Tag */}
+                        <div className="flex items-center justify-between text-[10px] font-mono text-slate-200 z-10 drop-shadow-md">
+                          <span className={`flex items-center gap-1.5 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border ${
+                            activeProject.verification_priority === 'LOW'
+                              ? 'border-emerald-500/30 text-emerald-300'
+                              : 'border-red-500/30 text-red-300'
+                          }`}>
+                            <span className={`size-1.5 rounded-full ${
+                              activeProject.verification_priority === 'LOW' ? 'bg-emerald-400' : 'bg-red-400'
+                            } animate-pulse`}></span>
+                            <span className="font-semibold">
+                              {activeProject.verification_priority === 'LOW' ? 'AUTHENTIC PROGRESSION' : 'MATCH DETECTED'}
+                            </span>
+                          </span>
+                          <span className="text-slate-300 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10">
+                            {activeProject.project_id === 'MN-PWD-ED-2026-0812'
+                              ? 'ARCHIVE MATCH: #MN-ED-2024-1102'
+                              : activeProject.project_id === 'MN-EDU-CCP-2026-0418'
+                              ? 'PHOTO ID: #CCP-SCI-STAGE3'
+                              : 'REGISTRY SEARCH'}
+                          </span>
+                        </div>
+
+                        {/* Center Identification Chip */}
+                        <div className="flex justify-center my-auto z-10 pointer-events-none">
+                          {getProjectPhotos(activeProject.project_id)?.photo2?.chipText ? (
+                            <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded bg-black/85 backdrop-blur-xs border shadow-md ${
+                              activeProject.verification_priority === 'LOW'
+                                ? 'border-emerald-500/50 text-emerald-200'
+                                : 'border-red-500/50 text-red-200'
+                            }`}>
+                              {getProjectPhotos(activeProject.project_id)!.photo2.chipText}
+                            </span>
+                          ) : (
+                            <div className="text-xs font-bold text-slate-200">
+                              [REFERENCE PHOTO: {activeProject.evidence_signals.visual_analysis.matched_historical_project || 'State Database'}]
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Bottom EXIF HUD Overlay */}
+                        <div className="bg-black/85 backdrop-blur-xs border border-white/15 rounded p-2 text-[10px] font-mono text-slate-200 grid grid-cols-2 gap-x-2 gap-y-0.5 z-10 shadow-lg">
+                          <div>
+                            <span className="text-slate-400">Source: </span>
+                            <span className="text-white font-medium">
+                              {activeProject.project_id === 'MN-PWD-ED-2026-0812'
+                                ? 'State Archived Works 2024'
+                                : 'Samsung Galaxy S23 (AE Kit)'}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">Date: </span>
+                            <span className="text-white font-medium">
+                              {activeProject.project_id === 'MN-PWD-ED-2026-0812' ? '2024-03-12 11:08 IST' : '2026-10-02 11:45 IST'}
+                            </span>
+                          </div>
+                          <div className="col-span-2 truncate">
+                            <span className="text-slate-400">Location: </span>
+                            <span className="text-slate-200">
+                              {activeProject.project_id === 'MN-PWD-ED-2026-0812'
+                                ? 'Bishnupur District (Archived School)'
+                                : 'Churachandpur Model College (Locked on site)'}
+                            </span>
+                          </div>
+                          <div className="col-span-2 font-bold">
+                            <span className="text-slate-400">Verdict: </span>
+                            <span className={activeProject.verification_priority === 'LOW' ? 'text-emerald-400' : 'text-red-400'}>
+                              {activeProject.verification_priority === 'LOW'
+                                ? '0.0% Collision (100% Unique Progressive Series)'
+                                : `${activeProject.evidence_signals.visual_analysis.similarity_match_pct}% Match (Recycled Image Re-use Detected)`}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className={`text-[11px] font-bold text-center ${
+                        activeProject.verification_priority === 'LOW' ? 'text-emerald-700' : 'text-red-700'
+                      }`}>
+                        {activeProject.verification_priority === 'LOW'
+                          ? 'Chronological ground photos match progressive site milestones'
+                          : `Visual Similarity: ${activeProject.evidence_signals.visual_analysis.similarity_match_pct}% Match with Archived Tender`}
                       </div>
                     </div>
                   </div>
@@ -1629,39 +1967,116 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
               {/* TAB 3: TIMELINE PROGRESSION */}
               {activeModalTab === 'timeline' && (
                 <div className="space-y-4">
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 space-y-2">
-                    <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
-                      <Clock className="size-4 text-amber-700" />
-                      <span>Construction Timeline Irregularity</span>
+                  <div className={`${
+                    activeProject.verification_priority === 'LOW'
+                      ? 'bg-emerald-50 border border-emerald-200 text-emerald-950'
+                      : 'bg-amber-50 border border-amber-200 text-amber-900'
+                  } rounded-lg p-4 space-y-2`}>
+                    <div className="flex items-center gap-2 font-bold text-sm">
+                      {activeProject.verification_priority === 'LOW' ? (
+                        <>
+                          <CheckCircle2 className="size-4 text-emerald-700" />
+                          <span>Construction Velocity Fully Compliant with CPWD Civil Norms</span>
+                        </>
+                      ) : (
+                        <>
+                          <Clock className="size-4 text-amber-700" />
+                          <span>Construction Timeline Irregularity: Unrealistic Physical Leap</span>
+                        </>
+                      )}
                     </div>
-                    <p className="text-xs text-amber-800 leading-relaxed">
+                    <p className={`text-xs leading-relaxed ${
+                      activeProject.verification_priority === 'LOW' ? 'text-emerald-800' : 'text-amber-800'
+                    }`}>
                       {activeProject.evidence_signals.temporal_velocity.finding}
                     </p>
                   </div>
 
                   <div className="border border-gray-200 rounded p-4 space-y-3 bg-white">
-                    <div className="text-xs font-bold text-gray-900 uppercase">Reported Physical Progress vs. Timeline</div>
-                    <div className="space-y-3 text-xs">
-                      <div>
-                        <div className="flex justify-between text-gray-600 mb-1">
-                          <span>Initial Foundation & Substructure Stage (Day 1 - 40)</span>
-                          <span className="font-bold">15% Completed</span>
-                        </div>
-                        <div className="w-full bg-gray-200 h-2.5 rounded overflow-hidden">
-                          <div className="bg-blue-600 h-full w-[15%]"></div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="flex justify-between text-red-700 font-bold mb-1">
-                          <span>Sudden Leap to 100% (Day 41 - 52)</span>
-                          <span>+85% in 11 Days (Physically Impossible Speed)</span>
-                        </div>
-                        <div className="w-full bg-gray-200 h-2.5 rounded overflow-hidden">
-                          <div className="bg-red-600 h-full w-[100%] animate-pulse"></div>
-                        </div>
-                      </div>
+                    <div className="text-xs font-bold text-gray-900 uppercase">
+                      {activeProject.verification_priority === 'LOW'
+                        ? 'Certified Physical Progress Milestones vs. Elapsed Time (135 Days)'
+                        : 'Reported Physical Progress vs. Timeline'}
                     </div>
+
+                    {activeProject.verification_priority === 'LOW' ? (
+                      <div className="space-y-3 text-xs">
+                        <div>
+                          <div className="flex justify-between text-gray-700 mb-1">
+                            <span>Stage 1: Foundation & Earthwork (Day 1 - 30)</span>
+                            <span className="font-bold text-emerald-700">25% Completed • Verified</span>
+                          </div>
+                          <div className="w-full bg-gray-200 h-2.5 rounded overflow-hidden">
+                            <div className="bg-emerald-600 h-full w-[25%]"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex justify-between text-gray-700 mb-1">
+                            <span>Stage 2: RCC Framing & Superstructure (Day 31 - 75)</span>
+                            <span className="font-bold text-emerald-700">50% Completed • Certified by AE</span>
+                          </div>
+                          <div className="w-full bg-gray-200 h-2.5 rounded overflow-hidden">
+                            <div className="bg-emerald-600 h-full w-[50%]"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex justify-between text-gray-700 font-bold mb-1">
+                            <span>Stage 3: Modular Lab Interior & Wiring (Day 76 - 135)</span>
+                            <span className="font-bold text-emerald-700">75% Completed • Current Certified Stage</span>
+                          </div>
+                          <div className="w-full bg-gray-200 h-2.5 rounded overflow-hidden">
+                            <div className="bg-emerald-600 h-full w-[75%]"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex justify-between text-gray-500 mb-1 text-[11px]">
+                            <span>Stage 4: Commissioning & Equipment Testing (Day 136 - 180)</span>
+                            <span>25% Remaining • Scheduled for Release</span>
+                          </div>
+                          <div className="w-full bg-gray-200 h-2 rounded overflow-hidden">
+                            <div className="bg-blue-300 h-full w-0"></div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3 text-xs">
+                        <div>
+                          <div className="flex justify-between text-gray-600 mb-1">
+                            <span>Initial Foundation & Substructure Stage (Day 1 - 40)</span>
+                            <span className="font-bold">15% Completed</span>
+                          </div>
+                          <div className="w-full bg-gray-200 h-2.5 rounded overflow-hidden">
+                            <div className="bg-blue-600 h-full w-[15%]"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex justify-between text-red-700 font-bold mb-1">
+                            <span>Sudden Leap to 100% (Day 41 - 52)</span>
+                            <span>+85% in 11 Days (Physically Impossible Speed)</span>
+                          </div>
+                          <div className="w-full bg-gray-200 h-2.5 rounded overflow-hidden">
+                            <div className="bg-red-600 h-full w-[100%] animate-pulse"></div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className={`rounded p-3 text-xs space-y-1 ${
+                    activeProject.verification_priority === 'LOW'
+                      ? 'bg-emerald-50/70 border border-emerald-200 text-emerald-950'
+                      : 'bg-amber-50/70 border border-amber-200 text-amber-950'
+                  }`}>
+                    <strong>CPWD Civil Engineering Standards:</strong>
+                    <p className={activeProject.verification_priority === 'LOW' ? 'text-emerald-900' : 'text-amber-900'}>
+                      {activeProject.verification_priority === 'LOW'
+                        ? 'Velocity curve shows steady 15-20% increments every 30 days over 135 calendar days, strictly respecting concrete curing intervals and modular installation sequences.'
+                        : 'CPWD Civil Specification Para 5.4 mandates a minimum 28-day water curing period for M25 grade reinforced concrete prior to structural loading. Claiming 85% superstructure and interior lab completion in 11 days during September monsoon rains violates engineering feasibility.'}
+                    </p>
                   </div>
                 </div>
               )}
@@ -1669,27 +2084,82 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
               {/* TAB 4: PAYMENTS VS PHYSICAL WORK */}
               {activeModalTab === 'financial' && (
                 <div className="space-y-4">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-2">
-                    <div className="flex items-center gap-2 text-red-900 font-bold text-sm">
-                      <BarChart3 className="size-4 text-red-700" />
-                      <span>Fund Release Divergence</span>
+                  <div className={`${
+                    activeProject.verification_priority === 'LOW'
+                      ? 'bg-emerald-50 border border-emerald-200 text-emerald-950'
+                      : 'bg-red-50 border border-red-200 text-red-900'
+                  } rounded-lg p-4 space-y-2`}>
+                    <div className="flex items-center gap-2 font-bold text-sm">
+                      {activeProject.verification_priority === 'LOW' ? (
+                        <>
+                          <CheckCircle2 className="size-4 text-emerald-700" />
+                          <span>Fund Disbursement Synchronized with Certified Physical Milestones</span>
+                        </>
+                      ) : (
+                        <>
+                          <BarChart3 className="size-4 text-red-700" />
+                          <span>Fund Release Divergence: 100% Capital Disbursed without Physical Sign-Offs</span>
+                        </>
+                      )}
                     </div>
-                    <p className="text-xs text-red-800 leading-relaxed">
+                    <p className={`text-xs leading-relaxed ${
+                      activeProject.verification_priority === 'LOW' ? 'text-emerald-800' : 'text-red-800'
+                    }`}>
                       {activeProject.evidence_signals.financial_divergence.finding}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 text-center">
-                    <div className="border border-gray-200 rounded p-3 bg-gray-50">
+                    <div className={`border rounded p-3 ${
+                      activeProject.verification_priority === 'LOW' ? 'border-emerald-200 bg-emerald-50/40' : 'border-gray-200 bg-gray-50'
+                    }`}>
                       <div className="text-[10px] text-gray-500 font-bold uppercase">Funds Disbursed</div>
-                      <div className="text-xl font-bold text-gray-900 font-mono">100.0%</div>
-                      <div className="text-xs text-gray-600">₹{activeProject.funds_disbursed_cr.toFixed(2)} Cr Released</div>
+                      <div className={`text-xl font-bold font-mono ${
+                        activeProject.verification_priority === 'LOW' ? 'text-emerald-700' : 'text-gray-900'
+                      }`}>
+                        {activeProject.verification_priority === 'LOW' ? '75.0%' : '100.0%'}
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        ₹{activeProject.funds_disbursed_cr.toFixed(2)} Cr of ₹{activeProject.sanctioned_cost_cr.toFixed(2)} Cr Released
+                      </div>
                     </div>
-                    <div className="border border-red-200 rounded p-3 bg-red-50">
-                      <div className="text-[10px] text-red-800 font-bold uppercase">Mandatory Physical Sign-Offs</div>
-                      <div className="text-xl font-bold text-red-700 font-mono">0 Inspection Logs</div>
-                      <div className="text-xs text-red-600">Missing Engineer Measurement Sign-Off</div>
+
+                    <div className={`border rounded p-3 ${
+                      activeProject.verification_priority === 'LOW'
+                        ? 'border-emerald-200 bg-emerald-50'
+                        : 'border-red-200 bg-red-50'
+                    }`}>
+                      <div className={`text-[10px] font-bold uppercase ${
+                        activeProject.verification_priority === 'LOW' ? 'text-emerald-800' : 'text-red-800'
+                      }`}>
+                        Mandatory Physical Sign-Offs
+                      </div>
+                      <div className={`text-xl font-bold font-mono ${
+                        activeProject.verification_priority === 'LOW' ? 'text-emerald-700' : 'text-red-700'
+                      }`}>
+                        {activeProject.verification_priority === 'LOW' ? '4 Inspection Logs' : '0 Inspection Logs'}
+                      </div>
+                      <div className={`text-xs ${
+                        activeProject.verification_priority === 'LOW' ? 'text-emerald-700' : 'text-red-600'
+                      }`}>
+                        {activeProject.verification_priority === 'LOW'
+                          ? 'Recorded in MB No. 408/2026 (AE & EE Signed)'
+                          : 'Missing Engineer Measurement Sign-Off'}
+                      </div>
                     </div>
+                  </div>
+
+                  <div className={`rounded p-3 text-xs space-y-1 ${
+                    activeProject.verification_priority === 'LOW'
+                      ? 'bg-emerald-50/70 border border-emerald-200 text-emerald-950'
+                      : 'bg-red-50/70 border border-red-200 text-red-950'
+                  }`}>
+                    <strong>Financial Governance (GFR 2017 Rule 133):</strong>
+                    <p className={activeProject.verification_priority === 'LOW' ? 'text-emerald-900' : 'text-red-900'}>
+                      {activeProject.verification_priority === 'LOW'
+                        ? 'Disbursements strictly pace certified stage completion with dual engineer signatures. Stage 4 running tranche held until final commissioning.'
+                        : 'GFR 2017 Rule 133(2) prohibits passing Running Account (RA) bills or releasing final tranches without on-site measurement certification by the Divisional Executive Engineer.'}
+                    </p>
                   </div>
                 </div>
               )}
@@ -1758,7 +2228,7 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                         </p>
                       ) : (
                         <p className="bg-white/85 p-3.5 rounded-lg border border-emerald-100 text-gray-800">
-                          This project is <strong>unmarked and cleared</strong> because all four evidentiary checks passed without discrepancy. Geo-coordinates match the sanctioned school boundary within 12 meters, photos have a unique perceptual hash, physical progress timeline aligns with CPWD milestones, and 2 separate Measurement Book (MB) inspections were signed off by the Executive Engineer.
+                          This project is <strong>unmarked and cleared (Green Passport)</strong> because all four evidentiary checks passed without discrepancy. Geo-coordinates match the sanctioned site boundary within 12 meters, photos retain unique cryptographic perceptual hashes, physical progress timeline aligns with CPWD milestones, and progressive Measurement Book (MB) inspections were certified by the Executive Engineer.
                         </p>
                       )}
                     </div>
@@ -1778,15 +2248,35 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                             <MapPin className="size-3.5 text-blue-700" />
                             1. Geo-Boundary Verification
                           </span>
-                          <span className="text-[10px] font-mono font-bold text-red-700 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded">
-                            {activeProject.evidence_signals.gps_analysis.discrepancy_delta_km} km Drift
+                          <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border ${
+                            activeProject.verification_priority === 'LOW'
+                              ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                              : activeProject.verification_priority === 'MEDIUM'
+                              ? 'text-amber-700 bg-amber-50 border-amber-200'
+                              : 'text-red-700 bg-red-50 border-red-200'
+                          }`}>
+                            {activeProject.verification_priority === 'LOW'
+                              ? '12m Offset (Geofence Locked)'
+                              : `${activeProject.evidence_signals.gps_analysis.discrepancy_delta_km} km Drift`}
                           </span>
                         </div>
                         <p className="text-gray-600 text-[11px] leading-relaxed">
                           <strong>Finding:</strong> {activeProject.evidence_signals.gps_analysis.finding}
                         </p>
-                        <div className="bg-gray-50 p-2 rounded text-[11px] text-gray-700 border border-gray-100">
-                          <strong>Why Flagged:</strong> Photos taken miles away in Lamphelpat residential quarters cannot prove physical work at the Heingang school site.
+                        <div className={`p-2 rounded text-[11px] border ${
+                          activeProject.verification_priority === 'LOW'
+                            ? 'bg-emerald-50/70 text-emerald-900 border-emerald-100'
+                            : activeProject.verification_priority === 'MEDIUM'
+                            ? 'bg-amber-50/70 text-amber-900 border-amber-100'
+                            : 'bg-red-50/70 text-red-900 border-red-100'
+                        }`}>
+                          {activeProject.verification_priority === 'LOW' ? (
+                            <span><strong>Audit Status:</strong> Site location verified on-site at college campus. Strict boundary compliance per CPWD 12.4.</span>
+                          ) : activeProject.verification_priority === 'MEDIUM' ? (
+                            <span><strong>Inspection Notice:</strong> Geo-coordinates slightly outside primary perimeter; field validation recommended.</span>
+                          ) : (
+                            <span><strong>Why Flagged:</strong> Photos taken miles away in Lamphelpat residential quarters cannot prove physical work at the Heingang school site.</span>
+                          )}
                         </div>
                       </div>
 
@@ -1797,15 +2287,35 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                             <Camera className="size-3.5 text-blue-700" />
                             2. Image Perceptual Authenticity
                           </span>
-                          <span className="text-[10px] font-mono font-bold text-red-700 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded">
-                            {activeProject.evidence_signals.visual_analysis.similarity_match_pct}% Match
+                          <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border ${
+                            activeProject.verification_priority === 'LOW'
+                              ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                              : activeProject.verification_priority === 'MEDIUM'
+                              ? 'text-amber-700 bg-amber-50 border-amber-200'
+                              : 'text-red-700 bg-red-50 border-red-200'
+                          }`}>
+                            {activeProject.verification_priority === 'LOW'
+                              ? '0.0% Match (Unique Capture)'
+                              : `${activeProject.evidence_signals.visual_analysis.similarity_match_pct}% Match`}
                           </span>
                         </div>
                         <p className="text-gray-600 text-[11px] leading-relaxed">
                           <strong>Finding:</strong> {activeProject.evidence_signals.visual_analysis.finding}
                         </p>
-                        <div className="bg-gray-50 p-2 rounded text-[11px] text-gray-700 border border-gray-100">
-                          <strong>Why Flagged:</strong> Reusing archived photographs from a different district constitutes photographic fabrication.
+                        <div className={`p-2 rounded text-[11px] border ${
+                          activeProject.verification_priority === 'LOW'
+                            ? 'bg-emerald-50/70 text-emerald-900 border-emerald-100'
+                            : activeProject.verification_priority === 'MEDIUM'
+                            ? 'bg-amber-50/70 text-amber-900 border-amber-100'
+                            : 'bg-red-50/70 text-red-900 border-red-100'
+                        }`}>
+                          {activeProject.verification_priority === 'LOW' ? (
+                            <span><strong>Audit Status:</strong> Cryptographic pHash signature is unique with progressive physical staging. Zero reuse detected across 14,200 photos.</span>
+                          ) : activeProject.verification_priority === 'MEDIUM' ? (
+                            <span><strong>Inspection Notice:</strong> Low-confidence visual match detected; manual verification advised.</span>
+                          ) : (
+                            <span><strong>Why Flagged:</strong> Reusing archived photographs from a different district constitutes photographic fabrication.</span>
+                          )}
                         </div>
                       </div>
 
@@ -1816,15 +2326,33 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                             <Clock className="size-3.5 text-blue-700" />
                             3. Physical Construction Velocity
                           </span>
-                          <span className="text-[10px] font-mono font-bold text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
-                            +85% in 11 Days
+                          <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border ${
+                            activeProject.verification_priority === 'LOW'
+                              ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                              : 'text-amber-700 bg-amber-50 border-amber-200'
+                          }`}>
+                            {activeProject.verification_priority === 'LOW'
+                              ? '75% in 135 Days (CPWD S-Curve)'
+                              : '+85% in 11 Days'}
                           </span>
                         </div>
                         <p className="text-gray-600 text-[11px] leading-relaxed">
                           <strong>Finding:</strong> {activeProject.evidence_signals.temporal_velocity.finding}
                         </p>
-                        <div className="bg-gray-50 p-2 rounded text-[11px] text-gray-700 border border-gray-100">
-                          <strong>Why Flagged:</strong> Curing of foundation concrete and structural fabrication physically requires 60–90 days; 11-day completion violates structural norms.
+                        <div className={`p-2 rounded text-[11px] border ${
+                          activeProject.verification_priority === 'LOW'
+                            ? 'bg-emerald-50/70 text-emerald-900 border-emerald-100'
+                            : activeProject.verification_priority === 'MEDIUM'
+                            ? 'bg-amber-50/70 text-amber-900 border-amber-100'
+                            : 'bg-red-50/70 text-red-900 border-red-100'
+                        }`}>
+                          {activeProject.verification_priority === 'LOW' ? (
+                            <span><strong>Audit Status:</strong> Construction velocity adheres strictly to concrete curing cycles and prefabricated assembly schedules.</span>
+                          ) : activeProject.verification_priority === 'MEDIUM' ? (
+                            <span><strong>Inspection Notice:</strong> Velocity curve shows accelerated milestone pacing; verify shift logs and batch receipts.</span>
+                          ) : (
+                            <span><strong>Why Flagged:</strong> Curing of foundation concrete and structural fabrication physically requires 60–90 days; 11-day completion violates structural norms.</span>
+                          )}
                         </div>
                       </div>
 
@@ -1835,15 +2363,33 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                             <BarChart3 className="size-3.5 text-blue-700" />
                             4. Payment vs. Inspection Sign-Offs
                           </span>
-                          <span className="text-[10px] font-mono font-bold text-red-700 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded">
-                            0 MB Logs
+                          <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border ${
+                            activeProject.verification_priority === 'LOW'
+                              ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                              : 'text-red-700 bg-red-50 border-red-200'
+                          }`}>
+                            {activeProject.verification_priority === 'LOW'
+                              ? '4 MB Logs Dual-Signed'
+                              : '0 MB Logs'}
                           </span>
                         </div>
                         <p className="text-gray-600 text-[11px] leading-relaxed">
                           <strong>Finding:</strong> {activeProject.evidence_signals.financial_divergence.finding}
                         </p>
-                        <div className="bg-gray-50 p-2 rounded text-[11px] text-gray-700 border border-gray-100">
-                          <strong>Why Flagged:</strong> 100% fund disbursement with zero certified Measurement Book entries is a direct procedural violation.
+                        <div className={`p-2 rounded text-[11px] border ${
+                          activeProject.verification_priority === 'LOW'
+                            ? 'bg-emerald-50/70 text-emerald-900 border-emerald-100'
+                            : activeProject.verification_priority === 'MEDIUM'
+                            ? 'bg-amber-50/70 text-amber-900 border-amber-100'
+                            : 'bg-red-50/70 text-red-900 border-red-100'
+                        }`}>
+                          {activeProject.verification_priority === 'LOW' ? (
+                            <span><strong>Audit Status:</strong> ₹2.40 Cr disbursement precisely tracks certified 75% physical milestone. Final ₹0.80 Cr milestone withheld until Stage-4 commissioning.</span>
+                          ) : activeProject.verification_priority === 'MEDIUM' ? (
+                            <span><strong>Inspection Notice:</strong> Running bill requires junior engineer re-certification before tranche release.</span>
+                          ) : (
+                            <span><strong>Why Flagged:</strong> 100% fund disbursement with zero certified Measurement Book entries is a direct procedural violation.</span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1883,11 +2429,25 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                               Mandates geo-tagged, timestamped photographic evidence within 100m of surveyed site and certified on-site Measurement Book (MB) recordings prior to passing Running Account (RA) bills.
                             </td>
                             <td className="py-2.5 px-3 text-gray-800">
-                              Photographs taken 9.42 km away in Lamphelpat; zero intermediate physical MB logs uploaded.
+                              {activeProject.verification_priority === 'LOW'
+                                ? 'Geo-location verified within 12m perimeter; 4 progressive on-site MB recordings counter-signed by Executive Engineer.'
+                                : activeProject.verification_priority === 'MEDIUM'
+                                ? 'Geo-tag offset observed; pending updated site measurement book reconciliation.'
+                                : 'Photographs taken 9.42 km away in Lamphelpat; zero intermediate physical MB logs uploaded.'}
                             </td>
                             <td className="py-2.5 px-3 text-center whitespace-nowrap">
-                              <span className="inline-block bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded text-[10px]">
-                                VIOLATED
+                              <span className={`inline-block font-bold px-2 py-0.5 rounded text-[10px] ${
+                                activeProject.verification_priority === 'LOW'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : activeProject.verification_priority === 'MEDIUM'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}>
+                                {activeProject.verification_priority === 'LOW'
+                                  ? 'COMPLIANT'
+                                  : activeProject.verification_priority === 'MEDIUM'
+                                  ? 'TECHNICAL REVIEW'
+                                  : 'VIOLATED'}
                               </span>
                             </td>
                           </tr>
@@ -1901,11 +2461,25 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                               Public works expenditure requires stage-wise technical completion verification by designated competent authority before final release of capital tranches.
                             </td>
                             <td className="py-2.5 px-3 text-gray-800">
-                              ₹4.82 Cr (100%) disbursed without Stage-II physical completion sign-off from Executive Engineer.
+                              {activeProject.verification_priority === 'LOW'
+                                ? 'Disbursements (₹2.40 Cr / 75%) strictly synchronized with Stage-3 physical milestone certification; final 25% held per retention norms.'
+                                : activeProject.verification_priority === 'MEDIUM'
+                                ? 'Interim Running Account bill pending site-level stage clearance before next release.'
+                                : '₹4.82 Cr (100%) disbursed without Stage-II physical completion sign-off from Executive Engineer.'}
                             </td>
                             <td className="py-2.5 px-3 text-center whitespace-nowrap">
-                              <span className="inline-block bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded text-[10px]">
-                                NON-COMPLIANT
+                              <span className={`inline-block font-bold px-2 py-0.5 rounded text-[10px] ${
+                                activeProject.verification_priority === 'LOW'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : activeProject.verification_priority === 'MEDIUM'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}>
+                                {activeProject.verification_priority === 'LOW'
+                                  ? 'COMPLIANT'
+                                  : activeProject.verification_priority === 'MEDIUM'
+                                  ? 'INTERIM PASS'
+                                  : 'NON-COMPLIANT'}
                               </span>
                             </td>
                           </tr>
@@ -1919,11 +2493,21 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                               Divisional Executive Engineer must conduct physical boundary verification and structural core sample inspection for modular educational buildings.
                             </td>
                             <td className="py-2.5 px-3 text-gray-800">
-                              No core sample compression test or physical site inspection record exists in the state portal.
+                              {activeProject.verification_priority === 'LOW'
+                                ? 'Physical boundary verification completed; structural modular certification signed by Divisional EE on 18-Aug-2026.'
+                                : activeProject.verification_priority === 'MEDIUM'
+                                ? 'Divisional inspection scheduled for current stage audit.'
+                                : 'No core sample compression test or physical site inspection record exists in the state portal.'}
                             </td>
                             <td className="py-2.5 px-3 text-center whitespace-nowrap">
-                              <span className="inline-block bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]">
-                                PENDING EE AUDIT
+                              <span className={`inline-block font-bold px-2 py-0.5 rounded text-[10px] ${
+                                activeProject.verification_priority === 'LOW'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : 'bg-amber-100 text-amber-800'
+                              }`}>
+                                {activeProject.verification_priority === 'LOW'
+                                  ? 'VERIFIED & FILED'
+                                  : 'PENDING EE AUDIT'}
                               </span>
                             </td>
                           </tr>
@@ -1937,11 +2521,25 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                               Digital evidence in public procurement must be authentic and tamper-free; recycled or synthetic progress documentation triggers mandatory administrative freeze.
                             </td>
                             <td className="py-2.5 px-3 text-gray-800">
-                              93.4% perceptual match with archived 2024 project indicates photo recycling.
+                              {activeProject.verification_priority === 'LOW'
+                                ? 'Cryptographic pHash originality score 100% unique; zero image reuse across state database of 14,200 public works.'
+                                : activeProject.verification_priority === 'MEDIUM'
+                                ? 'Single image variance noted; manual verification protocol initiated.'
+                                : '93.4% perceptual match with archived 2024 project indicates photo recycling.'}
                             </td>
                             <td className="py-2.5 px-3 text-center whitespace-nowrap">
-                              <span className="inline-block bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded text-[10px]">
-                                STATUTORY HOLD
+                              <span className={`inline-block font-bold px-2 py-0.5 rounded text-[10px] ${
+                                activeProject.verification_priority === 'LOW'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : activeProject.verification_priority === 'MEDIUM'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}>
+                                {activeProject.verification_priority === 'LOW'
+                                  ? 'CLEARED'
+                                  : activeProject.verification_priority === 'MEDIUM'
+                                  ? 'UNDER REVIEW'
+                                  : 'STATUTORY HOLD'}
                               </span>
                             </td>
                           </tr>
@@ -1968,66 +2566,128 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                     </div>
                   </div>
 
-                  {/* Remediation & How to Unmark Protocol */}
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="size-4 text-emerald-700" />
-                        <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider">
-                          Protocol to Unmark / Clear This Flag (Remediation Gates)
-                        </h4>
+                  {/* Remediation & How to Unmark Protocol vs Green Passport Certificate */}
+                  {activeProject.verification_priority === 'LOW' ? (
+                    <div className="bg-emerald-50/60 border border-emerald-200 rounded-xl p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="size-4 text-emerald-700" />
+                          <h4 className="text-xs font-bold text-emerald-950 uppercase tracking-wider">
+                            Green Passport Works Assurance Clearance Certificate
+                          </h4>
+                        </div>
+                        <span className="text-[10px] text-emerald-800 bg-emerald-100 font-bold px-2 py-0.5 rounded border border-emerald-200">
+                          All 4 Gates Satisfied
+                        </span>
                       </div>
-                      <span className="text-[10px] text-emerald-800 bg-emerald-100 font-bold px-2 py-0.5 rounded">
-                        4 Mandatory Gates
-                      </span>
+
+                      <p className="text-xs text-emerald-900">
+                        This project has satisfied all statutory checkpoints under PWD-04, CPWD Works Manual 2024, and GFR 2017 Rule 133. Authorized for ongoing Running Account disbursements and routine stage progression:
+                      </p>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                        <div className="bg-white p-3 rounded-lg border border-emerald-200 space-y-1">
+                          <div className="font-bold text-gray-900 flex items-center gap-1.5">
+                            <span className="size-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px]">✓</span>
+                            Geofenced Boundary Lock
+                          </div>
+                          <p className="text-[11px] text-gray-600">
+                            Site location strictly locked within 12m radius at Churachandpur Government Model College campus (24.3315° N, 93.6738° E).
+                          </p>
+                        </div>
+
+                        <div className="bg-white p-3 rounded-lg border border-emerald-200 space-y-1">
+                          <div className="font-bold text-gray-900 flex items-center gap-1.5">
+                            <span className="size-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px]">✓</span>
+                            Certified Measurement Book
+                          </div>
+                          <p className="text-[11px] text-gray-600">
+                            4 progressive MB entries recorded and counter-signed by AE & EE under Para 88 Manipur PWD Code.
+                          </p>
+                        </div>
+
+                        <div className="bg-white p-3 rounded-lg border border-emerald-200 space-y-1">
+                          <div className="font-bold text-gray-900 flex items-center gap-1.5">
+                            <span className="size-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px]">✓</span>
+                            Material & Physical Staging
+                          </div>
+                          <p className="text-[11px] text-gray-600">
+                            Modular smart science lab & computer fit-out verified on-site with supply chain e-way bills and batch inspection receipts.
+                          </p>
+                        </div>
+
+                        <div className="bg-white p-3 rounded-lg border border-emerald-200 space-y-1">
+                          <div className="font-bold text-gray-900 flex items-center gap-1.5">
+                            <span className="size-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px]">✓</span>
+                            Milestone Payment Alignment
+                          </div>
+                          <p className="text-[11px] text-gray-600">
+                            Current ₹2.40 Cr disbursement strictly aligns with certified 75% physical completion; final ₹0.80 Cr tranche held pending commissioning.
+                          </p>
+                        </div>
+                      </div>
                     </div>
-
-                    <p className="text-xs text-gray-600">
-                      To unmark this project and release the Utilization Certificate (UC), the contractor and Divisional Executive Engineer must complete the following statutory verification gates:
-                    </p>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-                      <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-1">
-                        <div className="font-bold text-gray-800 flex items-center gap-1.5">
-                          <span className="size-5 rounded-full bg-blue-100 text-[#003366] flex items-center justify-center font-bold text-[10px]">1</span>
-                          Ground Re-Inspection at Sanctioned Site
+                  ) : (
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="size-4 text-emerald-700" />
+                          <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider">
+                            Protocol to Unmark / Clear This Flag (Remediation Gates)
+                          </h4>
                         </div>
-                        <p className="text-[11px] text-gray-600">
-                          Executive Engineer must visit <strong>24.8512° N, 93.9482° E</strong> (Heingang School) and upload new tamper-resistant photos via the Cheirap Verifier mobile app.
-                        </p>
+                        <span className="text-[10px] text-emerald-800 bg-emerald-100 font-bold px-2 py-0.5 rounded">
+                          4 Mandatory Gates
+                        </span>
                       </div>
 
-                      <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-1">
-                        <div className="font-bold text-gray-800 flex items-center gap-1.5">
-                          <span className="size-5 rounded-full bg-blue-100 text-[#003366] flex items-center justify-center font-bold text-[10px]">2</span>
-                          Measurement Book (MB) Re-Audit
-                        </div>
-                        <p className="text-[11px] text-gray-600">
-                          Submission of physical Measurement Book No. 402/2026 counter-signed by Superintending Engineer certifying completed work quantities.
-                        </p>
-                      </div>
+                      <p className="text-xs text-gray-600">
+                        To unmark this project and release the Utilization Certificate (UC), the contractor and Divisional Executive Engineer must complete the following statutory verification gates:
+                      </p>
 
-                      <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-1">
-                        <div className="font-bold text-gray-800 flex items-center gap-1.5">
-                          <span className="size-5 rounded-full bg-blue-100 text-[#003366] flex items-center justify-center font-bold text-[10px]">3</span>
-                          GST E-Way Bill & Delivery Verification
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                        <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-1">
+                          <div className="font-bold text-gray-800 flex items-center gap-1.5">
+                            <span className="size-5 rounded-full bg-blue-100 text-[#003366] flex items-center justify-center font-bold text-[10px]">1</span>
+                            Ground Re-Inspection at Sanctioned Site
+                          </div>
+                          <p className="text-[11px] text-gray-600">
+                            Executive Engineer must visit <strong>24.8512° N, 93.9482° E</strong> (Heingang School) and upload new tamper-resistant photos via the Cheirap Verifier mobile app.
+                          </p>
                         </div>
-                        <p className="text-[11px] text-gray-600">
-                          Verification of factory dispatch and freight e-way bills proving physical transit of modular lab units to Imphal East.
-                        </p>
-                      </div>
 
-                      <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-1">
-                        <div className="font-bold text-gray-800 flex items-center gap-1.5">
-                          <span className="size-5 rounded-full bg-blue-100 text-[#003366] flex items-center justify-center font-bold text-[10px]">4</span>
-                          State Vigilance Clearance Note
+                        <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-1">
+                          <div className="font-bold text-gray-800 flex items-center gap-1.5">
+                            <span className="size-5 rounded-full bg-blue-100 text-[#003366] flex items-center justify-center font-bold text-[10px]">2</span>
+                            Measurement Book (MB) Re-Audit
+                          </div>
+                          <p className="text-[11px] text-gray-600">
+                            Submission of physical Measurement Book No. 402/2026 counter-signed by Superintending Engineer certifying completed work quantities.
+                          </p>
                         </div>
-                        <p className="text-[11px] text-gray-600">
-                          Formal clearance note uploaded to Manipur Works Darpan portal resolving the PWD-04 discrepancy notice.
-                        </p>
+
+                        <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-1">
+                          <div className="font-bold text-gray-800 flex items-center gap-1.5">
+                            <span className="size-5 rounded-full bg-blue-100 text-[#003366] flex items-center justify-center font-bold text-[10px]">3</span>
+                            GST E-Way Bill & Delivery Verification
+                          </div>
+                          <p className="text-[11px] text-gray-600">
+                            Verification of factory dispatch and freight e-way bills proving physical transit of modular lab units to Imphal East.
+                          </p>
+                        </div>
+
+                        <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-1">
+                          <div className="font-bold text-gray-800 flex items-center gap-1.5">
+                            <span className="size-5 rounded-full bg-blue-100 text-[#003366] flex items-center justify-center font-bold text-[10px]">4</span>
+                            State Vigilance Clearance Note
+                          </div>
+                          <p className="text-[11px] text-gray-600">
+                            Formal clearance note uploaded to Manipur Works Darpan portal resolving the PWD-04 discrepancy notice.
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               )}
             </div>
@@ -2042,9 +2702,22 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                 <span className="text-[10px] font-mono text-purple-800 bg-purple-100 border border-purple-200 px-2 py-0.5 rounded font-bold">
                   SHA-256: 4F8A...9C1E
                 </span>
-                <span className="text-[10px] font-mono text-amber-800 bg-amber-100/90 border border-amber-300/60 px-2 py-0.5 rounded font-bold">
-                  PWD-04 STATUTORY HOLD
-                </span>
+                {activeProject.verification_priority === 'LOW' ? (
+                  <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100/90 border border-emerald-300/60 px-2 py-0.5 rounded font-bold flex items-center gap-1">
+                    <CheckCircle2 className="size-3 text-emerald-700" />
+                    GREEN PASSPORT CLEARED
+                  </span>
+                ) : activeProject.verification_priority === 'MEDIUM' ? (
+                  <span className="text-[10px] font-mono text-amber-800 bg-amber-100/90 border border-amber-300/60 px-2 py-0.5 rounded font-bold flex items-center gap-1">
+                    <AlertTriangle className="size-3 text-amber-700" />
+                    PWD-44 ROUTINE REVIEW
+                  </span>
+                ) : (
+                  <span className="text-[10px] font-mono text-red-800 bg-red-100/90 border border-red-300/60 px-2 py-0.5 rounded font-bold flex items-center gap-1">
+                    <AlertTriangle className="size-3 text-red-700" />
+                    PWD-04 STATUTORY HOLD
+                  </span>
+                )}
               </div>
             </div>
 
