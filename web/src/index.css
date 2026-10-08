@@ -1,0 +1,513 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Government of India color system */
+    --background: 220 14% 96%;    /* #F4F6F9 light grey */
+    --foreground: 220 13% 18%;    /* #1F2937 near-black */
+    --card: 0 0% 100%;            /* #FFFFFF white */
+    --card-foreground: 220 13% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 18%;
+    --primary: 210 100% 20%;      /* #003366 NIC blue */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 13% 18%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 220 14% 93%;
+    --accent-foreground: 220 13% 18%;
+    --destructive: 0 72% 51%;     /* #DC2626 */
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 83%;        /* #D1D5DB */
+    --input: 220 13% 83%;
+    --ring: 210 100% 20%;
+    --radius: 0.25rem;            /* 4px — sharp government corners */
+  }
+}
+
+body {
+  margin: 0;
+  background-color: #F4F6F9;
+  color: #1F2937;
+  font-family: 'Roboto', 'Noto Sans Meetei Mayek', 'Segoe UI Historic', 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-meetei {
+  font-family: 'Noto Sans Meetei Mayek', 'Segoe UI Historic', 'Roboto', sans-serif;
+}
+
+/* Indian National Tricolor accent bar */
+.gov-tricolor-bar {
+  height: 4px;
+  background: linear-gradient(to right, #FF9933 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #138808 66.66%);
+}
+
+/* Accessibility: High-contrast mode */
+body.high-contrast {
+  background-color: #0b1120 !important;
+  color: #F9FAFB !important;
+}
+
+body.high-contrast .gov-card {
+  background-color: #111827 !important;
+  border-color: #F59E0B !important;
+  color: #F9FAFB !important;
+}
+
+body.high-contrast th {
+  background-color: #1F2937 !important;
+  color: #FCD34D !important;
+}
+
+body.high-contrast td {
+  border-color: #374151 !important;
+}
+
+body.high-contrast .bg-white {
+  background-color: #111827 !important;
+  color: #F9FAFB !important;
+}
+
+body.high-contrast [class*="text-[#003366]"],
+body.high-contrast h1,
+body.high-contrast h2,
+body.high-contrast h3,
+body.high-contrast h4 {
+  color: #93C5FD !important;
+}
+
+/* Accessibility: Font Scaling Modes */
+html.font-scale-normal {
+  font-size: 14px;
+}
+
+html.font-scale-large {
+  font-size: 15.5px;
+}
+
+html.font-scale-larger {
+  font-size: 17px;
+}
+
+/* Accessibility: Reduced Motion Overrides (Vestibular Comfort without Breaking Vital UI Feedback) */
+@media (prefers-reduced-motion: reduce) {
+  /* Eliminate disorienting scaling and large translates */
+  .zoom-in-95,
+  .slide-in-from-top-4,
+  .slide-in-from-bottom-2 {
+    transform: none !important;
+  }
+  
+  /* Live data marquee: Keep running continuously at a relaxed, gentle pacing so data feed is never frozen */
+  .gov-ticker-content {
+    animation-duration: 55s !important;
+  }
+
+  /* Vital system loading feedback must still spin */
+  .animate-spin {
+    animation-duration: 1.2s !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  /* Subtle status pulses remain gentle */
+  .animate-pulse,
+  .radar-blip::after {
+    animation-duration: 2.4s !important;
+  }
+}
+
+/* Accessibility: Global Visible Focus Indicators */
+:focus-visible {
+  outline: 2px solid #003366 !important;
+  outline-offset: 2px !important;
+}
+
+body.high-contrast :focus-visible {
+  outline: 2px solid #FCD34D !important;
+  outline-offset: 2px !important;
+}
+
+/* Data values — monospace for IDs, scores, numbers */
+.font-data {
+  font-family: 'Roboto Mono', 'Consolas', monospace;
+  font-feature-settings: 'tnum' on, 'zero' on;
+}
+
+/* Timeline component for corrigenda */
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+}
+
+/* Government blue top accent bar on header */
+.gov-header-accent {
+  border-top: 4px solid #003366;
+}
+
+/* Simple table styling */
+.gov-table th {
+  background-color: #E5E7EB;
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #374151;
+}
+
+.gov-table tr:nth-child(even) {
+  background-color: #F9FAFB;
+}
+
+.gov-table tr:hover {
+  background-color: #EFF6FF;
+}
+
+/* Alert banner for RED tenders */
+.gov-alert-warning {
+  background-color: #FEF3C7;
+  border: 1px solid #F59E0B;
+  border-left: 4px solid #D97706;
+  color: #92400E;
+}
+
+.gov-alert-danger {
+  background-color: #FEE2E2;
+  border: 1px solid #EF4444;
+  border-left: 4px solid #DC2626;
+  color: #991B1B;
+}
+
+.gov-alert-success {
+  background-color: #D1FAE5;
+  border: 1px solid #10B981;
+  border-left: 4px solid #059669;
+  color: #065F46;
+}
+
+/* Better-UI Surface & Elevation Tokens */
+:root {
+  --shadow-border: 
+    0px 0px 0px 1px rgba(0, 0, 0, 0.07),
+    0px 1px 2px -1px rgba(0, 0, 0, 0.05),
+    0px 2px 4px 0px rgba(0, 0, 0, 0.03);
+  --shadow-border-hover: 
+    0px 0px 0px 1px rgba(0, 51, 102, 0.16),
+    0px 2px 4px -1px rgba(0, 51, 102, 0.08),
+    0px 4px 10px 0px rgba(0, 51, 102, 0.06);
+}
+
+/* Government button styles with Better-UI Tactile Feedback */
+.gov-btn-primary {
+  background-color: #003366;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 18px 8px 16px; /* Optical alignment: 2px less on icon side */
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition: transform 150ms ease-out, background-color 150ms ease-out, box-shadow 150ms ease-out, opacity 150ms ease-out;
+}
+
+.gov-btn-primary:hover {
+  background-color: #1a5276;
+  box-shadow: 0 2px 4px rgba(0, 51, 102, 0.2);
+}
+
+.gov-btn-primary:active:not(:disabled) {
+  transform: scale(0.96); /* Exact Better-UI 0.96 press scale */
+}
+
+.gov-btn-outline {
+  background-color: #FFFFFF;
+  color: #003366;
+  border: 1px solid rgba(0, 51, 102, 0.3);
+  padding: 8px 18px 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: transform 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.gov-btn-outline:hover {
+  background-color: #F0F6FF;
+  border-color: #003366;
+}
+
+.gov-btn-outline:active:not(:disabled) {
+  transform: scale(0.96); /* Exact Better-UI 0.96 press scale */
+}
+
+/* Generic tactile class for interactive buttons */
+.btn-tactile {
+  transition: transform 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out !important;
+}
+
+.btn-tactile:active:not(:disabled) {
+  transform: scale(0.96) !important;
+}
+
+/* Better-UI Image Outline (1px low opacity neutral) */
+.img-outline {
+  outline: 1px solid rgba(0, 0, 0, 0.1);
+  outline-offset: -1px;
+}
+
+/* Optical padding utilities */
+.btn-icon-end {
+  padding-left: 14px;
+  padding-right: 12px;
+}
+
+.btn-icon-start {
+  padding-left: 12px;
+  padding-right: 14px;
+}
+
+/* Risk status indicators */
+.risk-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.risk-dot-red { background-color: #DC2626; }
+.risk-dot-amber { background-color: #D97706; }
+.risk-dot-green { background-color: #059669; }
+
+/* Enhanced GovTech Cards and Concentric Surfaces */
+.gov-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  box-shadow: var(--shadow-border);
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out, border-color 150ms ease-out;
+}
+
+.gov-card-interactive {
+  cursor: pointer;
+}
+
+.gov-card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-border-hover);
+  border-color: rgba(0, 51, 102, 0.25);
+}
+
+.gov-card-interactive:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Stat card top accents with concentric corner match */
+.gov-stat-blue { border-top: 3px solid #003366; }
+.gov-stat-red { border-top: 3px solid #DC2626; }
+.gov-stat-amber { border-top: 3px solid #D97706; }
+.gov-stat-green { border-top: 3px solid #059669; }
+
+/* Hazard diagonal stripes for critical RED risk bars */
+.hazard-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    #DC2626,
+    #DC2626 8px,
+    #B91C1C 8px,
+    #B91C1C 16px
+  );
+}
+
+/* Live Surveillance Ticker */
+.gov-ticker-wrap {
+  width: 100%;
+  max-width: 100vw;
+  overflow: hidden;
+  background-color: #0b172a;
+  border-bottom: 1px solid #1e293b;
+  color: #94a3b8;
+  font-size: 11px;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Mobile Scroll Utilities & Touch Comfort */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (max-width: 640px) {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+}
+
+
+.gov-ticker-badge {
+  background-color: #DC2626;
+  color: #FFFFFF;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+  margin-left: 12px;
+  margin-right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  z-index: 10;
+  position: relative;
+  box-shadow: 3px 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.gov-ticker-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  mask-image: linear-gradient(to right, transparent 0px, black 24px, black calc(100% - 24px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0px, black 24px, black calc(100% - 24px), transparent 100%);
+}
+
+.gov-ticker-content {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  white-space: nowrap;
+  animation: ticker-slide 34s linear infinite;
+  will-change: transform;
+}
+
+.gov-ticker-items {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.gov-ticker-content:hover {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-slide {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Radar pulse animation */
+.radar-blip {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #22C55E;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.radar-blip::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  border: 1.5px solid #22C55E;
+  animation: radar-pulse 1.8s ease-out infinite;
+}
+
+@keyframes radar-pulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* Print styles for official Gazette and Stay Orders */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 15mm 15mm;
+  }
+  
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 10pt !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Suppress non-printable screen elements */
+  .no-print,
+  header,
+  nav,
+  .gov-ticker-wrap,
+  .modal-backdrop,
+  button,
+  .no-print-area {
+    display: none !important;
+  }
+
+  /* Target the printable Gazette report container */
+  .gazette-print-container {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+
+  .print-page-break {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  .print-avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Force borders to print crisp black/gray */
+  table, th, td, hr, .border-gazette {
+    border-color: #374151 !important;
+  }
+
+  /* Ensure text contrast for print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

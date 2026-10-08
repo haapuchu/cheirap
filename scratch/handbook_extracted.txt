@@ -1,0 +1,120 @@
+TOTAL PAGES: 5
+
+==================== PAGE 1 ====================
+HACKATHON
+HANDBOOK
+HACKATHON
+HANDBOOK
+“National Innovation Challenge on
+AI & Digital Governance – Manipur”
+“National Innovation Challenge on
+AI & Digital Governance – Manipur”
+Participant Guidelines
+Evaluation Framework &
+Event Schedule
+
+==================== PAGE 2 ====================
+Activity Date / Time
+Problem Statements Release 7 October 2026, by 7:00 PM
+Preparation & Development 7–8 October 2026
+Registration Opens 9:00 AM
+Pitching & Evaluation Begins 9:30 AM onwards
+Teams may choose a problem statement of their preference from the
+list provided. Upon selection, teams are encouraged to immediately
+commence work on their proposed solution, including problem
+analysis, research, solution development and preparation of a
+functional prototype from home prior to the hackathon day.
+The event on 9 October 2026 will primarily focus on prototype
+demonstration, pitching, technical validation, assessment of
+government relevance and industry evaluation.
+Important Timeline
+
+==================== PAGE 3 ====================
+Guidelines
+Every team will go through three rounds of evaluation:
+1. TECHNICAL TRUST — 35%
+Focus: Does the solution work, and can it be trusted?
+Judges will assess:
+Working prototype
+Technical architecture and implementation
+Effective use of AI
+Data handling
+Security and privacy
+Reliability and responsible AI practices
+2. GOVERNMENT RELEVANCE — 30%
+Focus: Does the solution genuinely address a government
+problem?
+Judges will assess:
+Understanding of the problem statement
+Relevance to the concerned department
+Practical usefulness
+Citizen/official value
+Feasibility within a government context
+Potential for adoption or further testing
+3. INDUSTRY POTENTIAL — 35%
+Focus: Can the solution evolve into a practical, scalable product?
+Judges will assess:
+Problem–solution fit
+Innovation
+Product quality and user experience
+Scalability
+Deployment potential
+Presentation and ability to respond to questions
+
+==================== PAGE 4 ====================
+Participants will also have the opportunity to attend insightful
+sessions covering:
+Panel Discussion on:
+“From Departmental Challenges to AI Solutions — Shaping the
+Future of Governance” with officials from:
+Public Works Department
+Department of Agriculture
+Department of Transport
+Department of Youth Affairs & Sports
+Social Welfare Department
+Department of Education (S)
+Moderator: Shri G. Robert Sharma, Director (IT), Government of
+Manipur
+Expert Sessions:
+“Entrepreneurship”
+Dr. Jatin Botadra, CTO, Pioneer IT Solutions Private Limited
+“Turning a Product Idea into Business”
+Shri Roshnikumar Yambem, Managing Director, Globizs Web
+Solutions Private Limited
+“A Pathologist's Entrepreneurial Journey Beyond the Lab”
+Dr. Thangjam Dhabali Singh, Chairman & Managing Director,
+BABINA Group of Companies
+“Seeing the Problem Through the User's Lens”
+Ms. Ritika Chetri, Program Manager, Data Analysis,
+Sauramandala Foundation
+“From Need to Solution: Using AI Effectively for Public Service”
+Mr. Rohan Bose, Software Analyst, Sauramandala
+Foundation
+Beyond the Hackathon
+
+==================== PAGE 5 ====================
+Arrive on time for registration at 9:00 AM.
+Be ready for pitching from 9:30 AM onwards.
+Keep your prototype ready before your assigned presentation
+slot.
+Demonstrate the working solution, rather than only presenting
+slides.
+Clearly explain how your solution addresses the assigned
+government problem.
+Answer questions from the technical, government and
+industry panels confidently and honestly.
+Attend the panel discussion and expert sessions—they are
+intended to provide practical insights into governance,
+entrepreneurship, product development, user needs and AI
+implementation.
+Maintain professional conduct throughout the event.
+On the Hackathon Day
+Breakfast and lunch will be
+provided to all registered
+participants.
+Breakfast and lunch will be
+provided to all registered
+participants.
+“Wishing all teams the very best!
+Build boldly, innovate wisely, and create real impact.
+”

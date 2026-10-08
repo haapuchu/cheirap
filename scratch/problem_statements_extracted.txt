@@ -1,0 +1,177 @@
+TOTAL PAGES: 6
+
+==================== PAGE 1 ====================
+1. SOCIAL WELFARE DEPARTMENT
+SW-01 — AI-Based Welfare Scheme Eligibility & Assistance Navigator
+Citizen-side problem: Citizens may not know which government welfare schemes they 
+are eligible for, what documents are required, or how to apply.
+Problem Statement: Develop an AI-based system that understands a citizen's basic 
+circumstances and identifies potentially relevant welfare schemes, eligibility 
+requirements, required documents and application procedures. The system should 
+provide simple, accessible guidance while clearly indicating that final eligibility is 
+determined by the department.
+SW-02 — AI-Based Welfare Grievance & Service Assistant
+Citizen-side problem: Citizens may struggle to understand where to raise complaints 
+or obtain information regarding pensions, assistance, disability services and other 
+welfare programmes.
+Problem Statement: Develop an AI-powered multilingual assistant that understands 
+citizen queries and grievances, identifies the relevant welfare service, provides 
+information from an approved knowledge base and guides the citizen to the appropriate 
+service or grievance channel.
+SW-03 — AI-Based Welfare Application Screening & Case Prioritisation
+Government-side problem: Officials may have to manually examine large numbers of 
+applications, documents and case records, making it difficult to quickly identify 
+incomplete or inconsistent applications.
+Problem Statement: Develop an AI-based decision-support system that extracts 
+information from applications and documents, identifies missing or inconsistent 
+information, groups cases by status and highlights cases requiring official attention.
+SW-04 — AI-Based Welfare Service Gap & Coverage Analysis
+Government-side problem: Officials may find it difficult to identify areas where eligible 
+beneficiaries are not being adequately reached or where applications and services are 
+accumulating.
+Problem Statement: Develop an AI analytics system that analyses beneficiary and 
+service-delivery data to identify coverage gaps, unusual patterns, pending cases and 
+geographical areas requiring greater administrative attention.
+
+==================== PAGE 2 ====================
+2. AGRICULTURE DEPARTMENT
+AG-01 — AI-Based Crop Disease Detection & Advisory
+Citizen/Farmer-side problem: Farmers may have difficulty identifying crop diseases at 
+an early stage and deciding what action to take.
+Problem Statement: Develop an AI system that analyses crop/leaf images and relevant 
+information to identify possible diseases or abnormalities and provide basic preventive 
+and management guidance, with referral to agricultural experts when necessary.
+AG-02 — AI-Based Agricultural Advisory Assistant
+Citizen/Farmer-side problem: Farmers may need timely advice on crops, cultivation 
+practices, irrigation, pests and weather-related risks but may not have easy access to 
+agricultural experts.
+Problem Statement: Develop an AI-powered farmer assistant that understands farmer 
+queries and provides reliable, easy-to-understand advice using an approved agricultural 
+knowledge base and available contextual information.
+AG-03 — AI-Based Farmer Query & Field-Visit Prioritisation System
+Government-side problem: Agricultural officers and extension workers may receive 
+numerous farmer queries and requests for field assistance, making it difficult to 
+prioritise cases and respond quickly.
+Problem Statement: Develop an AI system that categorises farmer queries, identifies 
+urgency and location, detects recurring issues and helps officials prioritise field visits 
+and expert intervention.
+AG-04 — AI-Based Crop & Pest Risk Monitoring System
+Government-side problem: Agricultural officials need to monitor crop conditions and 
+potential pest or disease outbreaks across large geographical areas, but field-based 
+monitoring can be resource-intensive.
+Problem Statement: Develop an AI-based monitoring system that combines sample 
+crop, weather, pest and geographical data to identify areas showing increased risk and 
+provide an early-warning dashboard for agricultural officials.
+
+==================== PAGE 3 ====================
+3. PUBLIC WORKS DEPARTMENT
+PWD-01 — AI-Based Road Damage Reporting & Detection
+Citizen-side problem: Citizens encounter potholes, cracks and damaged roads but 
+reporting these issues and providing accurate location information may not always be 
+easy.
+Problem Statement: Develop an AI-enabled mobile/web system through which citizens 
+can submit road photographs or videos, automatically identify visible road defects and 
+capture their location for reporting to the concerned authority.
+PWD-02 — AI-Based Citizen Road Complaint Assistant
+Citizen-side problem: Citizens may not know which authority or service channel 
+should handle different road-related complaints.
+Problem Statement: Develop an AI assistant that understands citizen complaints, 
+identifies the nature and location of the issue and guides the citizen towards the 
+appropriate reporting or grievance channel.
+PWD-03 — AI-Based Road Inspection & Maintenance Prioritisation
+Government-side problem: PWD officials cannot physically inspect every road section 
+frequently and must decide where limited maintenance resources should be deployed.
+Problem Statement: Develop an AI-based system that analyses road images, road 
+condition, traffic, connectivity, previous maintenance and other relevant data to identify 
+defects and support maintenance prioritisation.
+PWD-04 — AI-Based Construction Progress Monitoring
+Government-side problem: Monitoring multiple infrastructure projects requires 
+regular field inspections and comparison of actual progress with planned milestones.
+Problem Statement: Develop an AI system that analyses periodic site 
+photographs/videos and project information to identify visible progress, potential 
+delays and areas requiring further inspection or intervention.
+
+==================== PAGE 4 ====================
+4. TRANSPORT DEPARTMENT
+TR-01 — AI-Based Citizen Transport Service Assistant
+Citizen-side problem: Citizens may find it difficult to understand transport-related 
+procedures, required documents, fees, services and application processes.
+Problem Statement: Develop a conversational AI assistant that provides verified 
+information from an approved government knowledge base and guides citizens through 
+relevant transport services and procedures.
+TR-02 — AI-Based Road Safety Reporting & Risk Awareness System
+Citizen-side problem: Citizens may encounter dangerous road locations or recurring 
+traffic-safety issues but may not have an effective way to report and understand such 
+risks.
+Problem Statement: Develop an AI-enabled platform that allows citizens to report 
+road-safety issues and uses location and incident information to identify recurring 
+safety concerns.
+TR-03 — AI-Based Transport Document Verification Assistant
+Government-side problem: Transport officials may need to manually examine large 
+volumes of vehicle and permit-related documents, making verification time-consuming.
+Problem Statement: Develop an AI-based OCR and document-analysis system that 
+extracts information, checks completeness and identifies inconsistencies or suspicious 
+patterns for manual verification by officials.
+TR-04 — AI-Based Road Accident & Traffic Risk Analysis
+Government-side problem: Transport authorities need to identify locations and 
+conditions associated with higher accident or traffic risk to support targeted 
+interventions.
+Problem Statement: Develop an AI-based system that analyses accident history, traffic 
+volume, road characteristics, time, weather and location data to identify recurring risk 
+patterns and generate a risk map.
+
+==================== PAGE 5 ====================
+5. EDUCATION (S) DEPARTMENT
+ED-01 — AI-Based Personalised Learning Assistant
+Citizen/Student-side problem: Students may struggle with particular subjects or 
+concepts but may not receive learning support suited to their individual needs.
+Problem Statement: Develop an AI learning assistant that identifies a student's 
+learning gaps and provides personalised explanations, practice questions and learning 
+activities appropriate to their level.
+ED-02 — AI-Based Parent/Student School Information Assistant
+Citizen-side problem: Parents and students may need information regarding school 
+facilities, academic activities, attendance, programmes and other school-related 
+services.
+Problem Statement: Develop an AI assistant that provides verified school-related 
+information through a simple conversational interface while ensuring that sensitive 
+student information is appropriately protected.
+ED-03 — AI-Based School Performance & Learning Gap Analytics
+Government-side problem: Education officials need to analyse data from many 
+schools to identify learning gaps and schools requiring additional academic support.
+Problem Statement: Develop an AI analytics system that analyses 
+anonymised/synthetic assessment data to identify subject-wise and school-wise 
+learning patterns, gaps and areas requiring intervention.
+ED-04 — AI-Based School Resource Planning System
+Government-side problem: Education authorities need to plan teachers, classrooms, 
+laboratories, computers and other resources across schools with different 
+requirements.
+Problem Statement: Develop an AI-based decision-support system that analyses 
+school-level data and identifies resource gaps and priority areas to support evidence￾based planning.
+
+==================== PAGE 6 ====================
+6. YOUTH AFFAIRS & SPORTS DEPARTMENT
+YAS-01 — AI-Based Sports Talent Identification
+Citizen/Athlete-side problem: Young athletes with potential may not always get 
+opportunities to be identified through conventional selection processes.
+Problem Statement: Develop an AI-based system that analyses fitness measurements, 
+performance records and sport-specific parameters to identify athletes who may merit 
+further assessment by qualified coaches.
+YAS-02 — AI-Based Athlete Performance & Technique Analysis
+Citizen/Athlete-side problem: Athletes may have difficulty objectively analysing their 
+technique and performance without continuous access to specialised coaching.
+Problem Statement: Develop a computer-vision system that analyses athlete videos to 
+identify movement patterns, posture, repetitions, speed or other relevant performance 
+indicators and provides useful feedback for coaches and athletes.
+YAS-03 — AI-Based Sports Facility Utilisation & Planning
+Government-side problem: Sports authorities may not have a consolidated view of 
+how frequently facilities are used, when demand is highest and which facilities are 
+underutilised.
+Problem Statement: Develop an AI-based system that analyses facility usage, location, 
+demand and availability to predict utilisation patterns and support better scheduling 
+and infrastructure planning.
+YAS-04 — AI-Based Sports Event Scheduling & Management
+Government-side problem: Organising sporting events involves managing athletes, 
+teams, venues, matches and schedules while avoiding multiple conflicts.
+Problem Statement: Develop an AI-assisted system that manages registrations, 
+generates schedules, detects venue/team conflicts and provides event and 
+performance reports.
