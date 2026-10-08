@@ -2032,41 +2032,6 @@ export const CheirapWorksAssuranceView: React.FC<CheirapWorksAssuranceViewProps>
                       </div>
                     </div>
                   </div>
-
-                  {/* Satellite & Cryptographic Forensic Proof Card (Feasible Judge-Winning Indicators) */}
-                  <div className="bg-slate-900 text-white rounded-xl p-4 space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2">
-                      <div className="flex items-center gap-2">
-                        <Satellite className="size-4 text-cyan-400" />
-                        <h4 className="text-xs font-bold text-white uppercase tracking-wider">
-                          Autonomous Geospatial & Cryptographic Audit Proof
-                        </h4>
-                      </div>
-                      <span className="text-[10px] text-cyan-300 font-mono bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800">
-                        ISRO Bhuvan & ESA Sentinel-2 Synthetic Aperture Radar (SAR)
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                      <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700 space-y-1">
-                        <div className="text-[10px] text-gray-400 uppercase font-semibold">Optical Satellite Change Detection</div>
-                        <div className="text-sm font-bold text-cyan-300">NDBI Delta: +0.02 (Baseline Unchanged)</div>
-                        <p className="text-[11px] text-gray-300">
-                          10m resolution optical pass on 2026-09-29 confirmed no new physical building footprint at the Heingang coordinates.
-                        </p>
-                      </div>
-
-                      <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700 space-y-1">
-                        <div className="text-[10px] text-gray-400 uppercase font-semibold">Tamper-Proof Electronic Seal</div>
-                        <div className="text-xs font-mono text-purple-300 truncate" title="SHA-256: 4f8a9e2d7b1c3a6e9f0d4b8a2c5e7f1a9b3d5c7e1f4a8b2d6c9e1f3a5b7d9c1e">
-                          SHA-256: 4f8a9e2d...7d9c1e
-                        </div>
-                        <p className="text-[11px] text-gray-300">
-                          Certified under Sec 65B BSA 2023 for admissibility in High Court of Manipur and State Lokayukta inquiries.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
             </div>
