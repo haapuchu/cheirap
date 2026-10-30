@@ -54,3 +54,14 @@ conversation_history_raw.jsonl
 .env
 .env.*
 !.env.example
+
+# Competition notes, internal dossiers & scripts
+docs/
+scripts/
+*.dossier.md
+CHEIRAP_*.md
+.opencode/
+skills-lock.json
+web/skills-lock.json
+NUL
+

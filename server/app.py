@@ -37,12 +37,29 @@ app.add_middleware(
 )
 
 DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "processed", "tenders_scored.json")
+SNAPSHOT_DATE = "24 October 2026"
+SNAPSHOT_SOURCE_URL = "https://manipurtenders.gov.in/nicgep/app"
+SNAPSHOT_SOURCE_NOTE = "Local processed snapshot; record-level portal evidence is not attached in this environment."
+
+def normalize_snapshot_record(tender: Dict[str, Any]) -> Dict[str, Any]:
+    normalized = dict(tender)
+    lineage = normalized.get("source_lineage") or normalized.get("source") or "UNSPECIFIED"
+    normalized.update({
+        "source": "SNAPSHOT",
+        "source_lineage": lineage,
+        "source_status": "snapshot",
+        "source_url": SNAPSHOT_SOURCE_URL,
+        "source_checked_at": SNAPSHOT_DATE,
+        "record_level_verified": False,
+        "source_note": SNAPSHOT_SOURCE_NOTE,
+    })
+    return normalized
 
 def load_tenders() -> List[Dict[str, Any]]:
     if not os.path.exists(DATA_PATH):
         return []
     with open(DATA_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+        return [normalize_snapshot_record(tender) for tender in json.load(f)]
 
 # In-memory Audit Trail Store (persisted across reviews during server session)
 AUDIT_TRAIL_STORE: Dict[str, List[Dict[str, Any]]] = {}
@@ -59,16 +76,16 @@ def get_or_create_audit_trail(tender_id: str, tender: Dict[str, Any]) -> List[Di
         {
             "id": f"EVT-{tender_id}-001",
             "tender_id": tender_id,
-            "officer_name": "CHEIRAP Autonomous Ingestion Engine",
+            "officer_name": "CHEIRAP Snapshot Loader",
             "officer_role": "SYSTEM",
-            "timestamp": f"{published_date} (Ingestion)",
-            "action": "RECORD_INGESTED",
+            "timestamp": f"{published_date} (Snapshot)",
+            "action": "SNAPSHOT_RECORDED",
             "old_status": "NONE",
-            "new_status": "RAW_PUBLISHED",
-            "reason": "Tender metadata, BOQ notices, and NIT parameters fetched from manipurtenders.gov.in.",
-            "comments": "DSC signature validated. NIT publication confirmed.",
-            "evidence_accessed": ["NIT Document", "Tender Schedule", "Org Chain"],
-            "regulatory_references_viewed": ["NICGEP Manual"]
+            "new_status": "SNAPSHOT_PENDING_SOURCE_CHECK",
+            "reason": SNAPSHOT_SOURCE_NOTE,
+            "comments": "The official portal URL and tender identifiers are preserved for manual verification; no document or signature validation is claimed.",
+            "evidence_accessed": ["Local processed tender snapshot"],
+            "regulatory_references_viewed": []
         },
         {
             "id": f"EVT-{tender_id}-002",
@@ -77,7 +94,7 @@ def get_or_create_audit_trail(tender_id: str, tender: Dict[str, Any]) -> List[Di
             "officer_role": "SYSTEM",
             "timestamp": "2026-10-01 08:30 IST",
             "action": "RISK_EVALUATION_COMPLETED",
-            "old_status": "RAW_PUBLISHED",
+            "old_status": "SNAPSHOT_PENDING_SOURCE_CHECK",
             "new_status": f"FLAGGED_{tier}",
             "reason": f"Isolation Forest and statutory rule checks computed. Computed Risk Score: {score}/100 ({tier} Tier).",
             "comments": f"Screened against CVC 01/01/2021, GFR 2017 Rules 144/161/170, and Manipur DFPR 2020.",
@@ -339,13 +356,18 @@ def get_portal_status():
     tenders = load_tenders()
     return {
         "status": "ONLINE",
-        "portal_url": "https://manipurtenders.gov.in/nicgep/app",
+        "portal_connection": "NOT_CONNECTED",
+        "status_note": "The API is online, but it serves a local snapshot rather than a live portal feed.",
+        "portal_url": SNAPSHOT_SOURCE_URL,
         "search_url": "https://manipurtenders.gov.in/nicgep/app?page=FrontEndTenderSearch&service=page",
         "gateway_title": "Government of Manipur e-Procurement System (GePNIC)",
         "operator": "National Informatics Centre (NIC) / Government of Manipur",
         "ssl_verified": True,
         "total_monitored_tenders": len(tenders),
-        "ingestion_channel": "LIVE_PORTAL"
+        "ingestion_channel": "LOCAL_SNAPSHOT",
+        "snapshot_date": SNAPSHOT_DATE,
+        "record_level_verified": False,
+        "source_note": SNAPSHOT_SOURCE_NOTE,
     }
 
 @app.get("/api/tenders/{tender_id}/portal-metadata")
@@ -385,7 +407,13 @@ def get_tender_portal_metadata(tender_id: str):
         "opening_date": match.get("opening_date"),
         "corrigendum_count": match.get("corrigendum_count", 0),
         "status": match.get("status", "ACTIVE"),
-        "source": match.get("source", "LIVE_PORTAL"),
+        "source": "SNAPSHOT",
+        "source_lineage": match.get("source_lineage", "UNSPECIFIED"),
+        "source_status": match.get("source_status", "snapshot"),
+        "source_url": match.get("source_url", SNAPSHOT_SOURCE_URL),
+        "source_checked_at": match.get("source_checked_at", SNAPSHOT_DATE),
+        "record_level_verified": match.get("record_level_verified", False),
+        "source_note": match.get("source_note", SNAPSHOT_SOURCE_NOTE),
         "portal_name": "Government of Manipur e-Procurement System (GePNIC)",
         "portal_url": "https://manipurtenders.gov.in/nicgep/app",
         "search_url": "https://manipurtenders.gov.in/nicgep/app?page=FrontEndTenderSearch&service=page",
@@ -972,87 +1000,6 @@ def generate_hold_order(tender_id: str, req: Optional[HoldOrderRequest] = None):
         "notice": hold_order
     }
 
-# =============================================================================
-# PROJECTPROOF ENDPOINTS (PWD-04 Post-Award Construction Progress & Evidence Assurance)
-# =============================================================================
-try:
-    import server.projectproof_engine as ppe
-except ImportError:
-    try:
-        import projectproof_engine as ppe
-    except ImportError:
-        try:
-            import cheirap.server.projectproof_engine as ppe
-        except ImportError:
-            from . import projectproof_engine as ppe
-
-@app.get("/api/projectproof/stats")
-@app.get("/api/works/stats")
-def api_projectproof_stats():
-    return ppe.get_projectproof_stats()
-
-@app.get("/api/projectproof/projects")
-@app.get("/api/works/projects")
-def api_projectproof_projects(priority: Optional[str] = Query(None), search: Optional[str] = Query(None)):
-    return ppe.get_projectproof_projects(priority=priority, search=search)
-
-@app.get("/api/projectproof/projects/{project_id}")
-@app.get("/api/works/projects/{project_id}")
-def api_projectproof_project_detail(project_id: str):
-    proj = ppe.get_project_by_id(project_id)
-    if not proj:
-        raise HTTPException(status_code=404, detail="Project not found")
-    return proj
-
-class InspectionRequest(BaseModel):
-    officer_name: Optional[str] = "Chief Engineer (Quality Control & Vigilance)"
-
-@app.post("/api/projectproof/inspect/{project_id}")
-@app.post("/api/works/inspect/{project_id}")
-def api_projectproof_dispatch_inspection(project_id: str, req: Optional[InspectionRequest] = None):
-    officer = req.officer_name if req and req.officer_name else "Chief Engineer (Quality Control & Vigilance)"
-    res = ppe.dispatch_field_inspection(project_id, officer_name=officer)
-    if "error" in res:
-        raise HTTPException(status_code=404, detail=res["error"])
-    return res
-
-@app.get("/api/darpan/proxy", response_class=HTMLResponse)
-def api_darpan_proxy():
-    import urllib.request
-    url = "https://www.darpanmanipur.in/site/index"
-    try:
-        req = urllib.request.Request(
-            url,
-            headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-            }
-        )
-        with urllib.request.urlopen(req, timeout=12) as resp:
-            content = resp.read().decode("utf-8", errors="ignore")
-        
-        # Inject base tag so relative links, CSS, and images resolve to darpanmanipur.in
-        if "<head>" in content:
-            content = content.replace("<head>", '<head><base href="https://www.darpanmanipur.in/">')
-        elif "<HEAD>" in content:
-            content = content.replace("<HEAD>", '<HEAD><base href="https://www.darpanmanipur.in/">')
-        else:
-            content = '<base href="https://www.darpanmanipur.in/">' + content
-            
-        return HTMLResponse(content=content, status_code=200)
-    except Exception as e:
-        return HTMLResponse(
-            content=f"""<!DOCTYPE html>
-            <html><head><meta charset='utf-8'><title>Darpan Manipur</title></head>
-            <body style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:40px;background:#0f172a;color:#f8fafc;text-align:center;'>
-                <div style='max-width:600px;margin:0 auto;background:#1e293b;padding:32px;border-radius:12px;border:1px solid #334155;'>
-                    <h2 style='color:#38bdf8;margin-bottom:12px;'>Manipur Infrastructure Darpan</h2>
-                    <p style='color:#94a3b8;font-size:14px;margin-bottom:20px;'>Live official portal proxy connection encountered a network delay: {str(e)}</p>
-                    <a href='https://www.darpanmanipur.in/site/index' target='_blank' rel='noopener noreferrer' style='display:inline-block;background:#0284c7;color:#ffffff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;'>Open https://www.darpanmanipur.in/site/index Directly &rarr;</a>
-                </div>
-            </body></html>""",
-            status_code=200
-        )
 # Serve compiled React frontend if web/dist exists
 dist_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web", "dist")
 if os.path.exists(dist_dir):

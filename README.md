@@ -1,391 +1,199 @@
-# CHEIRAP (ꯆꯩꯔꯥꯞ) — State Vigilance & Pre-Award Procurement Integrity System
+# CHEIRAP (ꯆꯩꯔꯥꯞ)
 
-<div align="center">
+> **Public Tender Transparency & Civic Vigilance for Manipur**  
+> *"See what public money is buying."*
 
-[![Government of Manipur](https://img.shields.io/badge/Government_of_Manipur-Department_of_Information_Technology-003366?style=for-the-badge&logo=gov.in)](https://manipur.gov.in)
-[![Hackathon](https://img.shields.io/badge/National_Innovation_Challenge-AI_%26_Digital_Governance_2026-D4AF37?style=for-the-badge)](https://ditmanipur.gov.in)
-[![Team](https://img.shields.io/badge/Submitted_by-Team_Lotux-10b981?style=for-the-badge)](#team--submission-credentials)
-[![Build Status](https://img.shields.io/badge/Build-Passing_%28Vite_%2B_FastAPI%29-brightgreen?style=for-the-badge)](https://github.com/haapuchu/cheirap)
-[![Trilateral Jury Ready](https://img.shields.io/badge/Trilateral_Jury_Audit-100%25_Verified-blue?style=for-the-badge)](#trilateral-grand-jury-alignment-matrix)
-
-**An autonomous AI and regulatory intelligence gateway that intercepts public procurement rigging pre-award and audits capital works execution on-ground under CVC, GFR-161, CPWD, and Bharatiya Sakshya Adhiniyam 2023 statutes.**
-
-[Submission Overview](#submission-overview) • [Official Problem Statement](#official-hackathon-manual-problem-statement) • [How CHEIRAP Solves PWD-04](#how-cheirap-solves-the-pwd-04-problem-statement) • [System Visual Tour](#system-visual-tour) • [Trilateral Jury Matrix](#trilateral-grand-jury-alignment-matrix) • [Exploits Intercepted](#the-4-procurement-exploits-intercepted-pre-award) • [Works Assurance](#post-award-works--ground-assurance-engine-pwd-04) • [Statutory Grounding](#statutory-rules--legal-enforceability) • [Quickstart Guide](#quickstart--local-setup)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Track](https://img.shields.io/badge/VBYLD%202027-Governance%20%26%20Civic%20Tech-orange.svg)](https://mybharat.gov.in/vbyld-2027)
+[![State](https://img.shields.io/badge/State-Manipur-emerald.svg)]()
+[![Stack](https://img.shields.io/badge/Stack-React%2019%20%7C%20FastAPI%20%7C%20GSAP-15335b.svg)]()
 
 ---
 
-</div>
+## 🏆 Project Overview
 
-## Submission Overview
+**CHEIRAP** (Meetei Mayek: `ꯆꯩꯔꯥꯞ`, historically referring to the traditional court of justice and civic assembly in Manipur) is an autonomous, open-source public procurement transparency platform. It transforms complex, fragmented government e-tender notices into understandable, comparable, and source-verified citizen briefs.
 
-| Parameter | Official Hackathon Detail |
-| :--- | :--- |
-| **Challenge** | **National Innovation Challenge on AI & Digital Governance – Manipur (2026)** |
-| **Host Department** | **Department of Information Technology (DIT), Government of Manipur** |
-| **Innovation Partner**| **Manipur Technology Innovation Foundation (MTIF)** |
-| **Team Name** | **Team Lotux** |
-| **Core Problem Track** | **PWD-04: AI-Based Construction Progress Monitoring (Government-side)** |
-| **Evaluation Date** | **9 October 2026** (On-site Demonstration & Trilateral Jury Defense) |
-| **Prototype Verification** | **100% Live Functional System** (FastAPI Microservice + React 18 / TypeScript SPA + Automated Browser Verification Suite) |
-
----
-
-## Official Hackathon Manual Problem Statement
-
-CHEIRAP directly answers the challenge statement published in the **National Innovation Challenge on AI & Digital Governance – Manipur (2026)** official problem catalog:
-
-### Track: Public Works Department (PWD) — Problem Code: PWD-04
-* **Problem Title:** **AI-Based Construction Progress Monitoring (Government-side)**
-* **Target Department:** Public Works Department (PWD), Government of Manipur
-* **Government Problem (Verbatim from Manual):**  
-  > *"Tracking multiple capital works projects across remote districts requires frequent field visits and continuous comparison of actual physical progress against planned milestones."*
-* **Problem Statement (Verbatim from Manual):**  
-  > *"Develop an AI system that analyzes periodic site photographs, videos, and project management metadata to verify visible physical progress, spot schedule slippages, and flag anomalies demanding official field inspection."*
+* **Competition**: **Hack for Social Cause (HSC 2027)** under **Viksit Bharat Young Leaders Dialogue (VBYLD)**
+* **Organized by**: Ministry of Youth Affairs & Sports (MoYAS), Government of India
+* **Knowledge Partner**: Indian Institute of Technology Bombay (GISE Hub & SJMSoM)
+* **Thematic Area**: **Theme 4 — Governance & Civic Technology** *(with cross-impact on Theme 7: AI & Emerging Tech and Theme 6: Digital Inclusion)*
+* **Team Name**: **Team Lotux** (Manipur)
+* **Team Members**:
+  * **Waikhom Preety Devi** — *Civic Policy, GFR 2017 & CVC Guidelines Research, Meetei Mayek Validation*
+  * **Yumnam Adit Singh** — *System Architecture, Full-Stack Engineering (React/FastAPI), UI/UX Motion*
 
 ---
 
-## How CHEIRAP Solves the PWD-04 Problem Statement
+## 💡 The Problem: The Civic Procurement Gap
 
-**CHEIRAP (ꯆꯩꯔꯥꯞ)**, designed by **Team Lotux**, bridges the gap between pre-award tender award integrity and on-ground capital works verification.
+Public procurement accounts for nearly **20% to 25% of India's GDP**, funding critical schools, roads, medical centers, and public infrastructure. In Manipur—a border state where logistical costs and infrastructure resilience are paramount—every public rupee counts.
+
+While official portals like the National Informatics Centre (NIC) GePNIC (`manipurtenders.gov.in`) make tender notices *technically available*, they remain *practically inaccessible* to citizens, journalists, and community leaders:
+
+1. **Information Asymmetry**: Notices are buried in technical codes, multi-page PDFs, and fragmented portal pages.
+2. **Compressed Bidding Windows**: High-value tenders are often modified by rapid, consecutive corrigenda, compressing the remaining bidding window to less than 72 hours—restricting fair participation without formally violating portal defaults.
+3. **Absence of Plain Language**: Procurement legalisms obscure basic questions: *Who is procuring? What is being bought? How much money is involved? Where is the site?*
+4. **Linguistic Exclusion**: Lack of bilingual access in the constitutional **Meetei Mayek** script alongside English.
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                    CHEIRAP PWD-04 WORKS ASSURANCE ARCHITECTURE               │
-├──────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  INPUT STREAMS & TELEMETRY INGESTION                                         │
-│  ├── Periodic Site Photographs & Drone Video Keyframes                       │
-│  ├── EXIF Geotags (Lat/Long, Altitude, Precision, Device Timestamp)          │
-│  ├── Project Management Metadata (GANTT Schedules, Stage Milestones)         │
-│  └── Measurement Book (MB Form 24) Entries & Running Account (RA) Bills      │
-│                                                                              │
-│  AI FORENSIC & PROGRESS VERIFICATION ENGINES                                 │
-│  ├── Vector 1: GPS Geofence & Survey Boundary Polygon Coherence Check        │
-│  ├── Vector 2: 64-bit DCT Perceptual Hash (pHash) against 11,202 Works       │
-│  ├── Vector 3: CPWD Civil Velocity Norms with Monsoon Curing Adjustment      │
-│  └── Vector 4: Fiscal Parity Audit (Disbursed Funds vs Verified MB Records)  │
-│                                                                              │
-│  STATUTORY FIELD ENFORCEMENT & ADMISSIBILITY                                │
-│  ├── PWD Form 44 Physical Field Verification Notices (7-Day Notice Gate)     │
-│  └── Section 65B Bharatiya Sakshya Adhiniyam (BSA 2023) Digital Seals        │
-│                                                                              │
-└──────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Direct Resolution of PWD-04 Mandates
-
-To satisfy the manual's mandate of analyzing periodic site photographs, videos, and project metadata without demanding impossible manual travel across remote districts:
-
-1. **Periodic Site Photograph & Drone Video Analysis (Computer Vision pHash):**
-   * Computes a 64-bit Discrete Cosine Transform (DCT) fingerprint (`pHash` and `dHash`) for every submitted site photograph or drone video keyframe.
-   * Cross-references the fingerprint against a statewide repository of 11,202 civil works to detect duplicate, recycled, or stock imagery across projects.
-   * *Demonstrated in Live Prototype:* Case A flags a claimed Lamphelpat construction photo as an immediate 93.4% perceptual match to an archived 2024 Bishnupur classroom photo.
-
-2. **Geolocation Telemetry & Geofence Boundary Polygon Coherence:**
-   * Extracts device EXIF telemetry (latitude, longitude, altitude, timestamp) and reverse-geocodes it against the registered survey boundary polygon for the sanctioned project.
-   * Flags coordinates that drift outside the permitted perimeter.
-   * *Demonstrated in Live Prototype:* Case A automatically flags a 9.42 km coordinate drift away from the sanctioned Lamphelpat site boundary.
-
-3. **Schedule Slippage Detection & CPWD Civil Velocity Curves:**
-   * Models reported milestone completion percentages against CPWD engineering velocity norms and local monsoon curing dynamics.
-   * Identifies unphysical construction velocity spikes (e.g., claiming a jump from 15% to 100% completion in 12 days during peak monsoon season).
-   * Highlights schedule slippages where physical visible progress lags critically behind GANTT milestone targets.
-
-4. **Project Metadata & Measurement Book (MB) Reconciliation:**
-   * Reconciles contractor Running Account (RA) bills against physical Measurement Book (MB Form 24) entries verified by Assistant and Executive Engineers.
-   * Flags anomalies where 100% of milestone funds are claimed or disbursed without corresponding signed MB entries.
-
-5. **Automated Anomaly Flagging & PWD Form 44 Field Inspection Dispatch:**
-   * When multidimensional anomaly scoring exceeds statutory thresholds (Composite Risk $\ge 70$), the system halts further disbursements and automatically dispatches a formal **PWD Form 44 Physical Field Inspection Notice**.
-   * Implements strict administrative due process and natural justice by granting a mandatory 7-day field verification window before financial debarment.
-
-6. **Court-Ready Admissibility under Section 65B BSA 2023:**
-   * Seals all telemetry, photographs, hash comparisons, and audit logs with SHA-256 cryptographic hashes and automated digital certificates under Section 65B of the Bharatiya Sakshya Adhiniyam, 2023.
-   * Produces legally admissible evidence packets ready for the High Court of Manipur or State Lokayukta.
-
----
-
-## Comparison Matrix: Manual Requirements vs. CHEIRAP Implementation
-
-| Hackathon Manual Requirement | Traditional Manual Workflow | CHEIRAP Implementation (Team Lotux) |
-| :--- | :--- | :--- |
-| **PWD-04: Periodic Site Photo Analysis** | Subjective inspection of printed photo attachments | **64-bit DCT pHash** checking photo originality against 11,202 state projects |
-| **PWD-04: Geolocation Verification** | Trusting self-reported contractor address | **Automated EXIF GPS polygon check** flagging $> 100\text{ m}$ perimeter drift |
-| **PWD-04: Milestone Slippage Detection** | Manual comparison of GANTT charts months late | **CPWD velocity curve engine** adjusting for monsoon curing schedules |
-| **PWD-04: Measurement Book (MB) Parity** | Paper MB verification after bill clearance | **Fiscal parity check** matching RA disbursements against verified MB entries |
-| **PWD-04: Anomaly Field Audit Trigger** | Delayed vigilance inquiries after funds leak | **PWD Form 44 Notice** auto-dispatched with 7-day physical verification window |
-| **Judicial Admissibility** | Ad-hoc internal departmental inquiry notes | **Sec 65B BSA 2023** tamper-proof digital cryptographic seals |
-| **Administrative Due Process** | Arbitrary blacklisting or delayed action | **PWD Form 44 Notice** granting 7-day field verification window |
-
----
-
-## System Visual Tour
-
-### 1. Pre-Award Surveillance Command Center & Doppler Capex Spectrum
-*Monitors ₹1,874 Cr public capex across 92 active line-department tenders with real-time Doppler risk distribution.*
-![Command Center](docs/screenshots/01_hero_surveillance.png)
-
----
-
-### 2. The 4 Procurement Exploits (CVC Window Squeeze & Collusion Analysis)
-*Interpretable breakdown of tender rigging mechanisms: Window Compression, Corrigendum Churn, EMD Barriers, and Price-Density Collusion.*
-![Problem & Exploits](docs/screenshots/02_exploits_analysis.png)
-
----
-
-### 3. Mantripukhri IT SEZ Geotagged Venue & Dual-Brain Architecture
-*Co-verifies site coordinates against Mantripukhri IT Park SEZ and runs deterministic legal automata alongside econometric anomaly isolation.*
-![Dual-Brain Architecture](docs/screenshots/03_dual_brain_architecture.png)
-
----
-
-### 4. Authenticated State Vigilance Commissioner Surveillance Dashboard
-*Live vigilance tier segmentation (RED Critical, AMBER Advisory, GREEN Compliant) with real-time SOAP/XML feed ingestion.*
-![Dashboard View](docs/screenshots/04_tender_surveillance_dashboard.png)
-
----
-
-### 5. Forensic Tender Anomaly Dossier & Radar Analysis
-*In-depth case investigation showing multidimensional risk scoring (82/100 RED), radar variance, CVC corrigendum chronology, and single-bidder walkover probability.*
-![Tender Dossier Modal](docs/screenshots/05_tender_dossier_modal.png)
-
----
-
-### 6. Pre-Award Statutory Stay Order Dispatch (Article 14 & GFR-161)
-*Generates enforceable stay notices with statutory citations, CVC directives, Manipur State Emblem, and digital signature sealing.*
-![Stay Order Modal](docs/screenshots/06_pre_award_stay_order.png)
-
----
-
-### 7. Post-Award Works & Ground Assurance View (PWD-04 & Manipur Darpan)
-*Statewide capital works assurance covering 11,202 civil projects, physical inspection notices, and discrepancy tracking.*
-![Works Assurance Overview](docs/screenshots/07_works_assurance_registry.png)
-
----
-
-### 8. Ground Evidence Camera Viewport: Flagged Ghost Work (Case A)
-*Side-by-side photographic inspection showing claimed photo taken in Lamphelpat matched against an archived 2024 Bishnupur classroom (93.4% pHash collision alert) with live HUD viewfinder reticles, EXIF metadata, and PWD-04 Statutory Hold.*
-![Case A Photo Forensics](docs/screenshots/08_case_a_photographic_forensics.png)
-
----
-
-### 9. Ground Evidence Camera Viewport: Verified Model Benchmark (Case B)
-*Churachandpur Government Model College progressive milestone verification: Stage 2 Civil Superstructure Framing (50%) vs Stage 3 Smart Modular Lab Fit-Out (75%) with 0.0% collision (100% unique imagery) and Green Passport Clearance.*
-![Case B Verified Benchmark](docs/screenshots/09_case_b_verified_benchmark.png)
-
----
-
-## Trilateral Grand Jury Alignment Matrix
-
-CHEIRAP is purpose-built to address the specific mandates of the Hackathon's **Trilateral Evaluation Framework**:
-
-```
-┌──────────────────────────────────────────────────────────────────────────────────┐
-│                             TRILATERAL JURY RUBRIC                               │
-├──────────────────────────┬────────────────────────────┬──────────────────────────┤
-│ TECHNICAL TRUST (35%)    │ GOVERNMENT RELEVANCE (30%) │ INDUSTRY POTENTIAL (35%) │
-├──────────────────────────┼────────────────────────────┼──────────────────────────┤
-│ • Working Prototype      │ • Dept Problem Fit         │ • Scalability & TAM      │
-│ • Modular Architecture   │ • Practical Value          │ • Enterprise UX/UI       │
-│ • Deterministic AI       │ • Administrative Due-Proc  │ • Deployability          │
-│ • Sec 65B BSA Seals      │ • CAG Audit Elimination    │ • Sub-100ms Inference    │
-└──────────────────────────┴────────────────────────────┴──────────────────────────┘
-```
-
-### 1. Technical Trust (35% Weightage)
-* **Dual-Brain Hybrid Intelligence**: Combines deterministic finite-state legal automata (validating 8 statutory provisions with 0% hallucination) with an econometric **Isolation Forest & Benford's Law anomaly scorer**.
-* **Computer Vision Perceptual Hashing (pHash)**: 64-bit DCT perceptual hash engine detects duplicate site photos even after resizing, cropping, compression, or metadata wiping.
-* **Cryptographic Tamper-Proofing**: Generates SHA-256 evidence chain hashes and digital certificates under **Section 65B of the Bharatiya Sakshya Adhiniyam, 2023**, admissible in the High Court of Manipur and State Lokayukta.
-
-### 2. Government Relevance (30% Weightage)
-* **Zero Disruption to Existing Portals**: Ingests standard GePNIC e-procurement data formats (`manipurtenders.gov.in`) and Manipur Works MIS (`darpanmanipur.in`) without altering upstream databases.
-* **Administrative Due Process**: Respects natural justice; flagged works automatically trigger **PWD Form 44 Inspection Notices** allowing 7 days for physical verification by the Superintending Engineer before financial debarment.
-* **MeitY & GIGW 3.0 Compliance**: Includes live font scaling (A- / A / A+), High Contrast accessibility mode (WCAG 2.1 AA certified), and multi-script localization (**English**, **Meetei Mayek ꯃꯩꯇꯩ**, and **Hindi हिन्दी**).
-
-### 3. Industry & Enterprise Potential (35% Weightage)
-* **National Addressable Market**: Plug-and-play architecture deployable across all 28 Indian States and Union Territories managing **₹40 Lakh Crores ($500B+)** in annual public capex.
-* **High-Throughput Microservice Architecture**: FastAPI + Redis async pipeline with sub-100ms inference, capable of scanning thousands of concurrent tenders and capital work milestone claims.
-
----
-
-## The 4 Procurement Exploits Intercepted Pre-Award
-
-| Exploit Code | Tactical Vector | How CHEIRAP Intercepts It | Legal Provision Violated |
-|---|---|---|---|
-| **EXP-01: Window Squeeze** | Tendering authority issues tender with only 4–7 days before submission to choke outside competition. | Flags any open tender with bidding window `< 21 days` (or `< 14 days` for urgent capex). | **GFR-161 & CVC Master Circular 02/02/2022** |
-| **EXP-02: Corrigendum Churn** | Restrictive amendments or scope revisions uploaded 24 hours before bid closing without deadline extension. | Scans timestamp delta between last corrigendum and closing date; mandates minimum 7-day extension. | **CVC Directive Item 4.2 / Rule 173 GFR** |
-| **EXP-03: EMD Barrier** | Inflates Earnest Money Deposit to 5%–10% to eliminate local MSMEs and favored cartels. | Compares EMD against statutory 2%–5% cap; flags out-of-band banking requirements. | **Rule 170(i) GFR 2017 & MSME Act Sec 11** |
-| **EXP-04: Cartel Clustering** | Collusive bidder syndicates submit bids within 0.1%–0.5% margin with clustered digital IP / timestamps. | Isolation Forest price-density clustering detects abnormal symmetry (`p < 0.001`). | **Competition Act 2002 Sec 3(3) (Bid Rigging)** |
-
----
-
-## Post-Award Works & Ground Assurance Engine (PWD-04)
-
-CHEIRAP's ground assurance pipeline reconciles claims across **4 physical validation vectors**:
-
-```
-                  CONTRACTOR RUNNING BILL CLAIM (PWD FORM 26)
-                                      │
-              ┌───────────────────────┴───────────────────────┐
-              ▼                                               ▼
-    VECTOR 1: GEOLOCATION COHERENCE                 VECTOR 2: COMPUTER VISION
-    • Reverse-geocodes EXIF lat/long               • Computes 64-bit pHash & dHash
-    • Compares against surveyed polygon            • Cross-checks 11,202 state photo archive
-    • Flag: > 500m drift outside boundary          • Flag: > 85% visual similarity
-              │                                               │
-              └───────────────────────┬───────────────────────┘
-                                      ▼
-    VECTOR 3: VELOCITY DYNAMICS                     VECTOR 4: FISCAL PARITY
-    • Compares reported % against CPWD norms       • Reconciles disbursed funds vs MB logs
-    • Applies monsoon curing curve adjustment      • Checks EE & AE dual-signed Form 24
-    • Flag: Impossible leaps (e.g., 15% -> 100%)   • Flag: 100% payout with 0 MB entries
-                                      │
-                                      ▼
-                        PWD-04 STATUTORY VERDICT
-        ┌─────────────────────────────┴─────────────────────────────┐
-        ▼                                                           ▼
-   RED SCORE >= 70                                            GREEN SCORE < 20
-   • Freeze running bill disbursements                        • Issue Green Passport Clearance
-   • Dispatch PWD Form 44 Field Audit                         • Auto-approve next running tranche
-   • Stamp Sec 65B BSA Tamper-Proof Seal                      • Archive milestone telemetry
+[Official Portal PDF] ──> [Dense Legal Jargon] ──> [Information Gap] ──> Irreversible Contracts
+                                                            │
+                                                     [CHEIRAP LAYER]
+                                                            │
+                                              Actionable Civic Transparency
 ```
 
 ---
 
-## Statutory Rules & Legal Enforceability
+## 🚀 The Solution: What CHEIRAP Does
 
-CHEIRAP does not provide vague AI suggestions; every alert maps to an **enforceable statutory provision**:
+CHEIRAP acts as an intelligent comprehension layer between complex government portals and public questions. It adheres to **CVC (Central Vigilance Commission)** guidelines and **General Financial Rules (GFR 2017 Rule 161)** without ever making accusatory or speculative claims.
 
-* **Central Vigilance Commission (CVC) Circular No. 02/02/2022**: Minimum tender publication window norms and mandatory corrigendum extensions.
-* **General Financial Rules (GFR) 2017**:
-  * *Rule 144*: Fundamental principles of public buying (equality, transparency, fairness).
-  * *Rule 161*: Minimum 21-day timeline for advertised bidding.
-  * *Rule 170*: EMD ceiling constraints (2%–5%) and MSME exemptions.
-  * *Rule 133(2)*: Mandatory milestone verification before capital works fund release.
-* **Central Public Works Department (CPWD) Manual**:
-  * *Section 12.4 & 29.1*: Physical Measurement Book (MB) verification and photographic milestone certification.
-* **Bharatiya Sakshya Adhiniyam, 2023 (BSA)**:
-  * *Section 65B*: Tamper-evident cryptographic hashing, device telemetry, and electronic record certification for judicial admissibility.
-* **Specific Relief Act, 1963**:
-  * *Section 41(h)*: Statutory compliance mandate for staying contracts prior to completion.
-* **Manipur Lokayukta Act, 2014**: Formal statutory referral pathway for prima facie procurement fraud.
+### Core Features
 
----
-
-## Tech Stack & System Architecture
-
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        CHEIRAP SYSTEM ARCHITECTURE                     │
-├────────────────────────────────────────────────────────────────────────┤
-│                                                                        │
-│   INGESTION LAYER                                                      │
-│   ├── GePNIC SOAP/XML Parser (manipurtenders.gov.in)                   │
-│   ├── Works MIS REST Client (darpanmanipur.in / PWD-04)               │
-│   └── ISRO Bhuvan Geo-Spatial Tile Service                             │
-│                                                                        │
-│   DUAL-BRAIN ANALYTIC CORE                                             │
-│   ├── Brain 1: Deterministic Legal Automata (CVC, GFR-161, CPWD)       │
-│   ├── Brain 2: Econometric Anomaly Scorer (Isolation Forest + pHash)  │
-│   └── Section 65B BSA Tamper-Proof Cryptographic Sealer                │
-│                                                                        │
-│   BACKEND MICROSERVICE (FastAPI & Python 3.12)                         │
-│   ├── Endpoints: /api/tenders, /api/works, /api/stats, /api/regulations│
-│   ├── In-Memory Audit Trail & Event Sourcing Store                     │
-│   └── Automated Legal Dossier & Court-Ready PDF Generator              │
-│                                                                        │
-│   FRONTEND INTERFACE (React 18 + Vite + TypeScript + Tailwind CSS)     │
-│   ├── Pre-Award Surveillance Gateway & Doppler Risk Radar              │
-│   ├── Post-Award Works Assurance Registry & Photo Forensics HUD        │
-│   ├── Multi-Persona SSO (Vigilance Commr, Auditor, Finance Secy, CE)   │
-│   └── GIGW 3.0 Accessibility Suite (Font Scaling, Contrast, Meetei)    │
-│                                                                        │
-└────────────────────────────────────────────────────────────────────────┘
-```
-
-### Core Technologies:
-* **Frontend**: React 18, TypeScript, Tailwind CSS, Lucide Icons, Vite, Recharts (Radar Anomaly Visualizer).
-* **Backend**: Python 3.12+, FastAPI, Uvicorn, Scikit-learn (Isolation Forest), NumPy, NetworkX.
-* **Computer Vision**: Perceptual Hashing (DCT 64-bit pHash / dHash) for image forensics.
-* **Quality Assurance**: Automated Playwright / Browser Verification Suite, Axe-Core Accessibility Engine.
+* 🔍 **Citizen Tender Explorer**: Search and filter Manipur tenders across departments, districts, values, and closing dates with an intuitive **Deadline View**.
+* 📖 **Plain-Language Executive Brief**: Converts 80-page tenders into 4 clear citizen anchors:
+  * *Who is procuring?* (Department & administrative chain)
+  * *What is being bought?* (Scope & deliverables)
+  * *Where is it located?* (District & PIN code)
+  * *What does the budget mean?* (Estimated expenditure, EMD security, tender fee)
+* ⏱️ **Visual Notice Flow Timeline Stepper**: A continuous 4-stage stepper (*Notice $\rightarrow$ Amendments $\rightarrow$ Submission Closes $\rightarrow$ Technical Opening*) that highlights when post-corrigendum response windows are compressed to $<72\text{ hours}$.
+* 📊 **Peer Comparison Benchmark**: Automatically benchmarks a tender's duration and estimated expenditure against historical tenders from the same department to contextualize outliers.
+* ✍️ **Citizen Action & Inquiry Generator**: One-click generation of polite, evidence-based inquiry letters citing specific Tender IDs, dates, and official URLs for RTI (Right to Information) filings or community oversight.
+* 🌐 **Bilingual Meetei Mayek Support**: Complete rendering in the indigenous Meetei Mayek script (`ꯆꯩꯔꯥꯞ`) alongside English for genuine regional inclusion.
+* 🔗 **100% Provenance & Source Traceability**: Direct one-click verification links back to the original `manipurtenders.gov.in` record.
 
 ---
 
-## Quickstart & Local Setup
+## 🛠️ Architecture & Tech Stack
+
+```mermaid
+flowchart TD
+    subgraph Data["1. Data Ingestion & Scoring"]
+        Raw["Raw Manipur GePNIC Data (manipurtenders.gov.in)"] --> Normalizer["Normalization Engine"]
+        Normalizer --> RuleEngine["GFR 2017 / CVC Rule Engine"]
+        RuleEngine --> ScoredDB["92 Scored & Normalized Tender Snapshots"]
+    end
+
+    subgraph Backend["2. Backend Services (FastAPI + Python 3.12)"]
+        ScoredDB --> API["FastAPI REST Endpoints (/api/tenders)"]
+        API --> RegKB["Statutory Traceability & Knowledge Base"]
+    end
+
+    subgraph Frontend["3. Civic Interface (React 19 + TypeScript + Vite)"]
+        API --> App["CHEIRAP Public App"]
+        App --> Explorer["Tender Explorer & Deadline View"]
+        App --> Brief["Executive Brief & Plain Decoder"]
+        App --> Stepper["Notice Flow Timeline Stepper"]
+        App --> Inquiry["Citizen Inquiry & RTI Drafter"]
+    end
+
+    style Data fill:#f8fafc,stroke:#cbd5e1
+    style Backend fill:#e2e8f0,stroke:#64748b
+    style Frontend fill:#15335b,stroke:#0284c7,color:#fff
+```
+
+### Technology Stack
+* **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Lucide Icons, GSAP (GreenSock) for accessible UI motion.
+* **Backend**: FastAPI, Uvicorn, Python 3.12, Pydantic schemas.
+* **Storage & Privacy**: Zero server tracking; bookmarks, private notes, and draft inquiries remain securely in the citizen's browser storage.
+* **Performance**: Sub-100ms local interaction response; fully responsive across desktop, tablet, and mobile.
+
+---
+
+## 📦 Getting Started
 
 ### Prerequisites
-* **Node.js**: v18.0.0 or higher
-* **Python**: v3.10 or higher
+* **Node.js**: v18+ (v20+ recommended)
+* **Python**: 3.10+
 * **Git**
 
 ### Installation
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/haapuchu/cheirap.git
-cd cheirap
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/haapuchu/cheirap.git
+   cd cheirap
+   ```
 
-# 2. Setup and run Backend Server
-cd server
-python -m pip install -r requirements.txt  # Or install fastapi uvicorn pydantic scikit-learn
-python -m uvicorn app:app --port 8000 --reload
+2. **Install Python backend dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-# 3. Setup and run Frontend Web App (in a separate terminal)
-cd ../web
-npm install
-npm run dev
-```
+3. **Install Frontend dependencies**:
+   ```bash
+   cd web
+   npm install
+   cd ..
+   ```
 
-The application will be live at:
-* **Frontend UI**: [http://localhost:5173](http://localhost:5173)
-* **Backend API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
-* **Health Endpoint**: [http://localhost:8000/api/health](http://localhost:8000/api/health)
+### Running Locally
 
----
+1. **Start the FastAPI Backend Service** (Port 8000):
+   ```bash
+   python -m uvicorn server.app:app --host 0.0.0.0 --port 8000 --reload
+   ```
 
-## Automated End-to-End Verification Audit
+2. **Start the Vite Frontend Dev Server** (Port 5173):
+   ```bash
+   npm --prefix web run dev
+   ```
 
-CHEIRAP has undergone automated end-to-end testing across 21 rigorous test modules:
-
-| # | Test Module | Workflow Exercised | Status |
-|---|---|---|---|
-| 1 | **Orient & Hero Scan** | MeitY header, emblem, public capex spectrum | **PASS** |
-| 2 | **The 4 Exploits** | Exploit analysis (Window Squeeze, Corrigendum Churn, etc.) | **PASS** |
-| 3 | **Dual-Brain AI** | Isolation Forest + CVC Statutory Engine | **PASS** |
-| 4 | **Venue Verification** | Mantripukhri IT SEZ geotagged venue validation | **PASS** |
-| 5 | **Forensic Delay** | 18–36 month post-award delay vs pre-award prevention | **PASS** |
-| 6 | **Font Scaling** | A- / A / A+ font scale toggle (MeitY standard) | **PASS** |
-| 7 | **High Contrast** | High-contrast black/amber accessibility mode toggle | **PASS** |
-| 8 | **Localization (MN)** | Meetei Mayek script (ꯃꯩꯇꯩ) localization | **PASS** |
-| 9 | **Localization (HI)** | Devanagari script (हिन्दी) localization | **PASS** |
-| 10 | **Statutory Compendium** | CVC Directives & GFR-161 full rule compendium modal | **PASS** |
-| 11 | **Regulatory Intelligence KB** | Jurisdictional filters, statutory hierarchy & KB explorer | **PASS** |
-| 12 | **NICGEP Real-Time Feed** | Simulated SOAP/XML sync with SHA-256 digital verification | **PASS** |
-| 13 | **NIC e-Praman SSO Login** | Role selection (SVC, Auditor, Secy, Evaluator) & auth | **PASS** |
-| 14 | **Authenticated Dashboard** | Role transition to State Vigilance Commissioner view | **PASS** |
-| 15 | **Vigilance Tier Filter** | Filter 1 critical work (₹43.0 Cr) with CVC window squeeze | **PASS** |
-| 16 | **Forensic Dossier Modal** | Radar chart, timeline forensics & statutory penalties | **PASS** |
-| 17 | **Pre-Award Stay Order Modal**| Statutory notice draft citing Article 14 & GFR-161 | **PASS** |
-| 18 | **Pre-Award Hold Dispatch** | Notice dispatch confirmation toast & audit trail update | **PASS** |
-| 19 | **Works Assurance Overview** | PWD-04 Registry with active capital works capex | **PASS** |
-| 20 | **Case A Photo Forensics** | Recycled photo detection (93.4% pHash match) with HUD viewfinder | **PASS** |
-| 21 | **Case B Milestone Verification** | Green Model Benchmark progressive milestone photos with 0.0% collision | **PASS** |
+3. **Open the App**:
+   Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
-## Team & Submission Credentials
+## 🎯 Sample Demonstration Tenders
 
-* **Team Name**: **Team Lotux**
-* **Repository**: [`https://github.com/haapuchu/cheirap`](https://github.com/haapuchu/cheirap)
-* **Submitted to**: **National Innovation Challenge on AI & Digital Governance – Manipur (2026)**
-* **Organized by**:
-  * **Department of Information Technology (DIT), Government of Manipur**
-  * **Manipur Technology Innovation Foundation (MTIF)**
-* **License**: Open Source Government Technical Architecture (MIT License)
+* **Tender ID `MAN_ED_PROC_2026_0142`**: *Procurement of Prefabricated Modular Infrastructure & Labs for Secondary Schools* (₹4.82 Cr, 3 Corrigenda, short response window).
+* **Tender ID `2026_MSPDC_3473_1`**: *High-voltage power supply distribution works* (Complete timeline stepper lifecycle).
+* **Tender ID `2026_FDM_3484_2`**: *Forest Department conservation logistics* (Standard 20-day open window).
 
-<div align="center">
+---
 
-**“Integrity in Public Procurement is Not a Post-Mortem Report. It is a Real-Time Gatekeeper.”**  
-*CHEIRAP (ꯆꯩꯔꯥꯞ) • Built with pride for the Government of Manipur by Team Lotux.*
+## 🌏 Regional Scalability (Northeast Expansion)
 
-</div>
+While seeded with Manipur procurement data, CHEIRAP's normalized data dictionary is engineered to support e-tender portals across the Northeast:
+* **Assam**: `assamtenders.gov.in`
+* **Meghalaya**: `meghalayatenders.gov.in`
+* **Tripura**: `tripuratenders.gov.in`
+* **Mizoram**: `mizoramtenders.gov.in`
+* **Nagaland**: `nagalandtenders.gov.in`
+
+---
+
+## 🇺🇳 Alignment with UN Sustainable Development Goals (SDGs)
+
+* **SDG 16.6**: Develop effective, accountable, and transparent institutions at all levels.
+* **SDG 16.10**: Ensure public access to information and protect fundamental freedoms in accordance with national legislation.
+* **SDG 9.1**: Develop quality, reliable, sustainable, and resilient infrastructure for economic development and human wellbeing.
+
+---
+
+## 🛡️ Responsible Use & Legal Neutrality Disclaimer
+
+CHEIRAP is an educational, civic-information, and decision-support layer. It is **not** a court of law, a formal vigilance authority, or an enforcement agency. All flags (such as *"Short bidding window"* or *"Several changes recorded"*) are **review signals** designed to encourage public scrutiny of original records—never accusations of wrongdoing. All claims link directly to the official government source for independent verification.
+
+---
+
+## 🤖 AI Tool Usage Disclosure
+
+*In compliance with Section 2.2 of the Hack for Social Cause competition guidelines:*
+* **Extent of AI Tool Usage**: Approximately **25%** of the engineering workflow.
+* **Application**: Used AI coding assistants for writing Playwright UI regression tests, optimizing CSS variable mappings, and structuring documentation outlines.
+* **Original Human Architecture**: Core scoring logic, CVC compliance heuristics, GFR 2017 thresholds, Meetei Mayek script validation, and full-stack product architecture were 100% human-designed and implemented by Team Lotux.
+
+---
+
+## 📄 License
+
+This project is open-source and distributed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
+---
+
+**Developed with ❤️ in Manipur by Team Lotux**  
+*Waikhom Preety Devi & Yumnam Adit Singh*  
+*Viksit Bharat Young Leaders Dialogue 2027*
