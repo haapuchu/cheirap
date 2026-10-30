@@ -8,6 +8,8 @@
 [![State](https://img.shields.io/badge/State-Manipur-emerald.svg)]()
 [![Stack](https://img.shields.io/badge/Stack-React%2019%20%7C%20FastAPI%20%7C%20GSAP-15335b.svg)]()
 
+![CHEIRAP Public Landing Page](assets/screenshots/00_landing_hero.png)
+
 ---
 
 ## Project Overview
