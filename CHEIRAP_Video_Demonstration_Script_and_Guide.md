@@ -130,3 +130,4 @@
 * **GFR**: Pronounced *"G-F-R"* (General Financial Rules).
 * **Pacing Tip**: Pause for half a second after each question in Scene 3 (*"Who is buying? What is being procured? Where is it located?"*) to let evaluators absorb the UI.
 * **Smile & Projection**: Maintain eye contact with the camera during the intro, speaking clearly at a conversational, confident volume.
+

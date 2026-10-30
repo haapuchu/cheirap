@@ -7,6 +7,17 @@
 [![Track](https://img.shields.io/badge/VBYLD%202027-Governance%20%26%20Civic%20Tech-orange.svg)](https://mybharat.gov.in/vbyld-2027)
 [![State](https://img.shields.io/badge/State-Manipur-emerald.svg)]()
 [![Stack](https://img.shields.io/badge/Stack-React%2019%20%7C%20FastAPI%20%7C%20GSAP-15335b.svg)]()
+[![Demo Video](https://img.shields.io/badge/YouTube-Video%20Demo-red.svg?logo=youtube)](https://youtu.be/mUFRQyueny4)
+
+---
+
+## Live Video Demonstration
+
+[![CHEIRAP Video Demonstration](assets/screenshots/video_demo_thumbnail.png)](https://youtu.be/mUFRQyueny4)
+
+*Click the thumbnail banner above to watch the official project walkthrough and live demonstration on YouTube: [https://youtu.be/mUFRQyueny4](https://youtu.be/mUFRQyueny4)*
+
+---
 
 ![CHEIRAP Public Landing Page](assets/screenshots/00_landing_hero.png)
 
