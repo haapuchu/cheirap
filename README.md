@@ -66,6 +66,38 @@ CHEIRAP acts as an intelligent comprehension layer between complex government po
 
 ---
 
+## 📸 Product Walkthrough & Differentiating Features
+
+### 1. Citizen Tender Explorer & Deadline View
+*Intuitive search with live department filtering, deadline calendar views, and objective CVC vigilance chips.*
+![Citizen Tender Explorer](assets/screenshots/01_citizen_explorer.png)
+
+---
+
+### 2. Tender Transparency Brief & Plain-Language Decoder
+*Decodes dense 80-page procurement documents into 4 essential citizen anchors with instant official portal verification.*
+![Tender Transparency Brief](assets/screenshots/02_tender_executive_brief.png)
+
+---
+
+### 3. Visual Timeline Stepper & Corrigenda Window Tracker
+*Maps the lifecycle from notice to opening, alerting citizens when late corrigenda compress the bidding window to $<72\text{ hours}$.*
+![Visual Notice Flow Timeline](assets/screenshots/03_visual_timeline_stepper.png)
+
+---
+
+### 4. Departmental Peer Comparison Benchmark
+*Compares tender durations and budgets against historical departmental averages to identify unusual compression or inflation.*
+![Peer Comparison Benchmark](assets/screenshots/04_peer_comparison_benchmark.png)
+
+---
+
+### 5. Citizen Action: Source-Cited Inquiry & RTI Drafter
+*Empowers citizens, journalists, and CSOs to generate polite, clause-cited inquiry drafts with zero legal barrier.*
+![Citizen Inquiry Drafter](assets/screenshots/05_citizen_inquiry_drafter.png)
+
+---
+
 ## 🛠️ Architecture & Tech Stack
 
 ```mermaid
