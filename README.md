@@ -92,7 +92,9 @@ CHEIRAP acts as an intelligent comprehension layer between complex government po
 
 ---
 
-## Architecture & Tech Stack
+## Technical Design Document (TDD)
+
+### 1. Architectural Blueprint
 
 ```mermaid
 flowchart LR
@@ -129,7 +131,16 @@ flowchart LR
     end
 ```
 
-### Technology Stack
+### 2. Core Subsystems
+
+1. **Ingestion & Normalization Engine**: Ingests multi-table HTML and PDF records from NIC GePNIC, extracting 32 standardized attributes including work description, estimated expenditure, dates, EMD security deposits, and corrigenda logs.
+2. **Statutory Vigilance Rule Engine**: Evaluates tender timelines against statutory thresholds:
+   * **GFR 2017 Rule 161**: Evaluates whether the bidding window meets minimum response times (minimum 21 days for standard open tenders; 14 days under documented urgency).
+   * **CVC Office Order 01/01/2021**: Detects substantial tender amendments issued close to deadline that fail to provide a compensatory extension (flagging windows compressed below 72 hours).
+   * **Vigilance Scoring Metric**: Normalizes risks into a calm 0 to 100 score, categorized into low (Green), medium (Amber), or high vigilance review (Red).
+3. **Local-First Privacy Architecture**: Bookmarks, personal notes, and draft RTI inquiry letters are processed entirely in browser client-side storage (`localStorage`). No citizen tracking, personal profiling, or surveillance logs are created on the server.
+
+### 3. Technology Stack
 * **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Lucide Icons, GSAP (GreenSock) for accessible UI motion.
 * **Backend**: FastAPI, Uvicorn, Python 3.12, Pydantic schemas.
 * **Storage & Privacy**: Zero server tracking; bookmarks, private notes, and draft inquiries remain securely in the citizen's browser storage.
@@ -152,12 +163,26 @@ flowchart LR
    cd cheirap
    ```
 
-2. **Install Python backend dependencies**:
+2. **Configure Environment Variables**:
+   Copy the provided environment template:
+   ```bash
+   cp .env.example .env
+   ```
+   Default environment variables:
+   | Variable | Default Value | Purpose |
+   | :--- | :--- | :--- |
+   | `PORT` | `8000` | Backend API port |
+   | `HOST` | `0.0.0.0` | API bind address |
+   | `CORS_ORIGINS` | `http://localhost:5173` | Allowed frontend client origins |
+   | `VITE_API_URL` | `http://localhost:8000` | Frontend backend API URL |
+   | `VITE_STATE_PORTAL` | `manipurtenders.gov.in` | Target official state portal |
+
+3. **Install Python backend dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Install Frontend dependencies**:
+4. **Install Frontend dependencies**:
    ```bash
    cd web
    npm install
@@ -181,6 +206,27 @@ flowchart LR
 
 ---
 
+## Sample Data & Test Cases
+
+### Sample Dataset
+The repository includes a curated, 92-tender snapshot from Manipur's official e-procurement portal located at:
+* [`web/src/data/tenders_scored.json`](web/src/data/tenders_scored.json)
+
+This dataset covers active and awarded procurements across Public Works (PWD), Education, Medical & Health, Public Health Engineering (PHED), Power Distribution (MSPDCL), and Forest Conservation.
+
+### Running Automated Test Cases
+An automated unit test suite validates data schemas, GFR/CVC scoring algorithms, and API endpoints:
+```bash
+python -m unittest tests/test_tenders_api.py
+```
+
+Test coverage includes:
+* **Schema Integrity**: Verifies all required fields (Tender ID, title, department, estimated value, dates, risk score) exist and conform to typing rules.
+* **Statutory Compliance Bounds**: Validates that all computed vigilance risk scores stay strictly within the normalized 0 to 100 boundary.
+* **API Service Verification**: Asserts that `/api/health` and `/api/tenders` endpoints return correct status codes and structured payloads.
+
+---
+
 ## Sample Demonstration Tenders
 
 * **Tender ID `MAN_ED_PROC_2026_0142`**: *Procurement of Prefabricated Modular Infrastructure & Labs for Secondary Schools* (₹4.82 Cr, 3 Corrigenda, short response window).
@@ -189,14 +235,34 @@ flowchart LR
 
 ---
 
-## Regional Scalability (Northeast Expansion)
+## Future Implementation Plan: Pan-India State Rollout
 
-While seeded with Manipur procurement data, CHEIRAP's normalized data dictionary is engineered to support e-tender portals across the Northeast:
-* **Assam**: `assamtenders.gov.in`
-* **Meghalaya**: `meghalayatenders.gov.in`
-* **Tripura**: `tripuratenders.gov.in`
-* **Mizoram**: `mizoramtenders.gov.in`
-* **Nagaland**: `nagalandtenders.gov.in`
+While prototyped with Manipur procurement data, CHEIRAP is built as a modular civic technology framework designed to scale across all 28 States and 8 Union Territories in India.
+
+### Phase 1: Northeast Regional Federation (Months 1 to 3)
+* Deploy unified GePNIC connectors across all 8 Northeastern states sharing the standard NIC architecture:
+  * Assam (`assamtenders.gov.in`)
+  * Meghalaya (`meghalayatenders.gov.in`)
+  * Tripura (`tripuratenders.gov.in`)
+  * Mizoram (`mizoramtenders.gov.in`)
+  * Nagaland (`nagalandtenders.gov.in`)
+  * Arunachal Pradesh (`arunachaltenders.gov.in`)
+  * Sikkim (`sikkimtenders.gov.in`)
+
+### Phase 2: National State Procurement Adapter Layer (Months 4 to 8)
+* Develop ingestion adapters for non-GePNIC and customized state procurement portals across major regions:
+  * **Western & Central**: Maharashtra (`mahatenders.gov.in`), Gujarat (`tender.nprocure.com`), Madhya Pradesh (`mptenders.gov.in`)
+  * **Southern**: Karnataka (`eproc.karnataka.gov.in`), Tamil Nadu (`tntenders.gov.in`), Kerala (`etenders.kerala.gov.in`), Andhra Pradesh (`apeprocurement.gov.in`), Telangana (`tender.telangana.gov.in`)
+  * **Northern**: Uttar Pradesh (`etender.up.nic.in`), Rajasthan (`eproc.rajasthan.gov.in`), Punjab (`eproc.punjab.gov.in`), Haryana (`etenders.hry.nic.in`)
+  * **Eastern**: West Bengal (`wbtenders.gov.in`), Odisha (`tendersodisha.gov.in`), Bihar (`eproc2.bihar.gov.in`), Jharkhand (`jharkhandtenders.gov.in`)
+
+### Phase 3: Constitutional Schedule VIII Multilingual Localization (Months 9 to 12)
+* Expand plain-language translations from Meetei Mayek to all 22 Eighth Schedule languages (including Hindi, Bengali, Assamese, Tamil, Telugu, Marathi, and Gujarati).
+* Provide localized civic summaries for Gram Panchayats, Autonomous District Councils, and local municipal wards.
+
+### Phase 4: Grassroots Civic Alerting & Open Data APIs (Months 13 to 18)
+* Launch WhatsApp and SMS notification integrations for verified community leaders and local journalists when tenders in their district undergo late-stage amendments or compressed bidding windows.
+* Publish open REST APIs and bulk CSV exports for academic research, civic monitoring, and investigative journalism.
 
 ---
 
