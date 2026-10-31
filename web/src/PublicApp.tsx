@@ -27,6 +27,7 @@ import {
   FileText,
   Flag,
   Filter,
+  SlidersHorizontal,
   Globe2,
   HelpCircle,
   Info,
@@ -1938,6 +1939,19 @@ function PublicApp() {
   const [sortField, setSortField] = useState<SortField>('value');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const activeFilterCount =
+    (department !== 'ALL' ? 1 : 0) +
+    (district !== 'ALL' ? 1 : 0) +
+    (location !== 'ALL' ? 1 : 0) +
+    (statusFilter !== 'ALL' ? 1 : 0) +
+    (valueBand !== 'ALL' ? 1 : 0) +
+    (closingWindow !== 'ALL' ? 1 : 0) +
+    (signal !== 'ALL' ? 1 : 0) +
+    (showSavedOnly ? 1 : 0);
+
+  const isFiltering = query.trim() !== '' || activeFilterCount > 0;
   const heroSearchRef = useRef<HTMLInputElement>(null);
   const exploreSearchRef = useRef<HTMLInputElement>(null);
   const [listMessage, setListMessage] = useState('');
@@ -2434,60 +2448,181 @@ function PublicApp() {
           </div>
 
           <div className="explore-toolbar">
-            <div className="explore-search">
-              <Search size={18} />
-              <input
-                ref={exploreSearchRef}
-                type="search"
-                name="explore-search"
-                enterKeyHint="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search title, work, department, district or tender ID (or press /)"
-                aria-label="Search tenders"
-              />
+            <div className="explore-search-bar-wrap">
+              <div className="explore-search">
+                <Search size={18} className="search-field-icon" />
+                <input
+                  ref={exploreSearchRef}
+                  type="search"
+                  name="explore-search"
+                  enterKeyHint="search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search title, dept, district, or tender ID..."
+                  aria-label="Search tenders"
+                />
+                {query && (
+                  <button
+                    type="button"
+                    className="search-field-clear"
+                    onClick={() => { setQuery(''); exploreSearchRef.current?.focus(); }}
+                    aria-label="Clear search text"
+                  >
+                    <X size={15} />
+                  </button>
+                )}
+              </div>
+              <button
+                type="button"
+                className={`mobile-filter-btn ${mobileFiltersOpen ? 'mobile-filter-btn-open' : ''} ${activeFilterCount > 0 ? 'mobile-filter-btn-active' : ''}`}
+                onClick={() => setMobileFiltersOpen((open) => !open)}
+                aria-expanded={mobileFiltersOpen}
+                aria-label={mobileFiltersOpen ? 'Hide detailed filters' : 'Show detailed filters'}
+              >
+                <SlidersHorizontal size={16} />
+                <span>Filters</span>
+                {activeFilterCount > 0 && <span className="filter-count-badge">{activeFilterCount}</span>}
+              </button>
             </div>
-            <div className="filter-group filter-group-primary">
-              <Filter size={16} />
-              <select aria-label="Filter by department" value={department} onChange={(event) => setDepartment(event.target.value)}>
-                <option value="ALL">All departments</option>
-                {departments.map((item) => <option key={item} value={item}>{item}</option>)}
-              </select>
-              <select aria-label="Filter by district" value={district} onChange={(event) => setDistrict(event.target.value)}>
-                <option value="ALL">All districts</option>
-                {districts.slice(0, 25).map((item) => <option key={item} value={item}>{item}</option>)}
-              </select>
-              <select aria-label="Filter by location" value={location} onChange={(event) => setLocation(event.target.value)}>
-                <option value="ALL">All locations</option>
-                {locations.slice(0, 20).map((item) => <option key={item} value={item}>{item}</option>)}
-              </select>
+
+            {/* Quick Filter Horizontal Carousel */}
+            <div className="explore-quick-chips" role="region" aria-label="Quick filters">
+              <button
+                type="button"
+                className={`quick-chip ${!isFiltering ? 'quick-chip-active' : ''}`}
+                onClick={clearFilters}
+              >
+                All ({allTenders.length})
+              </button>
+              <button
+                type="button"
+                className={`quick-chip ${signal === 'Open opportunity' ? 'quick-chip-active' : ''}`}
+                onClick={() => setSignal(signal === 'Open opportunity' ? 'ALL' : 'Open opportunity')}
+              >
+                <StatusDot tier="GREEN" />
+                <span>Open opportunity</span>
+              </button>
+              <button
+                type="button"
+                className={`quick-chip ${signal === 'Short bidding window' ? 'quick-chip-active' : ''}`}
+                onClick={() => setSignal(signal === 'Short bidding window' ? 'ALL' : 'Short bidding window')}
+              >
+                <StatusDot tier="AMBER" />
+                <span>Short window</span>
+              </button>
+              <button
+                type="button"
+                className={`quick-chip ${valueBand === 'UNDER_1' ? 'quick-chip-active' : ''}`}
+                onClick={() => setValueBand(valueBand === 'UNDER_1' ? 'ALL' : 'UNDER_1')}
+              >
+                Under ₹1 Cr
+              </button>
+              <button
+                type="button"
+                className={`quick-chip ${valueBand === 'OVER_10' ? 'quick-chip-active' : ''}`}
+                onClick={() => setValueBand(valueBand === 'OVER_10' ? 'ALL' : 'OVER_10')}
+              >
+                Over ₹10 Cr
+              </button>
+              <button
+                type="button"
+                className={`quick-chip ${showSavedOnly ? 'quick-chip-active' : ''}`}
+                onClick={() => setShowSavedOnly((curr) => !curr)}
+              >
+                <Bookmark size={13} fill={showSavedOnly ? 'currentColor' : 'none'} />
+                <span>Saved ({watchlist.length})</span>
+              </button>
+              {activeFilterCount > 0 && (
+                <button
+                  type="button"
+                  className="quick-chip quick-chip-reset"
+                  onClick={clearFilters}
+                  title="Reset all filters"
+                >
+                  <RotateCcw size={12} />
+                  <span>Reset</span>
+                </button>
+              )}
             </div>
-            <div className="filter-group filter-group-secondary">
-              <select aria-label="Filter by tender status" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
-                <option value="ALL">All statuses</option>
-                {statuses.map((item) => <option key={item} value={item}>{item}</option>)}
-              </select>
-              <select aria-label="Filter by estimated value" value={valueBand} onChange={(event) => setValueBand(event.target.value)}>
-                <option value="ALL">All values</option>
-                <option value="UNDER_1">Under ₹1 Cr</option>
-                <option value="ONE_TO_TEN">₹1–10 Cr</option>
-                <option value="OVER_10">Over ₹10 Cr</option>
-              </select>
-              <select aria-label="Filter by closing date" value={closingWindow} onChange={(event) => setClosingWindow(event.target.value)}>
-                <option value="ALL">Any closing date</option>
-                <option value="3">Closing in 3 days</option>
-                <option value="7">Closing in 7 days</option>
-                <option value="14">Closing in 14 days</option>
-              </select>
-              <select aria-label="Filter by review signal" value={signal} onChange={(event) => setSignal(event.target.value)}>
-                <option value="ALL">All signals</option>
-                <option value="Open opportunity">Open opportunity</option>
-                <option value="Short bidding window">Short bidding window</option>
-                <option value="Several changes recorded">Several changes recorded</option>
-                <option value="Low participation signal">Low participation signal</option>
-                <option value="Bid-security outlier">Bid-security outlier</option>
-              </select>
+
+            {/* Detailed Filters Pane (Always visible on desktop, collapsible on mobile) */}
+            <div className={`explore-filters-pane ${mobileFiltersOpen ? 'filters-pane-open' : ''}`}>
+              <div className="filters-pane-top">
+                <span className="filters-pane-title">
+                  <Filter size={15} /> Filter Records {activeFilterCount > 0 ? `(${activeFilterCount} active)` : ''}
+                </span>
+                {activeFilterCount > 0 && (
+                  <button type="button" className="filters-reset-btn" onClick={clearFilters}>
+                    <RotateCcw size={12} /> Reset all
+                  </button>
+                )}
+              </div>
+              <div className="filters-grid-mobile">
+                <div className="filter-field">
+                  <label>Department</label>
+                  <select aria-label="Filter by department" value={department} onChange={(event) => setDepartment(event.target.value)}>
+                    <option value="ALL">All departments</option>
+                    {departments.map((item) => <option key={item} value={item}>{item}</option>)}
+                  </select>
+                </div>
+                <div className="filter-field">
+                  <label>District</label>
+                  <select aria-label="Filter by district" value={district} onChange={(event) => setDistrict(event.target.value)}>
+                    <option value="ALL">All districts</option>
+                    {districts.slice(0, 25).map((item) => <option key={item} value={item}>{item}</option>)}
+                  </select>
+                </div>
+                <div className="filter-field">
+                  <label>Location</label>
+                  <select aria-label="Filter by location" value={location} onChange={(event) => setLocation(event.target.value)}>
+                    <option value="ALL">All locations</option>
+                    {locations.slice(0, 20).map((item) => <option key={item} value={item}>{item}</option>)}
+                  </select>
+                </div>
+                <div className="filter-field">
+                  <label>Tender Status</label>
+                  <select aria-label="Filter by tender status" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
+                    <option value="ALL">All statuses</option>
+                    {statuses.map((item) => <option key={item} value={item}>{item}</option>)}
+                  </select>
+                </div>
+                <div className="filter-field">
+                  <label>Estimated Value</label>
+                  <select aria-label="Filter by estimated value" value={valueBand} onChange={(event) => setValueBand(event.target.value)}>
+                    <option value="ALL">All values</option>
+                    <option value="UNDER_1">Under ₹1 Cr</option>
+                    <option value="ONE_TO_TEN">₹1–10 Cr</option>
+                    <option value="OVER_10">Over ₹10 Cr</option>
+                  </select>
+                </div>
+                <div className="filter-field">
+                  <label>Closing Deadline</label>
+                  <select aria-label="Filter by closing date" value={closingWindow} onChange={(event) => setClosingWindow(event.target.value)}>
+                    <option value="ALL">Any closing date</option>
+                    <option value="3">Closing in 3 days</option>
+                    <option value="7">Closing in 7 days</option>
+                    <option value="14">Closing in 14 days</option>
+                  </select>
+                </div>
+                <div className="filter-field filter-field-full">
+                  <label>Review Signal</label>
+                  <select aria-label="Filter by review signal" value={signal} onChange={(event) => setSignal(event.target.value)}>
+                    <option value="ALL">All review signals</option>
+                    <option value="Open opportunity">Open opportunity</option>
+                    <option value="Short bidding window">Short bidding window</option>
+                    <option value="Several changes recorded">Several changes recorded</option>
+                    <option value="Low participation signal">Low participation signal</option>
+                    <option value="Bid-security outlier">Bid-security outlier</option>
+                  </select>
+                </div>
+              </div>
+              <div className="filters-pane-actions-mobile">
+                <button type="button" className="filters-apply-btn" onClick={() => setMobileFiltersOpen(false)}>
+                  Show {sortedFilteredTenders.length} Tender{sortedFilteredTenders.length === 1 ? '' : 's'}
+                </button>
+              </div>
             </div>
+
             <div className="explore-toolbar-actions">
               <div className="view-mode-selector" role="group" aria-label="Explorer layout mode">
                 <button
@@ -2520,6 +2655,55 @@ function PublicApp() {
               </button>
             </div>
           </div>
+
+          {activeFilterCount > 0 && (
+            <div className="active-filters-strip" aria-label="Active filters">
+              <span className="active-filters-label">Active:</span>
+              {department !== 'ALL' && (
+                <button type="button" className="active-filter-pill" onClick={() => setDepartment('ALL')}>
+                  <span>Dept: {department}</span> <X size={12} />
+                </button>
+              )}
+              {district !== 'ALL' && (
+                <button type="button" className="active-filter-pill" onClick={() => setDistrict('ALL')}>
+                  <span>District: {district}</span> <X size={12} />
+                </button>
+              )}
+              {location !== 'ALL' && (
+                <button type="button" className="active-filter-pill" onClick={() => setLocation('ALL')}>
+                  <span>Loc: {location}</span> <X size={12} />
+                </button>
+              )}
+              {statusFilter !== 'ALL' && (
+                <button type="button" className="active-filter-pill" onClick={() => setStatusFilter('ALL')}>
+                  <span>Status: {statusFilter}</span> <X size={12} />
+                </button>
+              )}
+              {valueBand !== 'ALL' && (
+                <button type="button" className="active-filter-pill" onClick={() => setValueBand('ALL')}>
+                  <span>Value: {valueBand === 'UNDER_1' ? '< ₹1 Cr' : valueBand === 'ONE_TO_TEN' ? '₹1–10 Cr' : '> ₹10 Cr'}</span> <X size={12} />
+                </button>
+              )}
+              {closingWindow !== 'ALL' && (
+                <button type="button" className="active-filter-pill" onClick={() => setClosingWindow('ALL')}>
+                  <span>Closing: {closingWindow}d</span> <X size={12} />
+                </button>
+              )}
+              {signal !== 'ALL' && (
+                <button type="button" className="active-filter-pill" onClick={() => setSignal('ALL')}>
+                  <span>Signal: {signal}</span> <X size={12} />
+                </button>
+              )}
+              {showSavedOnly && (
+                <button type="button" className="active-filter-pill" onClick={() => setShowSavedOnly(false)}>
+                  <span>Saved only</span> <X size={12} />
+                </button>
+              )}
+              <button type="button" className="clear-all-pill" onClick={clearFilters}>
+                Clear all
+              </button>
+            </div>
+          )}
           {listMessage && <p className="action-message explore-message" role="status">{listMessage}</p>}
           {showDeadlineCalendar && <DeadlineCalendar tenders={allTenders} onOpen={openTender} />}
           <div className="explore-summary">
