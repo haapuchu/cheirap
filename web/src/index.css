@@ -455,6 +455,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .status-green { background: #5d9a79; }
 .status-amber { background: #d3954d; }
 .status-red { background: #ba6970; }
+.status-blue { background: #2c6eaa; }
 
 .explore-page { padding: 70px 0 110px; }
 .explore-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 36px; }

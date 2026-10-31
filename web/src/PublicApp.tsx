@@ -2463,7 +2463,7 @@ function PublicApp() {
           {showDeadlineCalendar && <DeadlineCalendar tenders={allTenders} onOpen={openTender} />}
           <div className="explore-summary">
             <span>{sortedFilteredTenders.length} tenders shown · Sorted by {sortField} ({sortDirection === 'asc' ? 'ascending' : 'descending'})</span>
-            <span className="explore-summary-note"><StatusDot tier="GREEN" /> {greenCount} open opportunity signals · <StatusDot tier="AMBER" /> {amberCount} worth a closer look · {districts.length} district areas</span>
+            <span className="explore-summary-note"><StatusDot tier="GREEN" /> {greenCount} open opportunity signals · <StatusDot tier="AMBER" /> {amberCount} worth a closer look · <span className="status-dot status-blue" aria-hidden="true" /> {districts.length} district areas</span>
           </div>
           <div className="explore-signal-strip">
             <div><span>Open opportunity</span><i><b style={{ width: `${(greenCount / allTenders.length) * 100}%` }} /></i><strong>{greenCount}</strong></div>
