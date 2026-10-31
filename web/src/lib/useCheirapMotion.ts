@@ -258,15 +258,10 @@ export function useCheirapMotion(rootRef: RefObject<HTMLElement | null>, activeP
           intro.from(heroCopy.querySelector('.hero-notes'), { opacity: 0, y: 10 }, '-=0.3');
           intro.from(
             heroVisual.querySelector('.hero-record-card'),
-            { opacity: 0, y: 28, rotation: -9, scale: 0.95, duration: 0.78 },
+            { opacity: 0, y: 28, rotation: -4, scale: 0.96, duration: 0.72 },
             'intro+=0.1'
           );
           intro.from(heroVisual.querySelector('.hero-emblem'), { opacity: 0, scale: 0.7, duration: 0.5 }, '-=0.38');
-          intro.from(
-            heroVisual.querySelectorAll('.hero-visual-orbit'),
-            { opacity: 0, scale: 0.84, stagger: 0.1, duration: 0.5 },
-            '-=0.35'
-          );
 
           // Desktop parallax depth scrub
           if (isDesktop && heroSection) {

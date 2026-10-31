@@ -2200,18 +2200,16 @@ function PublicApp() {
               <p>Explore public tender records in plain language, compare similar contracts, and verify every source on the official portal.</p>
               <div className="hero-search">
                 <Search size={19} />
-                 <input ref={heroSearchRef} type="search" name="tender-search" enterKeyHint="search" value={query} onChange={(event) => setQuery(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && openExplore(query)} placeholder="Search a tender, department, district or work (press /)" aria-label="Search public tenders" />
+                 <input ref={heroSearchRef} type="search" name="tender-search" enterKeyHint="search" value={query} onChange={(event) => setQuery(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && openExplore(query)} placeholder="Search tenders, departments, or districts... (press /)" aria-label="Search public tenders" />
                 <button onClick={() => openExplore(query)}>Search</button>
               </div>
               <div className="hero-notes">
                 <DataStatus />
                 <span><Check size={14} /> Official source links preserved</span>
-                <span><Check size={14} /> CVC & GFR 2017 Audit Baseline</span>
-                <span><Check size={14} /> Signals are not legal findings</span>
+                <span>CVC & GFR 2017 Audit Baseline</span>
               </div>
             </div>
              <div className="hero-visual" aria-label="Tender transparency visual">
-              <div className="hero-visual-orbit orbit-one" /><div className="hero-visual-orbit orbit-two" />
               <div className="hero-record-card">
                 <div className="hero-record-top"><span className="hero-record-label">A public record, explained</span><span className="record-source-dot" /></div>
                 <div className="hero-record-doc"><FileText size={20} /><span>Notice Inviting Tender</span><small>Government of Manipur</small></div>
@@ -2251,7 +2249,7 @@ function PublicApp() {
             <div className="question-grid">
               <button onClick={() => { setLocation('ALL'); openExplore(); }}><span className="question-icon"><MapPinned size={19} /></span><span className="question-index">01</span><strong>What is planned near me?</strong><span>Browse notices by location and closing date.</span><span className="question-cta">Browse by place <ArrowUpRight size={15} /></span></button>
               <button onClick={() => { setDepartment('ALL'); openExplore(); }}><span className="question-icon"><Network size={19} /></span><span className="question-index">02</span><strong>What is each department buying?</strong><span>See which public bodies are procuring work and services.</span><span className="question-cta">Browse by department <ArrowUpRight size={15} /></span></button>
-              <button onClick={() => { setSignal('Short bidding window'); openExplore(); }}><span className="question-icon"><Sparkles size={19} /></span><span className="question-index">03</span><strong>What deserves a closer look?</strong><span>Start with timelines, amendments, and participation signals.</span><span className="question-cta">Explore signals <ArrowUpRight size={15} /></span></button>
+              <button onClick={() => { setSignal('Short bidding window'); openExplore(); }}><span className="question-icon"><ShieldCheck size={19} /></span><span className="question-index">03</span><strong>What deserves a closer look?</strong><span>Start with timelines, amendments, and participation signals.</span><span className="question-cta">Explore signals <ArrowUpRight size={15} /></span></button>
             </div>
           </section>
 
