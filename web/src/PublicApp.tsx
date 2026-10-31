@@ -44,7 +44,6 @@ import {
   Search,
   Share2,
   ShieldCheck,
-  Sparkles,
   Table,
   Users,
   UsersRound,
@@ -1088,7 +1087,7 @@ function CitizenInquiryGenerator({ tender, brief, onMessage }: { tender: Tender;
           <section className="detail-section">
             <div className="section-heading-inline"><h3>Why it is highlighted</h3><Info size={16} /></div>
             <div className="signal-explanation">
-              <div className={`signal-icon ${getSignalTone(signal.tone)}`}><Sparkles size={17} /></div>
+              <div className={`signal-icon ${getSignalTone(signal.tone)}`}><ShieldCheck size={17} /></div>
               <div><strong>{signal.label}</strong><p>{signal.detail} This is a public-interest signal for context, not a finding of wrongdoing.</p></div>
             </div>
             <div className="detail-mini-grid">
@@ -1666,7 +1665,7 @@ function TenderDetail({
                 <ResponseWindowVisual tender={tender} benchmark={benchmark} />
                 <SpendScaleVisual tender={tender} portfolioValues={portfolioValues} department={departmentName} />
                 <div className="signal-explanation executive-signal">
-                  <div className={`signal-icon ${getSignalTone(signal.tone)}`}><Sparkles size={17} /></div>
+                  <div className={`signal-icon ${getSignalTone(signal.tone)}`}><ShieldCheck size={17} /></div>
                   <div>
                     <strong>{signal.label}</strong>
                     <p>{signal.detail} This is a public-interest signal for context, not a finding of wrongdoing.</p>
@@ -2359,7 +2358,7 @@ function PublicApp() {
 
           <section id="data-method" className="method-section page-container anchor-section">
             <div className="section-heading"><span className="eyebrow">Data & method</span><h2>Trust is part of the interface.</h2><p>Every record should tell you where it came from, what is connected today, and what CHEIRAP can and cannot infer.</p></div>
-            <div className="method-grid"><div><div className="method-icon"><Globe2 size={18} /></div><h3>Official sources first</h3><p>We preserve the original government portal and tender identifiers so the public record remains verifiable.</p></div><div><div className="method-icon"><Sparkles size={18} /></div><h3>Signals with context</h3><p>We explain timelines, changes, and comparisons without turning patterns into accusations or legal conclusions.</p></div><div><div className="method-icon"><NotebookPen size={18} /></div><h3>Citizen tools stay local</h3><p>Watchlists, private notes, shareable reading lists, and correction drafts stay in the browser until a real service is intentionally connected.</p></div><div><div className="method-icon"><Info size={18} /></div><h3>Visible data status</h3><p>This release distinguishes available, partial, and not-connected material. It does not make a legal-evidence or admissibility claim.</p></div></div>
+            <div className="method-grid"><div><div className="method-icon"><Globe2 size={18} /></div><h3>Official sources first</h3><p>We preserve the original government portal and tender identifiers so the public record remains verifiable.</p></div><div><div className="method-icon"><ShieldCheck size={18} /></div><h3>Signals with context</h3><p>We explain timelines, changes, and comparisons without turning patterns into accusations or legal conclusions.</p></div><div><div className="method-icon"><NotebookPen size={18} /></div><h3>Citizen tools stay local</h3><p>Watchlists, private notes, shareable reading lists, and correction drafts stay in the browser until a real service is intentionally connected.</p></div><div><div className="method-icon"><Info size={18} /></div><h3>Visible data status</h3><p>This release distinguishes available, partial, and not-connected material. It does not make a legal-evidence or admissibility claim.</p></div></div>
           </section>
         </main>
       ) : (

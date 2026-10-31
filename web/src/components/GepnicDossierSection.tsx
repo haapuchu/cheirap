@@ -48,10 +48,10 @@ export const GepnicDossierSection: React.FC<GepnicDossierSectionProps> = ({ tend
             <div className="banner-title-row">
               <span className="banner-title">
                 {isVerified
-                  ? 'Official Portal Filing — Source Captured'
+                  ? 'Official Portal Filing: Source Captured'
                   : isPrototypeFixture
-                    ? 'Official Filing Dossier — Complete 9-Part Record'
-                    : 'Official Portal Dossier — 9-Section Procurement Standard'}
+                    ? 'Official Filing Dossier: Complete 9-Part Record'
+                    : 'Official Portal Dossier: 9-Section Procurement Standard'}
               </span>
             </div>
             <p className="banner-description">
