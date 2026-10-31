@@ -483,7 +483,10 @@ function DetailTabs({ activeTab, onChange }: { activeTab: DetailTabId; onChange:
           aria-selected={activeTab === id}
           aria-controls={`tender-panel-${id}`}
           tabIndex={activeTab === id ? 0 : -1}
-          onClick={() => onChange(id)}
+          onClick={(e) => {
+            onChange(id);
+            e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }}
         >
           <Icon size={16} aria-hidden="true" />
           <span>{label}</span>
@@ -865,7 +868,21 @@ function PeerComparison({ tender, comparable, awardedName, awardDifference, awar
       <section className="detail-section">
         <div className="section-heading-inline"><div><span className="eyebrow-small">Peer comparison</span><h3>How this record compares with similar works.</h3></div><button className="text-action" type="button" onClick={() => onCompare(tender.tender_id)}>Add to compare <ChevronRight size={14} /></button></div>
         <p className="section-helper">Comparable records are selected from the same department where possible. Bars are a reading aid, not a compliance threshold.</p>
-        <div className="comparison-list comparison-list-large">{items.map((item, index) => <div className={`comparison-item ${index === 0 ? 'comparison-item-current' : ''}`} key={item.tender_id}><div className="comparison-item-label"><StatusDot tier={item.vigilance_tier} /><span>{index === 0 ? 'This tender' : 'Similar record'}</span></div><strong>{item.feat_window_days.toFixed(1)} days</strong><div className="comparison-bar"><span style={{ width: `${Math.max(10, (item.feat_window_days / maxWindow) * 100)}%` }} /></div><span>{formatCrores(item.estimated_value_inr)}</span></div>)}</div>
+        <div className="comparison-list comparison-list-large">
+          {items.map((item, index) => (
+            <div className={`comparison-item ${index === 0 ? 'comparison-item-current' : ''}`} key={item.tender_id}>
+              <div className="comparison-item-label">
+                <StatusDot tier={item.vigilance_tier} />
+                <span>{index === 0 ? 'This tender' : 'Similar record'}</span>
+              </div>
+              <strong className="comparison-days">{item.feat_window_days.toFixed(1)} days</strong>
+              <div className="comparison-bar">
+                <span style={{ width: `${Math.max(10, (item.feat_window_days / maxWindow) * 100)}%` }} />
+              </div>
+              <span className="comparison-val">{formatCrores(item.estimated_value_inr)}</span>
+            </div>
+          ))}
+        </div>
       </section>
       <section className="detail-section">
         <div className="section-heading-inline"><div><span className="eyebrow-small">Participation & award</span><h3>What is available after the notice?</h3></div><Users size={16} aria-hidden="true" /></div>
@@ -1240,6 +1257,20 @@ function TenderDetail({
 
   const copyLink = async () => {
     const link = `${window.location.origin}${window.location.pathname}?tender=${encodeURIComponent(tender.tender_id)}`;
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({
+          title: `CHEIRAP: ${tender.title}`,
+          text: `Public tender transparency brief for ${tender.title} (${formatCrores(tender.estimated_value_inr)})`,
+          url: link,
+        });
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1800);
+        return;
+      } catch (err) {
+        if ((err as Error)?.name === 'AbortError') return;
+      }
+    }
     const success = await safeCopyToClipboard(link);
     if (success) {
       setCopied(true);
@@ -1464,19 +1495,20 @@ function TenderDetail({
             <span>Open in separate window</span>
           </button>
           <button
-            className={`secondary-button ${watched ? 'btn-saved-active' : ''}`}
+            className={`secondary-button tender-btn-save ${watched ? 'btn-saved-active' : ''}`}
             onClick={() => onWatch(tender.tender_id)}
+            title={watched ? 'Remove from saved' : 'Save tender'}
           >
             <Bookmark size={15} fill={watched ? 'currentColor' : 'none'} />
-            <span>{watched ? 'Saved to list' : 'Save tender'}</span>
+            <span>{watched ? 'Saved' : 'Save'}</span>
           </button>
-          <button className="secondary-button" onClick={copyLink}>
+          <button className="secondary-button tender-btn-share" onClick={copyLink} title="Share tender brief">
             {copied ? <Check size={15} /> : <Share2 size={15} />}
-            <span>{copied ? 'Link copied' : 'Share brief'}</span>
+            <span>{copied ? 'Copied' : 'Share'}</span>
           </button>
-          <button className="secondary-button" onClick={() => window.print()}>
+          <button className="secondary-button tender-btn-print" onClick={() => window.print()} title="Print or save as PDF">
             <Printer size={15} />
-            <span>Print / save PDF</span>
+            <span>Print</span>
           </button>
         </div>
       </div>
@@ -1821,6 +1853,35 @@ function TenderDetail({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Mobile Floating Action Bar (Thumb-Zone CTA) */}
+      <div className="mobile-tender-dock" aria-label="Mobile quick actions">
+        <button
+          className={`mobile-dock-btn ${watched ? 'mobile-dock-active' : ''}`}
+          onClick={() => onWatch(tender.tender_id)}
+          aria-label={watched ? 'Remove from saved' : 'Save tender'}
+        >
+          <Bookmark size={18} fill={watched ? 'currentColor' : 'none'} />
+          <span>{watched ? 'Saved' : 'Save'}</span>
+        </button>
+        <button
+          className="mobile-dock-btn"
+          onClick={copyLink}
+          aria-label="Share tender brief"
+        >
+          {copied ? <Check size={18} /> : <Share2 size={18} />}
+          <span>{copied ? 'Copied' : 'Share'}</span>
+        </button>
+        <a
+          className="mobile-dock-cta"
+          href={officialSearchUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span>Verify on Portal</span>
+          <ExternalLink size={15} />
+        </a>
       </div>
     </div>
   );
