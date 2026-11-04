@@ -90,6 +90,7 @@ export interface Tender {
   ref_no: string;
   title: string;
   department: string;
+  state?: string;
   org_chain?: string;
   location: string;
   pincode?: string;

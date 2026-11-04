@@ -45,13 +45,13 @@ def normalize_snapshot_record(tender: Dict[str, Any]) -> Dict[str, Any]:
     normalized = dict(tender)
     lineage = normalized.get("source_lineage") or normalized.get("source") or "UNSPECIFIED"
     normalized.update({
-        "source": "SNAPSHOT",
+        "source": normalized.get("source", "SNAPSHOT"),
         "source_lineage": lineage,
-        "source_status": "snapshot",
-        "source_url": SNAPSHOT_SOURCE_URL,
-        "source_checked_at": SNAPSHOT_DATE,
+        "source_status": normalized.get("source_status", "snapshot"),
+        "source_url": normalized.get("source_url") or SNAPSHOT_SOURCE_URL,
+        "source_checked_at": normalized.get("source_checked_at") or SNAPSHOT_DATE,
         "record_level_verified": False,
-        "source_note": SNAPSHOT_SOURCE_NOTE,
+        "source_note": normalized.get("source_note") or SNAPSHOT_SOURCE_NOTE,
     })
     return normalized
 

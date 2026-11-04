@@ -80,7 +80,33 @@ const allTenders = (embeddedTenders as unknown as Tender[]).map(normalizeSnapsho
 const officialPortalUrl = snapshotMeta.sourceUrl;
 const officialSearchUrl = snapshotMeta.searchUrl;
 
+export const getTenderPortalUrl = (tender?: Tender | null) => {
+  if (tender?.source_url) return tender.source_url;
+  if (tender?.state === 'Maharashtra' || tender?.tender_id?.includes('MCGM') || tender?.tender_id?.includes('MMRDA') || tender?.tender_id?.includes('DHS') || tender?.tender_id?.includes('PWR') || tender?.tender_id?.includes('PMC') || tender?.tender_id?.includes('TMC')) {
+    return 'https://mahatenders.gov.in/nicgep/app';
+  }
+  return officialSearchUrl;
+};
+
+export const getTenderPortalName = (tender?: Tender | null) => {
+  if (tender?.state === 'Maharashtra' || tender?.source_url?.includes('mahatenders')) {
+    return 'Government of Maharashtra e-Procurement (mahatenders.gov.in)';
+  }
+  return 'Government of Manipur e-Procurement (manipurtenders.gov.in)';
+};
+
 const statePortals = [
+  {
+    code: 'MH',
+    state: 'Maharashtra',
+    capital: 'Mumbai / Mantralaya',
+    coords: '18.92° N, 72.83° E',
+    portalUrl: 'https://mahatenders.gov.in/',
+    portalLabel: 'MahaTenders (Govt. of Maharashtra)',
+    rulebookUrl: 'https://maharashtra.gov.in',
+    rulebookLabel: 'Maharashtra Public Procurement',
+    status: 'Live adapter active (96 tenders)',
+  },
   {
     code: 'AS',
     state: 'Assam',
@@ -924,7 +950,7 @@ function CitizenInquiryGenerator({ tender, brief, onMessage }: { tender: Tender;
   const [inquiryType, setInquiryType] = useState<InquiryType>('timeline');
   const [copied, setCopied] = useState(false);
   const inquiry = useMemo(() => {
-    const sourceLine = `Source: ${officialSearchUrl} · Tender ID: ${tender.tender_id}`;
+    const sourceLine = `Source: ${getTenderPortalUrl(tender)} · Tender ID: ${tender.tender_id}`;
     if (inquiryType === 'specification') return `Subject: Clarification requested on ${tender.tender_id}\n\nDear Sir/Madam,\n\nI am seeking a public clarification on the scope and eligibility requirements for “${tender.title}”. Could you please confirm what work is included, which qualification documents apply, and where the complete specification or BOQ can be reviewed?\n\n${sourceLine}\n\nThank you.`;
     if (inquiryType === 'participation') return `Subject: Request for participation and award information for ${tender.tender_id}\n\nDear Sir/Madam,\n\nCould you please share the published participation and award information for “${tender.title}”, including the number of bids received, qualified bidders, selected contractor, and awarded value if available?\n\n${sourceLine}\n\nThank you.`;
     return `Subject: Clarification requested on the tender timeline for ${tender.tender_id}\n\nDear Sir/Madam,\n\nCould you please clarify the publication, closing, and opening timeline for “${tender.title}”? The public snapshot shows a ${tender.feat_window_days.toFixed(1)}-day response window and ${tender.corrigendum_count} recorded amendment${tender.corrigendum_count === 1 ? '' : 's'}. Please share the relevant amendment notices and confirm whether the closing date was extended.\n\n${sourceLine}\n\nThank you.`;
@@ -1574,7 +1600,7 @@ function TenderDetail({
             <MessageSquare size={15} />
             Copy public question brief
           </button>
-          <a className="secondary-button tender-official-portal-btn" href={officialSearchUrl} target="_blank" rel="noreferrer">
+          <a className="secondary-button tender-official-portal-btn" href={getTenderPortalUrl(tender)} target="_blank" rel="noreferrer">
             <span>Verify on official portal</span>
             <ExternalLink size={14} />
           </a>
@@ -1826,7 +1852,7 @@ function TenderDetail({
               <div className="source-card-icon"><Globe2 size={19} /></div>
               <div>
                 <span className="eyebrow-small">Verify the official record</span>
-                <h3>Government of Manipur e-Procurement Portal</h3>
+                <h3>{getTenderPortalName(tender)}</h3>
                 <p>CHEIRAP presents a structured snapshot of public portal information. Record-level verification is still pending, so always verify the original notice before relying on it.</p>
                 <div className="source-meta">
                   <span>ID {tender.tender_id}</span>
@@ -1835,7 +1861,7 @@ function TenderDetail({
                   <span>Record status: {tender.source_status === 'snapshot' ? 'Snapshot only' : tender.source_status}</span>
                 </div>
               </div>
-              <a className="source-link" href={officialSearchUrl} target="_blank" rel="noreferrer">Open official portal <ExternalLink size={15} /></a>
+              <a className="source-link" href={getTenderPortalUrl(tender)} target="_blank" rel="noreferrer">Open official portal <ExternalLink size={15} /></a>
             </section>
           </div>
         )}
@@ -1846,7 +1872,7 @@ function TenderDetail({
           <div className="print-footer-grid">
             <div>
               <strong>Official Verification Source:</strong>
-              <p>{officialSearchUrl} (Tender ID: {tender.tender_id})</p>
+              <p>{getTenderPortalUrl(tender)} (Tender ID: {tender.tender_id})</p>
             </div>
             <div>
               <strong>Integrity & Civic Notice:</strong>
@@ -1876,7 +1902,7 @@ function TenderDetail({
         </button>
         <a
           className="mobile-dock-cta"
-          href={officialSearchUrl}
+          href={getTenderPortalUrl(tender)}
           target="_blank"
           rel="noreferrer"
         >
@@ -1926,6 +1952,7 @@ function PublicApp() {
   const [activePage, setActivePage] = useState<'home' | 'explore'>('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [stateFilter, setStateFilter] = useState('ALL');
   const [department, setDepartment] = useState('ALL');
   const [location, setLocation] = useState('ALL');
   const [district, setDistrict] = useState('ALL');
@@ -1942,6 +1969,7 @@ function PublicApp() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const activeFilterCount =
+    (stateFilter !== 'ALL' ? 1 : 0) +
     (department !== 'ALL' ? 1 : 0) +
     (district !== 'ALL' ? 1 : 0) +
     (location !== 'ALL' ? 1 : 0) +
@@ -2000,7 +2028,8 @@ function PublicApp() {
   const filteredTenders = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return allTenders.filter((tender) => {
-      const matchesQuery = !normalized || [tender.title, tender.work_desc, tender.tender_id, tender.ref_no, tender.department, tender.location, tender.product_category].filter(Boolean).some((value) => value!.toLowerCase().includes(normalized));
+      const matchesQuery = !normalized || [tender.title, tender.work_desc, tender.tender_id, tender.ref_no, tender.department, tender.location, tender.state, tender.product_category].filter(Boolean).some((value) => value!.toLowerCase().includes(normalized));
+      const matchesState = stateFilter === 'ALL' || (tender.state ? tender.state === stateFilter : (stateFilter === 'Manipur' ? (tender.tender_id.startsWith('MAN_') || tender.tender_id.includes('PHED') || tender.tender_id.includes('PWDM1') || tender.tender_id.includes('MANIPUR')) : (tender.source_url?.includes('mahatenders') || tender.tender_id.includes('MCGM') || tender.tender_id.includes('MMRDA'))));
       const matchesDepartment = department === 'ALL' || getSimpleDepartment(tender.department) === department;
       const matchesLocation = location === 'ALL' || getLocationLabel(tender.location) === location;
       const matchesDistrict = district === 'ALL' || getDistrictLabel(tender.location) === district;
@@ -2010,9 +2039,9 @@ function PublicApp() {
       const daysUntilClosing = getDaysUntilClosing(tender);
       const matchesClosing = closingWindow === 'ALL' || (daysUntilClosing !== null && daysUntilClosing >= 0 && daysUntilClosing <= Number(closingWindow));
       const matchesSaved = !showSavedOnly || watchlist.includes(tender.tender_id);
-      return matchesQuery && matchesDepartment && matchesLocation && matchesDistrict && matchesSignal && matchesStatus && matchesValue && matchesClosing && matchesSaved;
+      return matchesQuery && matchesState && matchesDepartment && matchesLocation && matchesDistrict && matchesSignal && matchesStatus && matchesValue && matchesClosing && matchesSaved;
     });
-  }, [closingWindow, department, district, location, query, signal, showSavedOnly, statusFilter, valueBand, watchlist]);
+  }, [closingWindow, department, district, location, query, signal, showSavedOnly, stateFilter, statusFilter, valueBand, watchlist]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -2061,6 +2090,7 @@ function PublicApp() {
   const saveCorrection = (payload: { tenderId: string; field: string; correction: string; source: string }) => setCorrections((current) => [...current, { ...payload, createdAt: new Date().toISOString() }]);
   const clearFilters = () => {
     setQuery('');
+    setStateFilter('ALL');
     setDepartment('ALL');
     setLocation('ALL');
     setDistrict('ALL');
@@ -2358,7 +2388,7 @@ function PublicApp() {
 
               <div className="expansion-proof">
                 <CheckCircle2 size={15} />
-                <span>Manipur snapshot live · {statePortals.length} Northeast state portals mapped for the next adapter cycle.</span>
+                <span>Manipur & Maharashtra live adapters active ({allTenders.length} total tenders) · Northeast state portals mapped for the next adapter cycle.</span>
               </div>
 
               <button className="primary-button" onClick={() => scrollToSection('data-method')}>
@@ -2496,6 +2526,20 @@ function PublicApp() {
               </button>
               <button
                 type="button"
+                className={`quick-chip ${stateFilter === 'Manipur' ? 'quick-chip-active' : ''}`}
+                onClick={() => setStateFilter(stateFilter === 'Manipur' ? 'ALL' : 'Manipur')}
+              >
+                <span>Manipur ({allTenders.filter(t => t.state === 'Manipur' || !t.source_url?.includes('mahatenders')).length})</span>
+              </button>
+              <button
+                type="button"
+                className={`quick-chip ${stateFilter === 'Maharashtra' ? 'quick-chip-active' : ''}`}
+                onClick={() => setStateFilter(stateFilter === 'Maharashtra' ? 'ALL' : 'Maharashtra')}
+              >
+                <span>Maharashtra / Mumbai ({allTenders.filter(t => t.state === 'Maharashtra' || t.source_url?.includes('mahatenders')).length})</span>
+              </button>
+              <button
+                type="button"
                 className={`quick-chip ${signal === 'Open opportunity' ? 'quick-chip-active' : ''}`}
                 onClick={() => setSignal(signal === 'Open opportunity' ? 'ALL' : 'Open opportunity')}
               >
@@ -2558,6 +2602,14 @@ function PublicApp() {
                 )}
               </div>
               <div className="filters-grid-mobile">
+                <div className="filter-field">
+                  <label>State / Portal</label>
+                  <select aria-label="Filter by state" value={stateFilter} onChange={(event) => setStateFilter(event.target.value)}>
+                    <option value="ALL">All states ({allTenders.length})</option>
+                    <option value="Manipur">Manipur (manipurtenders.gov.in)</option>
+                    <option value="Maharashtra">Maharashtra (mahatenders.gov.in)</option>
+                  </select>
+                </div>
                 <div className="filter-field">
                   <label>Department</label>
                   <select aria-label="Filter by department" value={department} onChange={(event) => setDepartment(event.target.value)}>
@@ -2659,6 +2711,11 @@ function PublicApp() {
           {activeFilterCount > 0 && (
             <div className="active-filters-strip" aria-label="Active filters">
               <span className="active-filters-label">Active:</span>
+              {stateFilter !== 'ALL' && (
+                <button type="button" className="active-filter-pill" onClick={() => setStateFilter('ALL')}>
+                  <span>State: {stateFilter}</span> <X size={12} />
+                </button>
+              )}
               {department !== 'ALL' && (
                 <button type="button" className="active-filter-pill" onClick={() => setDepartment('ALL')}>
                   <span>Dept: {department}</span> <X size={12} />
