@@ -279,6 +279,102 @@ export const getProjectType = (tender: Tender) => {
   return tender.product_category || 'Public procurement';
 };
 
+export type SocialImpactDomain =
+  | 'WATER_SANITATION'
+  | 'HEALTHCARE'
+  | 'EDUCATION'
+  | 'ROADS_MOBILITY'
+  | 'ENERGY_SAFETY'
+  | 'PUBLIC_INFRA';
+
+export interface SocialImpactMeta {
+  key: SocialImpactDomain;
+  label: string;
+  shortLabel: string;
+  sdgTag: string;
+  iconName: 'Droplets' | 'HeartPulse' | 'GraduationCap' | 'Route' | 'Zap' | 'Building2';
+  badgeTone: 'blue' | 'emerald' | 'amber' | 'indigo' | 'violet' | 'slate';
+  description: string;
+}
+
+export const socialImpactCatalog: Record<SocialImpactDomain, SocialImpactMeta> = {
+  WATER_SANITATION: {
+    key: 'WATER_SANITATION',
+    label: 'Clean Water & Sanitation',
+    shortLabel: 'Water & Sanitation',
+    sdgTag: 'SDG 6 · Clean Water',
+    iconName: 'Droplets',
+    badgeTone: 'blue',
+    description: 'Drinking water pipelines, filtration plants, drainage chambers, and community sanitation facilities.',
+  },
+  HEALTHCARE: {
+    key: 'HEALTHCARE',
+    label: 'Healthcare & Public Hospitals',
+    shortLabel: 'Healthcare & Hospitals',
+    sdgTag: 'SDG 3 · Good Health',
+    iconName: 'HeartPulse',
+    badgeTone: 'emerald',
+    description: 'District hospital diagnostics, regional blood banks, medical equipment, and surgical supplies.',
+  },
+  EDUCATION: {
+    key: 'EDUCATION',
+    label: 'Education & Youth Facilities',
+    shortLabel: 'Education & Schools',
+    sdgTag: 'SDG 4 · Quality Education',
+    iconName: 'GraduationCap',
+    badgeTone: 'amber',
+    description: 'Secondary school modular labs, classrooms, youth training centres, and learning infrastructure.',
+  },
+  ROADS_MOBILITY: {
+    key: 'ROADS_MOBILITY',
+    label: 'Roads, Transit & Connectivity',
+    shortLabel: 'Roads & Transit',
+    sdgTag: 'SDG 9 & 11 · Sustainable Transit',
+    iconName: 'Route',
+    badgeTone: 'indigo',
+    description: 'Highway corridors, rural road concretisation, pedestrian bridges, and elevated urban metro viaducts.',
+  },
+  ENERGY_SAFETY: {
+    key: 'ENERGY_SAFETY',
+    label: 'Energy, Lighting & Public Safety',
+    shortLabel: 'Energy & Safety',
+    sdgTag: 'SDG 7 & 16 · Safe Communities',
+    iconName: 'Zap',
+    badgeTone: 'violet',
+    description: 'Solar streetlighting, electrical substations, municipal fire safety, and civic area illumination.',
+  },
+  PUBLIC_INFRA: {
+    key: 'PUBLIC_INFRA',
+    label: 'Civic Spaces & Public Infrastructure',
+    shortLabel: 'Civic Infrastructure',
+    sdgTag: 'SDG 11 · Civic Spaces',
+    iconName: 'Building2',
+    badgeTone: 'slate',
+    description: 'Public community parks, administrative complexes, municipal facilities, and public works.',
+  },
+};
+
+export const getSocialImpactDomain = (tender: Tender): SocialImpactMeta => {
+  const text = `${tender.title} ${tender.work_desc || ''} ${tender.department} ${tender.org_chain || ''} ${tender.product_category || ''}`.toLowerCase();
+  
+  if (/water|pipeline|sewer|drain|filtration|ro unit|wtp|stp|dhapa|pump|well|irrigation|plumbing|jal/i.test(text)) {
+    return socialImpactCatalog.WATER_SANITATION;
+  }
+  if (/hospital|health|medical|clinic|ambulance|diagnostic|medicine|surgical|blood bank|dhs|nurse|pharma|consumable|hygiene/i.test(text)) {
+    return socialImpactCatalog.HEALTHCARE;
+  }
+  if (/school|college|academic|hostel|classroom|laboratory|polytechnic|education|student|textbook|balbharati|curriculum|dmm/i.test(text)) {
+    return socialImpactCatalog.EDUCATION;
+  }
+  if (/road|bridge|culvert|highway|pavement|bypass|flyover|metro|viaduct|station|ramp|tunnel|transit|ccr|concritikaran|khadikaran|lane|sh 119|panand/i.test(text)) {
+    return socialImpactCatalog.ROADS_MOBILITY;
+  }
+  if (/solar|power|electric|substation|transformer|energy|highmast|pole light|street light|led|cctv|surveillance|fire brigade|light fitting/i.test(text)) {
+    return socialImpactCatalog.ENERGY_SAFETY;
+  }
+  return socialImpactCatalog.PUBLIC_INFRA;
+};
+
 export const getAwardedName = (tender: Tender) => tender.awarded_contractor || tender.awarded_vendor || '';
 
 export const getAwardDifference = (tender: Tender) => {
@@ -297,6 +393,7 @@ export interface CoverageItem {
 export interface TenderBrief {
   scope: string;
   projectType: string;
+  socialImpact: SocialImpactMeta;
   buyer: string;
   location: string;
   summaryParagraphs: string[];
@@ -310,6 +407,7 @@ export const getTenderBrief = (tender: Tender): TenderBrief => {
   const location = getLocationLabel(tender.location);
   const scope = getScopeText(tender);
   const signal = getSignal(tender);
+  const socialImpact = getSocialImpactDomain(tender);
   const awardedName = getAwardedName(tender);
   const awardDifference = getAwardDifference(tender);
   const hasAward = Boolean(awardedName || tender.awarded_value_inr || /award/i.test(tender.status));
@@ -322,11 +420,12 @@ export const getTenderBrief = (tender: Tender): TenderBrief => {
   return {
     scope,
     projectType: getProjectType(tender),
+    socialImpact,
     buyer,
     location,
     awardDifference,
     summaryParagraphs: [
-      `${buyer} has published a public tender for ${scope}. In everyday terms, this is an invitation for eligible suppliers or contractors to submit a bid for ${projectArticle} ${projectType} project in ${location}.`,
+      `${buyer} has published a public tender for ${scope}. This procurement provides ${projectArticle} ${projectType} intervention supporting ${socialImpact.label.toLowerCase()} (${socialImpact.sdgTag}), impacting public facilities and resident welfare in ${location}.`,
       `The notice estimates the work at ${formatCrores(tender.estimated_value_inr)}. It lists ${formatIndianCurrency(tender.emd_amount_inr)} as bid security and ${formatIndianCurrency(tender.tender_fee_inr)} as the tender fee. These are entry conditions shown in the notice; they do not, by themselves, tell us whether the procurement is fair or unfair.`,
       `The record shows ${windowText} response window, closing on ${formatDate(tender.closing_date)}. ${changeText}. The main review prompt is “${signal.label}”: ${signal.detail.toLowerCase()} Read the original notice and any amendments before relying on this summary.`,
     ],

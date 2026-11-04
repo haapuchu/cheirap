@@ -20,6 +20,7 @@ import {
   Clock3,
   Clipboard,
   ClipboardCheck,
+  Droplets,
   ExternalLink,
   FileSearch,
   FileDiff,
@@ -27,6 +28,8 @@ import {
   FileText,
   Flag,
   Filter,
+  GraduationCap,
+  HeartPulse,
   SlidersHorizontal,
   Globe2,
   HelpCircle,
@@ -42,6 +45,8 @@ import {
   NotebookPen,
   Printer,
   RotateCcw,
+  Route,
+  Scale,
   Search,
   Share2,
   ShieldCheck,
@@ -49,6 +54,7 @@ import {
   Users,
   UsersRound,
   X,
+  Zap,
 } from 'lucide-react';
 import embeddedTenders from '@/data/tenders_scored.json';
 import { IndiaMapWatermark } from '@/components/IndiaMapWatermark';
@@ -67,12 +73,14 @@ import {
   getSignal,
   getSignalTone,
   getSimpleDepartment,
+  getSocialImpactDomain,
+  socialImpactCatalog,
   getTenderBrief,
   normalizeSnapshotTender,
   parseTenderDate,
   snapshotMeta,
 } from '@/lib/tenderInsights';
-import type { Tender, TenderTier } from '@/lib/tenderInsights';
+import type { Tender, TenderTier, SocialImpactDomain } from '@/lib/tenderInsights';
 import { useCheirapMotion } from '@/lib/useCheirapMotion';
 
 const allTenders = (embeddedTenders as unknown as Tender[]).map(normalizeSnapshotTender);
@@ -94,6 +102,15 @@ export const getTenderPortalName = (tender?: Tender | null) => {
   }
   return 'Government of Manipur e-Procurement (manipurtenders.gov.in)';
 };
+
+function ImpactIcon({ name, size = 13 }: { name: string; size?: number }) {
+  if (name === 'Droplets') return <Droplets size={size} />;
+  if (name === 'HeartPulse') return <HeartPulse size={size} />;
+  if (name === 'GraduationCap') return <GraduationCap size={size} />;
+  if (name === 'Route') return <Route size={size} />;
+  if (name === 'Zap') return <Zap size={size} />;
+  return <Building2 size={size} />;
+}
 
 const statePortals = [
   {
@@ -250,6 +267,10 @@ function TenderRow({
         </div>
         <p className="tender-row-subtitle">{getSimpleDepartment(tender.department)} · {getLocationLabel(tender.location)} · {brief.projectType}</p>
         <div className="tender-row-tags">
+          <span className={`impact-badge impact-badge-${brief.socialImpact.badgeTone}`}>
+            <ImpactIcon name={brief.socialImpact.iconName} size={11} />
+            <span>{brief.socialImpact.sdgTag}</span>
+          </span>
           <span className={`signal-label ${getSignalTone(signal.tone)}`}>{signal.label}</span>
           <span className="neutral-tag">{tender.status}</span>
           <span className="neutral-tag">{getClosingLabel(tender)}</span>
@@ -944,36 +965,400 @@ function PeerComparison({ tender, comparable, awardedName, awardDifference, awar
   );
 }
 
-type InquiryType = 'timeline' | 'specification' | 'participation';
+type InquiryType = 'formal_rti' | 'timeline' | 'specification' | 'participation';
 
 function CitizenInquiryGenerator({ tender, brief, onMessage }: { tender: Tender; brief: ReturnType<typeof getTenderBrief>; onMessage: (message: string) => void }) {
-  const [inquiryType, setInquiryType] = useState<InquiryType>('timeline');
+  const [inquiryType, setInquiryType] = useState<InquiryType>('formal_rti');
   const [copied, setCopied] = useState(false);
+
+  const portalName = getTenderPortalName(tender);
+  const portalUrl = getTenderPortalUrl(tender);
+  const buyer = brief.buyer;
+  const dept = tender.department;
+  const org = tender.org_chain?.replace(/\|+/g, ' / ') || dept;
+  const state = tender.state || (portalUrl.includes('mahatenders') ? 'Maharashtra' : 'Manipur');
+  const now = useMemo(() => new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }), []);
+  const closingStr = formatDate(tender.closing_date);
+  const valueStr = formatCrores(tender.estimated_value_inr);
+
   const inquiry = useMemo(() => {
-    const sourceLine = `Source: ${getTenderPortalUrl(tender)} · Tender ID: ${tender.tender_id}`;
+    const sourceLine = `Source: ${portalUrl} · Tender ID: ${tender.tender_id}`;
+    if (inquiryType === 'formal_rti') {
+      return `FORM A
+[See Rule 3(1) of RTI Rules / Right to Information Act, 2005 (Section 6(1))]
+APPLICATION FOR OBTAINING INFORMATION UNDER SECTION 6(1) OF THE RTI ACT, 2005
+
+To:
+The Central / State Public Information Officer (CPIO / SPIO),
+Office of: ${buyer} (${org})
+Government of ${state}
+Reference Portal: ${portalName} (${portalUrl})
+
+1. Full Name of the Applicant: [Citizen / Resident Name]
+2. Address for Correspondence: [Complete Address with PIN Code and Mobile/Email]
+3. Particulars of Public Procurement Record:
+   a. Portal Tender ID / Reference: ${tender.tender_id} ${tender.ref_no ? `(Ref No: ${tender.ref_no})` : ''}
+   b. Work Description / Subject: ${tender.title}
+   c. Procuring Department / Authority: ${dept}
+   d. Estimated Procurement Value: ${valueStr} (${tender.estimated_value_inr ? 'INR ' + tender.estimated_value_inr.toLocaleString('en-IN') : 'As per notice'})
+   e. Publication & Closing Timeline: Published with ${tender.feat_window_days.toFixed(1)}-day response window; closing date: ${closingStr}
+   f. Civic / Social Impact Domain: ${brief.socialImpact.label} (${brief.socialImpact.sdgTag})
+
+4. Specific Information Requested under Section 6(1):
+   (i) Certified copy of the complete Detailed Notice Inviting Tender (DNIT), Tender Documents, Bill of Quantities (BOQ), and minimum technical qualification criteria as published.
+   (ii) Certified copy of all Corrigenda / Addenda issued (Total recorded in snapshot: ${tender.corrigendum_count}), along with the internal administrative note-sheet and competent authority approval for any timeline reduction or closing date variation (under CVC Guidelines / State Procurement Rules).
+   (iii) Certified copies of the Minutes of the Technical Evaluation Committee (TEC) meeting detailing the evaluation of all bids received, grounds for qualification / disqualification of bidders, and technical scoring sheets.
+   (iv) Certified copy of the Comparative Statement of Financial Bids (L1, L2, L3 schedule) and Commercial Evaluation Report.
+   (v) Current execution status: If contract has been awarded, provide the certified copy of Letter of Acceptance (LOA) / Work Order, contract agreement, name of selected contractor, awarded amount, and agreed completion date.
+
+5. Period to which Information Pertains:
+   From tender publication date (${formatDate(tender.published_date)}) to the current date (${now}).
+
+6. Statutory Application Fee:
+   Statutory fee of ₹10 (Rupees Ten only) is tendered herewith via Indian Postal Order (IPO) / Court Fee Stamp / Demand Draft / Online RTI Payment Receipt.
+
+7. Applicant Declaration:
+   I hereby declare that I am a citizen of India and that the information sought above falls squarely within the scope of Section 2(f) and 2(j) of the RTI Act, 2005, and does not attract any exemptions under Section 8 or Section 9.
+
+Place: ________________________
+Date: ${now}
+
+Applicant Signature: ________________________
+`;
+    }
     if (inquiryType === 'specification') return `Subject: Clarification requested on ${tender.tender_id}\n\nDear Sir/Madam,\n\nI am seeking a public clarification on the scope and eligibility requirements for “${tender.title}”. Could you please confirm what work is included, which qualification documents apply, and where the complete specification or BOQ can be reviewed?\n\n${sourceLine}\n\nThank you.`;
     if (inquiryType === 'participation') return `Subject: Request for participation and award information for ${tender.tender_id}\n\nDear Sir/Madam,\n\nCould you please share the published participation and award information for “${tender.title}”, including the number of bids received, qualified bidders, selected contractor, and awarded value if available?\n\n${sourceLine}\n\nThank you.`;
     return `Subject: Clarification requested on the tender timeline for ${tender.tender_id}\n\nDear Sir/Madam,\n\nCould you please clarify the publication, closing, and opening timeline for “${tender.title}”? The public snapshot shows a ${tender.feat_window_days.toFixed(1)}-day response window and ${tender.corrigendum_count} recorded amendment${tender.corrigendum_count === 1 ? '' : 's'}. Please share the relevant amendment notices and confirm whether the closing date was extended.\n\n${sourceLine}\n\nThank you.`;
-  }, [inquiryType, tender]);
+  }, [buyer, closingStr, dept, inquiryType, now, org, portalName, portalUrl, state, tender, valueStr, brief.socialImpact]);
 
   const copyInquiry = async () => {
     try {
       await navigator.clipboard.writeText(inquiry);
       setCopied(true);
-      onMessage('Source-cited citizen inquiry copied. Review it before sending.');
+      onMessage(inquiryType === 'formal_rti' ? 'Official RTI Form A text copied to clipboard.' : 'Source-cited citizen inquiry copied.');
       window.setTimeout(() => setCopied(false), 1800);
     } catch {
       onMessage('Copy was not available in this browser.');
     }
   };
 
+  const printRtiForm = () => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      onMessage('Pop-up window blocked. Please allow pop-ups to print Form A.');
+      return;
+    }
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>RTI Application Form A - ${tender.tender_id}</title>
+  <style>
+    @page { size: A4; margin: 20mm 18mm; }
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11pt;
+      line-height: 1.55;
+      color: #0f172a;
+      background: #ffffff;
+      margin: 0;
+      padding: 24px;
+    }
+    .header-box {
+      text-align: center;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+    .badge {
+      display: inline-block;
+      border: 1px solid #1e293b;
+      padding: 3px 10px;
+      font-family: sans-serif;
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      background: #f1f5f9;
+    }
+    .header-box h2 {
+      margin: 0 0 4px;
+      font-size: 13.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 800;
+    }
+    .header-box p {
+      margin: 0;
+      font-size: 9.5pt;
+      font-style: italic;
+      color: #334155;
+    }
+    .recipient {
+      margin-bottom: 16px;
+      line-height: 1.45;
+    }
+    .recipient p { margin: 2px 0; }
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px;
+      font-size: 10pt;
+    }
+    .meta-table td {
+      padding: 6px 10px;
+      border: 1px solid #94a3b8;
+      vertical-align: top;
+    }
+    .meta-table td.label {
+      width: 30%;
+      font-weight: bold;
+      background: #f8fafc;
+    }
+    ol {
+      margin: 8px 0 16px 22px;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 7px;
+    }
+    .fee-box {
+      background: #f8fafc;
+      border: 1px dashed #64748b;
+      padding: 10px 14px;
+      margin: 14px 0;
+      font-size: 10pt;
+    }
+    .declaration {
+      margin: 14px 0;
+      font-size: 10pt;
+    }
+    .sign-section {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .sign-box {
+      width: 45%;
+    }
+    .sign-line {
+      border-top: 1px solid #000;
+      margin-top: 50px;
+      padding-top: 4px;
+      font-weight: bold;
+    }
+    .footer-note {
+      margin-top: 36px;
+      padding-top: 10px;
+      border-top: 1px solid #cbd5e1;
+      font-size: 8pt;
+      color: #64748b;
+      font-family: sans-serif;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-box">
+    <div class="badge">Statutory Application · Form A</div>
+    <h2>Application for Obtaining Information under Section 6(1)</h2>
+    <p>Right to Information Act, 2005 · Rule 3(1) of the Right to Information Rules</p>
+  </div>
+
+  <div class="recipient">
+    <p><strong>To:</strong></p>
+    <p>The Public Information Officer (PIO) / Assistant Public Information Officer,</p>
+    <p><strong>${buyer}</strong> (${org}),</p>
+    <p>Government of ${state}.</p>
+    <p><em>(Portal Provenance: ${portalName})</em></p>
+  </div>
+
+  <table class="meta-table">
+    <tr>
+      <td class="label">1. Applicant Details</td>
+      <td>
+        <strong>Name:</strong> ____________________________________________<br>
+        <strong>Address:</strong> __________________________________________<br>
+        <strong>Contact / Email:</strong> ___________________________________
+      </td>
+    </tr>
+    <tr>
+      <td class="label">2. Tender Reference / ID</td>
+      <td><strong>${tender.tender_id}</strong> ${tender.ref_no ? `· Reference No: ${tender.ref_no}` : ''}</td>
+    </tr>
+    <tr>
+      <td class="label">3. Work Subject</td>
+      <td><strong>${tender.title}</strong></td>
+    </tr>
+    <tr>
+      <td class="label">4. Estimated Value & Domain</td>
+      <td><strong>${valueStr}</strong> · <em>${brief.socialImpact.label} (${brief.socialImpact.sdgTag})</em></td>
+    </tr>
+    <tr>
+      <td class="label">5. Notice Timeline</td>
+      <td>Response Window: ${tender.feat_window_days.toFixed(1)} days · Closing Date: ${closingStr} · Corrigenda: ${tender.corrigendum_count}</td>
+    </tr>
+  </table>
+
+  <div>
+    <strong>6. Particulars of Information Sought under Section 6(1) of the RTI Act, 2005:</strong>
+    <ol>
+      <li>Certified copy of the complete Detailed Notice Inviting Tender (DNIT), Tender Documents, Bill of Quantities (BOQ), and minimum technical qualification criteria as published.</li>
+      <li>Certified copy of all Corrigenda / Addenda issued (Total recorded: ${tender.corrigendum_count}), along with internal administrative note-sheet and competent authority approval for any timeline reduction or closing date variation (mandated under CVC Circular 01/01/2021).</li>
+      <li>Certified copies of the Minutes of the Technical Evaluation Committee (TEC) meeting detailing the evaluation of all bids received, grounds for qualification / disqualification of bidders, and technical scoring sheets.</li>
+      <li>Certified copy of the Comparative Statement of Financial Bids (L1, L2, L3 schedule) and Commercial Evaluation Report.</li>
+      <li>Current execution status: If contract has been awarded, provide the certified copy of Letter of Acceptance (LOA) / Work Order, contract agreement, name of selected contractor, awarded amount, and agreed completion date.</li>
+    </ol>
+  </div>
+
+  <div class="fee-box">
+    <strong>7. Statutory Application Fee:</strong><br>
+    Statutory application fee of ₹10 (Rupees Ten only) is tendered herewith via Indian Postal Order (IPO) / Court Fee Stamp / Demand Draft / Online RTI Payment Receipt No. ________________________.
+  </div>
+
+  <div class="declaration">
+    <strong>8. Declaration:</strong><br>
+    I hereby declare that I am a citizen of India and that the information sought above falls squarely within the scope of Section 2(f) and 2(j) of the RTI Act, 2005, and does not attract any exemptions under Section 8 or Section 9.
+  </div>
+
+  <div class="sign-section">
+    <div class="sign-box">
+      <p>Place: ____________________</p>
+      <p>Date: ${now}</p>
+    </div>
+    <div class="sign-box" style="text-align: right;">
+      <div class="sign-line">Signature of the Applicant</div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Generated via CHEIRAP Civic Transparency Engine · Reference URL: ${portalUrl} · Generated on ${now}
+  </div>
+
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(function() { window.print(); }, 250);
+    });
+  </script>
+</body>
+</html>`;
+
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+    onMessage('Official RTI Form A generated and print dialogue opened.');
+  };
+
   return (
     <section className="citizen-action-card inquiry-card">
-      <div className="citizen-action-heading"><span className="action-icon"><MessageSquare size={18} /></span><div><span className="eyebrow-small">Citizen inquiry generator</span><h3>Turn a reading into a respectful question.</h3><p>Choose a question type to create a source-cited draft. It stays in your clipboard until you decide what to do next.</p></div></div>
-      <div className="inquiry-type-grid" role="group" aria-label="Citizen inquiry type"><button type="button" className={inquiryType === 'timeline' ? 'inquiry-type-active' : ''} aria-pressed={inquiryType === 'timeline'} onClick={() => setInquiryType('timeline')}><Clock3 size={15} /><span>Timeline inquiry</span></button><button type="button" className={inquiryType === 'specification' ? 'inquiry-type-active' : ''} aria-pressed={inquiryType === 'specification'} onClick={() => setInquiryType('specification')}><FileText size={15} /><span>Specification clarification</span></button><button type="button" className={inquiryType === 'participation' ? 'inquiry-type-active' : ''} aria-pressed={inquiryType === 'participation'} onClick={() => setInquiryType('participation')}><Users size={15} /><span>Participation query</span></button></div>
-      <textarea className="inquiry-preview" value={inquiry} readOnly aria-label="Generated citizen inquiry" />
-      <button className="primary-button" type="button" onClick={copyInquiry}><ClipboardCheck size={16} /> {copied ? 'Inquiry copied' : 'Copy source-cited inquiry'}</button>
-      <p className="section-helper">{brief.buyer} remains the source of record. CHEIRAP does not send messages or represent you.</p>
+      <div className="citizen-action-heading">
+        <span className="action-icon"><Scale size={18} /></span>
+        <div>
+          <span className="eyebrow-small">Civic Inquiry & Statutory RTI Generator</span>
+          <h3>Exercise legal citizen oversight with statutory Form A.</h3>
+          <p>Generate a legally structured Right to Information (RTI) application under Section 6(1) of the RTI Act, 2005, or create targeted clarification inquiries.</p>
+        </div>
+      </div>
+      <div className="inquiry-type-grid" role="group" aria-label="Citizen inquiry type">
+        <button
+          type="button"
+          className={inquiryType === 'formal_rti' ? 'inquiry-type-active' : ''}
+          aria-pressed={inquiryType === 'formal_rti'}
+          onClick={() => setInquiryType('formal_rti')}
+        >
+          <Scale size={15} />
+          <span>Formal RTI (Form A)</span>
+        </button>
+        <button
+          type="button"
+          className={inquiryType === 'timeline' ? 'inquiry-type-active' : ''}
+          aria-pressed={inquiryType === 'timeline'}
+          onClick={() => setInquiryType('timeline')}
+        >
+          <Clock3 size={15} />
+          <span>Timeline inquiry</span>
+        </button>
+        <button
+          type="button"
+          className={inquiryType === 'specification' ? 'inquiry-type-active' : ''}
+          aria-pressed={inquiryType === 'specification'}
+          onClick={() => setInquiryType('specification')}
+        >
+          <FileText size={15} />
+          <span>Specification clarification</span>
+        </button>
+        <button
+          type="button"
+          className={inquiryType === 'participation' ? 'inquiry-type-active' : ''}
+          aria-pressed={inquiryType === 'participation'}
+          onClick={() => setInquiryType('participation')}
+        >
+          <Users size={15} />
+          <span>Participation query</span>
+        </button>
+      </div>
+
+      {inquiryType === 'formal_rti' ? (
+        <div className="rti-application-wrapper">
+          <div className="rti-official-paper">
+            <div className="rti-official-header">
+              <span className="rti-form-tag">FORM A · RTI ACT 2005 (SECTION 6(1))</span>
+              <h4>Application for Obtaining Information</h4>
+              <p>Rule 3(1) of the Right to Information Rules / Act 2005</p>
+            </div>
+            <div className="rti-recipient-box">
+              <strong>To:</strong> The Public Information Officer (PIO) / Assistant PIO,<br />
+              <strong>{brief.buyer}</strong> ({org}),<br />
+              Government of {state}<br />
+              <span style={{ fontSize: '11px', color: '#64748b' }}>Portal Provenance: {portalName}</span>
+            </div>
+            <p style={{ fontSize: '13px', margin: '8px 0 4px', fontWeight: 600 }}>
+              Subject: Information sought regarding procurement tender “{tender.title}” (Tender ID: {tender.tender_id})
+            </p>
+            <p style={{ fontSize: '12px', margin: '4px 0 10px', color: '#475569' }}>
+              <strong>Civic Impact:</strong> {brief.socialImpact.label} ({brief.socialImpact.sdgTag}) · <strong>Value:</strong> {valueStr}
+            </p>
+            <div style={{ fontSize: '12.5px', fontWeight: 600, marginTop: '12px' }}>
+              Specific Points of Information Requested under Section 6(1):
+            </div>
+            <ol className="rti-query-list">
+              <li>Certified copy of complete Detailed Notice Inviting Tender (DNIT), Tender Documents, and BOQ specifications.</li>
+              <li>Certified copy of all Corrigenda / Addenda ({tender.corrigendum_count} recorded), with administrative note-sheet and competent approvals for timeline variation (per CVC Circular 01/01/2021).</li>
+              <li>Minutes of the Technical Evaluation Committee (TEC) detailing qualification/disqualification grounds of all participating bidders.</li>
+              <li>Comparative Statement of Financial Bids (L1, L2, L3 schedule) and Commercial Evaluation Report.</li>
+              <li>Current award status, Letter of Acceptance (LOA) / Work Order, winning vendor, and milestone schedule.</li>
+            </ol>
+            <div style={{ fontSize: '12px', background: '#f1f5f9', padding: '8px 12px', borderRadius: '6px', margin: '10px 0' }}>
+              <strong>Statutory Fee:</strong> ₹10 statutory fee payable via IPO / Court Fee Stamp / e-RTI portal receipt.
+            </div>
+            <div style={{ fontSize: '11.5px', color: '#64748b', fontStyle: 'italic' }}>
+              Applicant declaration under Section 2(f) and 2(j) of the RTI Act 2005.
+            </div>
+          </div>
+          <div className="rti-actions-bar">
+            <button className="rti-print-btn" type="button" onClick={printRtiForm}>
+              <Printer size={15} /> Print / Save Official Form A (PDF)
+            </button>
+            <button className="rti-copy-btn" type="button" onClick={copyInquiry}>
+              <ClipboardCheck size={15} /> {copied ? 'Form A text copied' : 'Copy Form A text'}
+            </button>
+          </div>
+          <p className="rti-statutory-notice">
+            ⚖️ <strong>Statutory Mandate:</strong> Under Section 7(1) of the RTI Act 2005, the Public Information Officer is required by law to provide this information within 30 days of receipt.
+          </p>
+        </div>
+      ) : (
+        <>
+          <textarea className="inquiry-preview" value={inquiry} readOnly aria-label="Generated citizen inquiry" />
+          <button className="primary-button" type="button" onClick={copyInquiry}>
+            <ClipboardCheck size={16} /> {copied ? 'Inquiry copied' : 'Copy source-cited inquiry'}
+          </button>
+        </>
+      )}
+
+      <p className="section-helper">{brief.buyer} remains the public authority of record. CHEIRAP generates standard statutory drafts; citizens retain full editorial authority.</p>
     </section>
   );
 }
@@ -1555,6 +1940,10 @@ function TenderDetail({
 
         {/* Metadata Badges Strip */}
         <div className="tender-hero-meta-strip" aria-label="Tender core details">
+          <span className={`impact-badge impact-badge-${brief.socialImpact.badgeTone}`}>
+            <ImpactIcon name={brief.socialImpact.iconName} size={12} />
+            <span>{brief.socialImpact.shortLabel}</span>
+          </span>
           <span className="tender-meta-pill pill-dept">
             <Building2 size={14} />
             <span>{departmentName}</span>
@@ -1584,6 +1973,17 @@ function TenderDetail({
             <span>Score {Math.round(tender.cheirap_risk_score)}/100 · {signal.label}</span>
           </span>
           <span className="neutral-tag">{tender.status}</span>
+        </div>
+
+        {/* Civic Impact & SDG Alignment Strip */}
+        <div className="tender-impact-strip">
+          <span className={`impact-badge impact-badge-${brief.socialImpact.badgeTone}`}>
+            <ImpactIcon name={brief.socialImpact.iconName} size={13} />
+            <span>{brief.socialImpact.sdgTag}</span>
+          </span>
+          <span className="impact-desc">
+            <strong>{brief.socialImpact.label}:</strong> {brief.socialImpact.description}
+          </span>
         </div>
 
         {/* Hero Actions */}
@@ -1949,10 +2349,17 @@ function DeadlineCalendar({ tenders, onOpen }: { tenders: Tender[]; onOpen: (ten
 
 function PublicApp() {
   const motionRootRef = useRef<HTMLDivElement>(null);
-  const [activePage, setActivePage] = useState<'home' | 'explore'>('home');
+  const [activePage, setActivePage] = useState<'home' | 'explore'>(() => {
+    try {
+      return new URLSearchParams(window.location.search).get('page') === 'explore' ? 'explore' : 'home';
+    } catch {
+      return 'home';
+    }
+  });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [stateFilter, setStateFilter] = useState('ALL');
+  const [impactDomain, setImpactDomain] = useState('ALL');
   const [department, setDepartment] = useState('ALL');
   const [location, setLocation] = useState('ALL');
   const [district, setDistrict] = useState('ALL');
@@ -1970,6 +2377,7 @@ function PublicApp() {
 
   const activeFilterCount =
     (stateFilter !== 'ALL' ? 1 : 0) +
+    (impactDomain !== 'ALL' ? 1 : 0) +
     (department !== 'ALL' ? 1 : 0) +
     (district !== 'ALL' ? 1 : 0) +
     (location !== 'ALL' ? 1 : 0) +
@@ -2030,6 +2438,7 @@ function PublicApp() {
     return allTenders.filter((tender) => {
       const matchesQuery = !normalized || [tender.title, tender.work_desc, tender.tender_id, tender.ref_no, tender.department, tender.location, tender.state, tender.product_category].filter(Boolean).some((value) => value!.toLowerCase().includes(normalized));
       const matchesState = stateFilter === 'ALL' || (tender.state ? tender.state === stateFilter : (stateFilter === 'Manipur' ? (tender.tender_id.startsWith('MAN_') || tender.tender_id.includes('PHED') || tender.tender_id.includes('PWDM1') || tender.tender_id.includes('MANIPUR')) : (tender.source_url?.includes('mahatenders') || tender.tender_id.includes('MCGM') || tender.tender_id.includes('MMRDA'))));
+      const matchesImpact = impactDomain === 'ALL' || getSocialImpactDomain(tender).key === impactDomain;
       const matchesDepartment = department === 'ALL' || getSimpleDepartment(tender.department) === department;
       const matchesLocation = location === 'ALL' || getLocationLabel(tender.location) === location;
       const matchesDistrict = district === 'ALL' || getDistrictLabel(tender.location) === district;
@@ -2039,9 +2448,9 @@ function PublicApp() {
       const daysUntilClosing = getDaysUntilClosing(tender);
       const matchesClosing = closingWindow === 'ALL' || (daysUntilClosing !== null && daysUntilClosing >= 0 && daysUntilClosing <= Number(closingWindow));
       const matchesSaved = !showSavedOnly || watchlist.includes(tender.tender_id);
-      return matchesQuery && matchesState && matchesDepartment && matchesLocation && matchesDistrict && matchesSignal && matchesStatus && matchesValue && matchesClosing && matchesSaved;
+      return matchesQuery && matchesState && matchesImpact && matchesDepartment && matchesLocation && matchesDistrict && matchesSignal && matchesStatus && matchesValue && matchesClosing && matchesSaved;
     });
-  }, [closingWindow, department, district, location, query, signal, showSavedOnly, stateFilter, statusFilter, valueBand, watchlist]);
+  }, [closingWindow, department, district, impactDomain, location, query, signal, showSavedOnly, stateFilter, statusFilter, valueBand, watchlist]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -2091,6 +2500,7 @@ function PublicApp() {
   const clearFilters = () => {
     setQuery('');
     setStateFilter('ALL');
+    setImpactDomain('ALL');
     setDepartment('ALL');
     setLocation('ALL');
     setDistrict('ALL');
@@ -2540,6 +2950,46 @@ function PublicApp() {
               </button>
               <button
                 type="button"
+                className={`quick-chip ${impactDomain === 'WATER_SANITATION' ? 'quick-chip-active' : ''}`}
+                onClick={() => setImpactDomain(impactDomain === 'WATER_SANITATION' ? 'ALL' : 'WATER_SANITATION')}
+              >
+                <Droplets size={13} />
+                <span>Water ({allTenders.filter(t => getSocialImpactDomain(t).key === 'WATER_SANITATION').length})</span>
+              </button>
+              <button
+                type="button"
+                className={`quick-chip ${impactDomain === 'HEALTHCARE' ? 'quick-chip-active' : ''}`}
+                onClick={() => setImpactDomain(impactDomain === 'HEALTHCARE' ? 'ALL' : 'HEALTHCARE')}
+              >
+                <HeartPulse size={13} />
+                <span>Healthcare ({allTenders.filter(t => getSocialImpactDomain(t).key === 'HEALTHCARE').length})</span>
+              </button>
+              <button
+                type="button"
+                className={`quick-chip ${impactDomain === 'ROADS_MOBILITY' ? 'quick-chip-active' : ''}`}
+                onClick={() => setImpactDomain(impactDomain === 'ROADS_MOBILITY' ? 'ALL' : 'ROADS_MOBILITY')}
+              >
+                <Route size={13} />
+                <span>Roads ({allTenders.filter(t => getSocialImpactDomain(t).key === 'ROADS_MOBILITY').length})</span>
+              </button>
+              <button
+                type="button"
+                className={`quick-chip ${impactDomain === 'EDUCATION' ? 'quick-chip-active' : ''}`}
+                onClick={() => setImpactDomain(impactDomain === 'EDUCATION' ? 'ALL' : 'EDUCATION')}
+              >
+                <GraduationCap size={13} />
+                <span>Education ({allTenders.filter(t => getSocialImpactDomain(t).key === 'EDUCATION').length})</span>
+              </button>
+              <button
+                type="button"
+                className={`quick-chip ${impactDomain === 'ENERGY_SAFETY' ? 'quick-chip-active' : ''}`}
+                onClick={() => setImpactDomain(impactDomain === 'ENERGY_SAFETY' ? 'ALL' : 'ENERGY_SAFETY')}
+              >
+                <Zap size={13} />
+                <span>Energy & Safety ({allTenders.filter(t => getSocialImpactDomain(t).key === 'ENERGY_SAFETY').length})</span>
+              </button>
+              <button
+                type="button"
                 className={`quick-chip ${signal === 'Open opportunity' ? 'quick-chip-active' : ''}`}
                 onClick={() => setSignal(signal === 'Open opportunity' ? 'ALL' : 'Open opportunity')}
               >
@@ -2608,6 +3058,20 @@ function PublicApp() {
                     <option value="ALL">All states ({allTenders.length})</option>
                     <option value="Manipur">Manipur (manipurtenders.gov.in)</option>
                     <option value="Maharashtra">Maharashtra (mahatenders.gov.in)</option>
+                  </select>
+                </div>
+                <div className="filter-field">
+                  <label>Civic Need (SDG)</label>
+                  <select aria-label="Filter by civic domain" value={impactDomain} onChange={(event) => setImpactDomain(event.target.value)}>
+                    <option value="ALL">All civic domains ({allTenders.length})</option>
+                    {Object.values(socialImpactCatalog).map((cat) => {
+                      const count = allTenders.filter((t) => getSocialImpactDomain(t).key === cat.key).length;
+                      return (
+                        <option key={cat.key} value={cat.key}>
+                          {cat.label} ({count})
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
                 <div className="filter-field">
@@ -2714,6 +3178,11 @@ function PublicApp() {
               {stateFilter !== 'ALL' && (
                 <button type="button" className="active-filter-pill" onClick={() => setStateFilter('ALL')}>
                   <span>State: {stateFilter}</span> <X size={12} />
+                </button>
+              )}
+              {impactDomain !== 'ALL' && (
+                <button type="button" className="active-filter-pill" onClick={() => setImpactDomain('ALL')}>
+                  <span>Domain: {socialImpactCatalog[impactDomain as SocialImpactDomain]?.shortLabel || impactDomain}</span> <X size={12} />
                 </button>
               )}
               {department !== 'ALL' && (
