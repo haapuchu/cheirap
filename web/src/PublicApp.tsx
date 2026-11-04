@@ -20,7 +20,6 @@ import {
   Clock3,
   Clipboard,
   ClipboardCheck,
-  Compass,
   Droplets,
   ExternalLink,
   FileSearch,
@@ -83,7 +82,6 @@ import {
 } from '@/lib/tenderInsights';
 import type { Tender, TenderTier, SocialImpactDomain } from '@/lib/tenderInsights';
 import { useCheirapMotion } from '@/lib/useCheirapMotion';
-import { GuidedTour, FirstVisitTourBanner } from '@/components/GuidedTour';
 
 const allTenders = (embeddedTenders as unknown as Tender[]).map(normalizeSnapshotTender);
 
@@ -2412,45 +2410,6 @@ function PublicApp() {
     try { return JSON.parse(localStorage.getItem('cheirap-corrections') || '[]'); } catch { return []; }
   });
 
-  const [tourActive, setTourActive] = useState(false);
-  const [firstVisitPromptOpen, setFirstVisitPromptOpen] = useState(() => {
-    try {
-      return !localStorage.getItem('cheirap-tour-dismissed') && !localStorage.getItem('cheirap-tour-completed');
-    } catch {
-      return false;
-    }
-  });
-
-  const startTour = () => {
-    setTourActive(true);
-    setFirstVisitPromptOpen(false);
-    try {
-      localStorage.setItem('cheirap-tour-dismissed', 'true');
-    } catch {
-      /* ignore */
-    }
-  };
-
-  const toggleTour = () => {
-    setTourActive((prev) => !prev);
-    setFirstVisitPromptOpen(false);
-  };
-
-  const dismissFirstVisitPrompt = () => {
-    setFirstVisitPromptOpen(false);
-    try {
-      localStorage.setItem('cheirap-tour-dismissed', 'true');
-    } catch {
-      /* ignore */
-    }
-  };
-
-  const selectSampleTender = () => {
-    if (allTenders.length > 0) {
-      setSelectedTender(allTenders[0]);
-    }
-  };
-
   useCheirapMotion(motionRootRef, selectedTender ? 'detail' : activePage);
 
   useEffect(() => {
@@ -2715,33 +2674,8 @@ function PublicApp() {
             <button className="nav-link" onClick={() => { closeTender(); openHomeSection('how-it-works'); }}>How it works</button>
             <button className="nav-link" onClick={() => { closeTender(); openHomeSection('data-method'); }}>Data & method</button>
             <button className="nav-link" onClick={() => { closeTender(); openHomeSection('across-india'); }}>Across India</button>
-            <button
-              type="button"
-              className={`nav-link ${tourActive ? 'nav-link-active' : ''}`}
-              onClick={() => {
-                setMobileMenuOpen(false);
-                startTour();
-              }}
-              title="Guided walkthrough of CHEIRAP"
-            >
-              <Compass size={14} style={{ display: 'inline-block', verticalAlign: '-2px', marginRight: '5px' }} />
-              Guided Tour ({tourActive ? 'ON' : 'OFF'})
-            </button>
           </nav>
           <div className="header-actions">
-            <button
-              type="button"
-              className={`tour-header-nav-btn ${tourActive ? 'tour-header-nav-btn-active' : ''}`}
-              onClick={toggleTour}
-              title={tourActive ? 'Exit guided walkthrough' : 'Start guided interactive walkthrough'}
-              aria-label={tourActive ? 'Turn guided walkthrough OFF' : 'Start guided walkthrough'}
-            >
-              <Compass size={14} />
-              <span>Tour</span>
-              <span className={`tour-status-tag ${tourActive ? 'tour-status-on' : 'tour-status-off'}`}>
-                {tourActive ? 'ON' : 'OFF'}
-              </span>
-            </button>
             <button className="header-cta" onClick={() => { closeTender(); openExplore(); }}>Explore <ArrowUpRight size={16} /></button>
             <button className="mobile-menu-button" onClick={() => setMobileMenuOpen((open) => !open)} aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-controls="site-navigation" aria-expanded={mobileMenuOpen}>{mobileMenuOpen ? <X /> : <Menu />}</button>
           </div>
@@ -3383,32 +3317,6 @@ function PublicApp() {
       </footer>
 
       <CompareTray tenders={compareTenders} onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))} onClear={() => setCompareIds([])} onOpen={openTender} />
-
-      <GuidedTour
-        active={tourActive}
-        onToggle={setTourActive}
-        currentPage={activePage}
-        hasSelectedTender={Boolean(selectedTender)}
-        onNavigatePage={(page) => {
-          if (page === 'home') {
-            closeTender();
-            setActivePage('home');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          } else {
-            closeTender();
-            openExplore();
-          }
-        }}
-        onSelectSampleTender={selectSampleTender}
-        onCloseTender={closeTender}
-      />
-
-      {firstVisitPromptOpen && !tourActive && (
-        <FirstVisitTourBanner
-          onStart={startTour}
-          onDismiss={dismissFirstVisitPrompt}
-        />
-      )}
     </div>
   );
 }
