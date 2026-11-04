@@ -1346,7 +1346,7 @@ Applicant Signature: ________________________
             </button>
           </div>
           <p className="rti-statutory-notice">
-            ⚖️ <strong>Statutory Mandate:</strong> Under Section 7(1) of the RTI Act 2005, the Public Information Officer is required by law to provide this information within 30 days of receipt.
+            <strong>Statutory Mandate:</strong> Under Section 7(1) of the RTI Act 2005, the Public Information Officer is required by law to provide this information within 30 days of receipt.
           </p>
         </div>
       ) : (
